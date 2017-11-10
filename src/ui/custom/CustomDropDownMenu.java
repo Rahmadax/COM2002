@@ -1,29 +1,23 @@
 package ui.custom;
 
-import java.awt.AWTEvent;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.AWTEventListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.MatteBorder;
 
-import listener.HoverListener;
-import ui.PopupPane;
+import ui.listener.HoverListener;
+import ui.popup.PopupPane;
 
 public class CustomDropDownMenu extends CustomButton {
 

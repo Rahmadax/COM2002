@@ -14,18 +14,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.swing.ButtonModel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
-import listener.HoverListener;
 import ui.custom.CustomButton;
 
 public class CalendarPane extends JPanel {
@@ -39,17 +33,15 @@ public class CalendarPane extends JPanel {
 	private Calendar calendar;
 
 	public CalendarPane(Calendar calendar) {
-		super();
+		super(new BorderLayout(20, 20));
 		
 		this.calendar = calendar;
 		this.calendar.set(Calendar.DAY_OF_WEEK, 2);
 
-		setLayout(new BorderLayout(20, 20));
+		setBackground(new Color(90, 90, 90));
 		setBorder(new EmptyBorder(20, 20, 20, 20));
 
 		addComponents();
-		
-		setBackground(new Color(90, 90, 90));
 	}
 
 	// the control button class to change the week (up or down)
@@ -70,9 +62,8 @@ public class CalendarPane extends JPanel {
 	private class DatePicker extends JComboBox {
 		DatePicker(String[] strs) {
 			super(strs);
-			
-			setFocusable(false);
 
+			setFocusable(false);
 			setSelectedIndex(PICK_WEEKS_BEFORE);
 						
 			addActionListener(new ActionListener() {
@@ -89,43 +80,10 @@ public class CalendarPane extends JPanel {
 			});
 
 			setFont(new Font("Serif", Font.BOLD, 20));
-			setPreferredSize(new Dimension(150, 40));
-			setOpaque(true);
 			setBackground(new Color(80, 80, 80));
 			setForeground(new Color(255, 160, 0));
+			setPreferredSize(new Dimension(150, 40));
 		}
-	}
-	
-	// add all content to the week pane
-	private void addComponents() {
-		JPanel container = new JPanel();
-		JPanel controlPane = new JPanel();
-
-		controlPane.setOpaque(false);
-		controlPane.add(new ControlButton("<", false));
-		controlPane.add(new DatePicker(generateDates()));
-		controlPane.add(new ControlButton(">", true));
-		
-		container.setOpaque(false);
-		container.setLayout(new BorderLayout(0, 10));
-		container.add(createBookButton(), BorderLayout.WEST);
-		
-		if (!isDateInCurrentWeek(calendar.getTime())) {
-			container.add(createBackButton(), BorderLayout.CENTER);
-		}
-		
-		container.add(controlPane, BorderLayout.EAST);
-		container.add(new DayLabelPane(calendar), BorderLayout.SOUTH);
-		
-		JScrollPane dayPane = new JScrollPane(new DayPane(calendar));
-		dayPane.setOpaque(false);
-		dayPane.setBorder(new LineBorder(new Color(255, 160, 0), 1));
-		dayPane.getVerticalScrollBar().setUnitIncrement(16);;
-		dayPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		dayPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
-		add(container, BorderLayout.NORTH);
-		add(dayPane, BorderLayout.CENTER);
 	}
 	
 	// change week up or down
@@ -154,19 +112,56 @@ public class CalendarPane extends JPanel {
 		repaint();
 	}
 	
+	// add all content to the week pane
+	private void addComponents() {
+		JPanel container = new JPanel();
+		container.setOpaque(false);
+		container.setLayout(new BorderLayout(0, 10));
+		container.add(createBookButton(), BorderLayout.WEST);
+		
+		if (!isDateInCurrentWeek(calendar.getTime())) {
+			container.add(createBackButton(), BorderLayout.CENTER);
+		}
+		
+		container.add(createControlPane(), BorderLayout.EAST);
+		container.add(new DayLabelPane(calendar), BorderLayout.SOUTH);
+        
+		add(container, BorderLayout.NORTH);
+		add(createDayPane(), BorderLayout.CENTER);
+	}
+	
+	private JScrollPane createDayPane() {
+		JScrollPane dayPane = new JScrollPane(new DayPane(calendar));
+		dayPane.setOpaque(false);
+		dayPane.setBorder(new LineBorder(new Color(255, 160, 0), 1));
+		dayPane.getVerticalScrollBar().setUnitIncrement(16);;
+		dayPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		dayPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+	
+		return dayPane;
+	}
+	
+	private JPanel createControlPane() {
+		JPanel controlPane = new JPanel();
+		controlPane.setOpaque(false);
+		controlPane.add(new ControlButton("<", false));
+		controlPane.add(new DatePicker(generateDates()));
+		controlPane.add(new ControlButton(">", true));
+		
+		return controlPane;
+	}
+	
 	private JPanel createBackButton() {
 		CustomButton backButton = new CustomButton("Back to current week");
 		backButton.setPreferredSize(new Dimension(230, 40));
 		backButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				System.out.println("test");
 				changeWeek(Calendar.getInstance(Locale.UK).getTime());
 			}
 		});
 		
 		JPanel backPane = new JPanel();
-		
 		backPane.setOpaque(false);
 		backPane.add(backButton);
 		

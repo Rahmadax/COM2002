@@ -1,13 +1,10 @@
 package ui.calendar;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.util.Date;
 
 import javax.swing.JPanel;
 
 import calendar.TimeSlot;
-import listener.HoverListener;
 
 public abstract class TimeSlotPane extends JPanel {
 	
@@ -20,16 +17,16 @@ public abstract class TimeSlotPane extends JPanel {
 		super();
 		
 		this.timeSlot = timeSlot;
-		height = calculateHeight();
+		height = 150;
 		
 		setPreferredSize(new Dimension(0, height));
 	}
 	
-	private int calculateHeight() {
+	/*private int calculateHeight() {
 		int interval = (int) (timeSlot.getEndDate().getTime() -
 				timeSlot.getStartDate().getTime());
 		
 		return interval / (HEIGHT_SCALE * 1000);
-	}
+	}*/
 	
 }

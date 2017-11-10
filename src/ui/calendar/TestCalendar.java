@@ -8,8 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 
-import ui.animation.FadeAnimation;
-
 public class TestCalendar {
 
 	public static void main(String[] args) {

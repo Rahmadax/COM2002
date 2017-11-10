@@ -14,5 +14,5 @@ public class CenteredPane extends JPanel {
 		setLayout(new GridBagLayout());
 		add(component);
 	}
-	
+
 }

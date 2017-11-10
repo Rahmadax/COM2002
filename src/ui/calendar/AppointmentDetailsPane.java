@@ -1,9 +1,7 @@
 package ui.calendar;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
 import javax.swing.BoxLayout;
@@ -11,26 +9,26 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import calendar.Appointment;
 import ui.layout.AnchorTopPane;
 
 public class AppointmentDetailsPane extends JPanel {
 
+	private Appointment appointment;
+	
 	// TO BE CONTINUED
 	// pane class that shows details of a specific appointment
 	// and the actions that can be performed over it 
 	// (eg. reschedule, delete, etc.)
-	public AppointmentDetailsPane() {
+	public AppointmentDetailsPane(Appointment appointment) {
 		super();
+		this.appointment = appointment;
 		
 		setOpaque(false);
 		setLayout(new GridLayout(0, 2));
+		setBorder(new EmptyBorder(20, 0, 0, 0));
 		
 		addComponents();
-	}
-	
-	private void addComponents() {
-		add(createLeftPane());
-		add(createRightPane());
 	}
 	
 	public JPanel getTitlePane() {
@@ -39,16 +37,23 @@ public class AppointmentDetailsPane extends JPanel {
 		titlePane.setLayout(new BoxLayout(titlePane, BoxLayout.Y_AXIS));
 		
 		JLabel date = new JLabel("10 Novemner 2011");
+		date.setForeground(new Color(200, 200, 200));
 		date.setBorder(new EmptyBorder(0, 5, 0, 0));
 		
 		JLabel title = new JLabel("Appoitnment");
 		Font large = new Font("serif", Font.BOLD, 25);
+		title.setForeground(new Color(230, 130, 0));
 		title.setFont(large);
 		
 		titlePane.add(title);
 		titlePane.add(date);
 		
 		return titlePane;
+	}
+	
+	private void addComponents() {
+		add(createLeftPane());
+		add(createRightPane());
 	}
 	
 	private JPanel createLeftPane() {

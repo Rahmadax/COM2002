@@ -1,40 +1,30 @@
 package ui.calendar;
 
-import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
-import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 
 import calendar.Appointment;
-import listener.HoverListener;
-import ui.OverlayPane;
-import ui.animation.FadeAnimation;
 import ui.layout.CenteredPane;
+import ui.listener.HoverListener;
+import ui.popup.OverlayPane;
 
 public class AppointmentPane extends TimeSlotPane {
+	
+	private static final Color BACKGROUND_COLOR = new Color(255, 200, 100);
+	private static final Color HOVER_COLOR = new Color(255, 180, 80);
 	
 	// overlay pane instance to show the appointment details
 	private OverlayPane overlay;
@@ -48,41 +38,33 @@ public class AppointmentPane extends TimeSlotPane {
 		super(appointment);
 		
 		this.appointment = appointment;
+		detailsPane = new AppointmentDetailsPane(appointment);
 		
-		JPanel panel = this;
-		detailsPane = new AppointmentDetailsPane();
-		
+		addMouseListener(new HoverListener(BACKGROUND_COLOR, HOVER_COLOR));
 		addMouseListener(new MouseAdapter() {
-			// click listener to show the details pane overlay
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if (overlay == null) {
-					JRootPane rootPane = SwingUtilities.getRootPane(panel);
-					overlay = new OverlayPane(rootPane, detailsPane);
-					overlay.setTitlePane(detailsPane.getTitlePane());
-				}
+				JPanel panel = (JPanel) e.getSource();
+				JRootPane rootPane = SwingUtilities.getRootPane(panel);
 
-				if (overlay.isHidden()) {
-					overlay.show();
-				} else {
-					overlay.hide();
-				}
+				overlay = new OverlayPane(rootPane, detailsPane, panel);
+				overlay.setTitle("Appointment", "12 December 1999");
+				overlay.show();
+				panel.removeMouseListener(this);
 			}
 		});
 		
-		setLayout(new BorderLayout());
-		
-		addComponents();
-				
-		addMouseListener(new HoverListener(
-				new Color(255, 200, 200), new Color(255, 170, 170)));
-		setBackground(new Color(255, 200, 200));
+		setBackground(BACKGROUND_COLOR);
 		setPreferredSize(new Dimension(50, height));
+		
+		setLayout(new BorderLayout());
+		addComponents();
 	}
 	
 	// TO BE CONTINUED
 	private void addComponents() {
-		add(createTimePane(), BorderLayout.CENTER);
+		add(createTimePane(), BorderLayout.NORTH);
+		add(createContentPane(), BorderLayout.CENTER);
 	}
 
 	private JPanel createTimePane() {
@@ -91,22 +73,34 @@ public class AppointmentPane extends TimeSlotPane {
 		String endTime = timeFormatter.format(appointment.getEndDate());
 		
 		JPanel panel = new JPanel();
-		panel.setOpaque(false);
-		panel.setLayout(new BorderLayout());
-		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		panel.setBackground(new Color(255, 160, 50));
 		
-		Font font = new Font("serif", Font.BOLD, 12);
+		panel.setLayout(new BorderLayout());
+		panel.setBorder(new CompoundBorder(
+				new MatteBorder(0, 0, 1, 0, new Color(100, 100, 100)),
+				new EmptyBorder(5, 10, 4, 10)));
+		
+		Font font = new Font("serif", Font.BOLD, 13);
 
 		JLabel startLabel = new JLabel(startTime);
 		JLabel endLabel = new JLabel(endTime);
-		startLabel.setForeground(new Color(255, 0, 0));
+		startLabel.setForeground(new Color(70, 70, 70));
 		startLabel.setFont(font);
+		endLabel.setForeground(new Color(70, 70, 70));
 		endLabel.setFont(font);
 
 		panel.add(new CenteredPane(startLabel), BorderLayout.WEST);
 		panel.add(new CenteredPane(endLabel), BorderLayout.EAST);
 
 		return panel;
+	}
+	
+	private JPanel createContentPane() {
+		JLabel patientName = new JLabel("John Smith");
+		patientName.setFont(new Font("serif", Font.BOLD, 14));
+		patientName.setForeground(new Color(80, 50, 0));
+		
+		return new CenteredPane(patientName);
 	}
 
 }

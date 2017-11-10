@@ -47,7 +47,7 @@ public class DayLabelPane extends JPanel {
 			
 			if (day != "Friday") {
 				setBorder(BorderFactory.createCompoundBorder(
-						new EmptyBorder(0, 0, 0, 10),
+						new EmptyBorder(0, 0, 0, 15),
 						new MatteBorder(0, 0, 0, 3, new Color(120, 120, 120))));
 			}
 			

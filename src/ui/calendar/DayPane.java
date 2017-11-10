@@ -3,19 +3,25 @@ package ui.calendar;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import calendar.Appointment;
 import calendar.EmptySlot;
 import ui.animation.FadeAnimation;
+import ui.custom.CustomUtilities;
 
 public class DayPane extends JPanel {
 	
@@ -48,7 +54,7 @@ public class DayPane extends JPanel {
 			
 			// add random appointment panes (just for presentation)
 			// TO BE CONTINUED
-			for (int j = 0; j < 8; j++) {
+			for (int j = 0; j < 3; j++) {
 				int randomNum = ThreadLocalRandom.current().nextInt(1, 1 + 1);
 				Date startDate = calendar.getTime();
 				calendar.add(Calendar.HOUR_OF_DAY, randomNum);
@@ -73,7 +79,7 @@ public class DayPane extends JPanel {
 			add(anchorTopContainer);
 		}
 
-		setBackground(new Color(130, 130, 130));
+		setBackground(new Color(120, 120, 120));
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 	}
 	

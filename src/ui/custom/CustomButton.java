@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import listener.HoverListener;
+import ui.listener.HoverListener;
 
 public class CustomButton extends JPanel {
 	
@@ -38,9 +38,7 @@ public class CustomButton extends JPanel {
 	}
 	
 	public CustomButton(String str) {
-		super();
-		
-		setDefaultStyle(str);
+		this(str, DEFAULT);
 	}
 
 	private void setDefaultStyle(String str) {
