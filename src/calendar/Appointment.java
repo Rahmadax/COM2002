@@ -7,8 +7,15 @@ public class Appointment extends TimeSlot {
 	private Status status;
 	private Appointment rescheduledAppointment;
 	
-	public Appointment(Date startDate, Date endDate, int patientID) {
+	private int patientID;
+	private String partner;
+
+	public Appointment(Date startDate, Date endDate, 
+			String partner, int patientID) {
 		super(startDate, endDate);
+		
+		this.patientID = patientID;
+		this.partner = partner;
 		
 		status = Status.PENDING;
 		rescheduledAppointment = null;

@@ -52,11 +52,12 @@ public class DayLabelPane extends JPanel {
 			}
 			
 			JLabel dayLabel = new JLabel(day);
-			dayLabel.setFont(new Font("Serif", Font.BOLD, 20));
+			dayLabel.setFont(new Font("Aller", Font.BOLD, 20));
 			dayLabel.setForeground(new Color(255, 140, 0));
 			
 			SimpleDateFormat dateFormatter = new SimpleDateFormat("d MMMM yyyy");
 			JLabel dateLabel = new JLabel(dateFormatter.format(date));
+			dateLabel.setFont(new Font("Aller", Font.BOLD, 13));
 			dateLabel.setForeground(new Color(200, 200, 200));
 
 			add(dayLabel);			

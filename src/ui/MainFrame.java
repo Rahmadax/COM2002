@@ -31,7 +31,7 @@ public class MainFrame extends JFrame {
 		setTitle("set title here");
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setResizable(true);
-	    setMinimumSize(new Dimension(800, 600));
+	    setMinimumSize(new Dimension(1024, 768));
 
 	    addComponents();
 	    

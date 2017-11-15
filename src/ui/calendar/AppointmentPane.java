@@ -61,14 +61,13 @@ public class AppointmentPane extends TimeSlotPane {
 		addComponents();
 	}
 	
-	// TO BE CONTINUED
 	private void addComponents() {
 		add(createTimePane(), BorderLayout.NORTH);
 		add(createContentPane(), BorderLayout.CENTER);
 	}
 
 	private JPanel createTimePane() {
-		SimpleDateFormat timeFormatter = new SimpleDateFormat("h:m a");
+		SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a");
 		String startTime = timeFormatter.format(appointment.getStartDate());
 		String endTime = timeFormatter.format(appointment.getEndDate());
 		
@@ -80,7 +79,7 @@ public class AppointmentPane extends TimeSlotPane {
 				new MatteBorder(0, 0, 1, 0, new Color(100, 100, 100)),
 				new EmptyBorder(5, 10, 4, 10)));
 		
-		Font font = new Font("serif", Font.BOLD, 13);
+		Font font = new Font("Aller", Font.BOLD, 13);
 
 		JLabel startLabel = new JLabel(startTime);
 		JLabel endLabel = new JLabel(endTime);
@@ -97,7 +96,7 @@ public class AppointmentPane extends TimeSlotPane {
 	
 	private JPanel createContentPane() {
 		JLabel patientName = new JLabel("John Smith");
-		patientName.setFont(new Font("serif", Font.BOLD, 14));
+		patientName.setFont(new Font("Aller", Font.BOLD, 14));
 		patientName.setForeground(new Color(80, 50, 0));
 		
 		return new CenteredPane(patientName);

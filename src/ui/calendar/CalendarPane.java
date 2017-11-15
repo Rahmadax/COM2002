@@ -89,12 +89,16 @@ public class CalendarPane extends JPanel {
 	// change week up or down
 	private void changeWeek(boolean up) {	
 		removeAll();
-				
+		
+		System.out.println(calendar.get(Calendar.DAY_OF_WEEK));
+
 		if (up == true) {
-			calendar.add(Calendar.DAY_OF_YEAR, 6);
+			calendar.add(Calendar.DAY_OF_MONTH, 7);
 		} else {
-			calendar.add(Calendar.DAY_OF_YEAR, -8);
+			calendar.add(Calendar.DAY_OF_MONTH, -7);
 		}
+		System.out.println(calendar.get(Calendar.DAY_OF_WEEK));
+
 
 		addComponents();
 		revalidate();
@@ -124,14 +128,16 @@ public class CalendarPane extends JPanel {
 		}
 		
 		container.add(createControlPane(), BorderLayout.EAST);
-		container.add(new DayLabelPane(calendar), BorderLayout.SOUTH);
+		container.add(new DayLabelPane((Calendar) calendar.clone()), 
+				BorderLayout.SOUTH);
         
 		add(container, BorderLayout.NORTH);
 		add(createDayPane(), BorderLayout.CENTER);
 	}
 	
 	private JScrollPane createDayPane() {
-		JScrollPane dayPane = new JScrollPane(new DayPane(calendar));
+		JScrollPane dayPane = new JScrollPane(new DayPane((Calendar) 
+				calendar.clone()));
 		dayPane.setOpaque(false);
 		dayPane.setBorder(new LineBorder(new Color(255, 160, 0), 1));
 		dayPane.getVerticalScrollBar().setUnitIncrement(16);;
@@ -169,7 +175,8 @@ public class CalendarPane extends JPanel {
 	}
 	
 	private JPanel createBookButton() {
-		CustomButton bookButton = new CustomButton("Book appoitnment", CustomButton.REVERSED);
+		CustomButton bookButton = new CustomButton("Book appoitnment", 
+				CustomButton.REVERSED);
 		bookButton.setPreferredSize(new Dimension(200, 40));
 		
 		JPanel bookPane = new JPanel();

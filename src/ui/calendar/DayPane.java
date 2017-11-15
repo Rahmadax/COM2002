@@ -20,8 +20,6 @@ import javax.swing.border.EmptyBorder;
 
 import calendar.Appointment;
 import calendar.EmptySlot;
-import ui.animation.FadeAnimation;
-import ui.custom.CustomUtilities;
 
 public class DayPane extends JPanel {
 	
@@ -54,13 +52,14 @@ public class DayPane extends JPanel {
 			
 			// add random appointment panes (just for presentation)
 			// TO BE CONTINUED
-			for (int j = 0; j < 3; j++) {
+			for (int j = 0; j < 10; j++) {
 				int randomNum = ThreadLocalRandom.current().nextInt(1, 1 + 1);
 				Date startDate = calendar.getTime();
 				calendar.add(Calendar.HOUR_OF_DAY, randomNum);
 				Date endDate = calendar.getTime();
 				
-				Appointment apponitment = new Appointment(startDate, endDate, j);
+				Appointment apponitment = new Appointment(startDate, endDate, 
+						null, 0);
 				
 				TimeSlotPane[] arr = new TimeSlotPane[2];
 				arr[0] = new EmptySlotPane(new EmptySlot(startDate, endDate));
