@@ -42,4 +42,12 @@ public class Appointment extends TimeSlot {
 		return this.startDate.compareTo(that.endDate);
 	}
 
+	public int getPatientID() {
+		return patientID;
+	}
+
+	public String getPartner() {
+		return partner;
+	}
+
 }

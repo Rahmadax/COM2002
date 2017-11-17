@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 public class HoverListener extends MouseAdapter {
 	
@@ -27,46 +28,56 @@ public class HoverListener extends MouseAdapter {
 	
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		Component component;
-		
-		if (target == null) {
-			component = e.getComponent();
-		} else {
-			component = target;
-		}
-		
-		if (component instanceof JPanel) {
-			component.setBackground(hover);
-		}
-		
-		if (component instanceof JLabel) {
-			component.setForeground(hover);
-		}
-		
-		component.revalidate();
-		component.repaint();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				Component component;
+				
+				if (target == null) {
+					component = e.getComponent();
+				} else {
+					component = target;
+				}
+				
+				if (component instanceof JPanel) {
+					component.setBackground(hover);
+				}
+				
+				if (component instanceof JLabel) {
+					component.setForeground(hover);
+				}
+				
+				component.revalidate();
+				component.repaint();
+			}
+		});
 	}
 	
 	@Override
 	public void mouseExited(MouseEvent e) {
-		Component component;
-		
-		if (target == null) {
-			component = e.getComponent();
-		} else {
-			component = target;
-		}		
-		
-		if (component instanceof JPanel) {
-			component.setBackground(initial);
-		}
-		
-		if (component instanceof JLabel) {
-			component.setForeground(initial);
-		}
-		
-		component.revalidate();
-		component.repaint();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				Component component;
+				
+				if (target == null) {
+					component = e.getComponent();
+				} else {
+					component = target;
+				}		
+				
+				if (component instanceof JPanel) {
+					component.setBackground(initial);
+				}
+				
+				if (component instanceof JLabel) {
+					component.setForeground(initial);
+				}
+				
+				component.revalidate();
+				component.repaint();
+			}
+		});
 	}
 	
 }

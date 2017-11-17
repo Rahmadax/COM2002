@@ -16,11 +16,15 @@ import java.util.Locale;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import ui.custom.CustomButton;
+import ui.popup.LoadingPane;
+import ui.popup.OverlayPane;
 
 public class CalendarPane extends JPanel {
 	
@@ -31,7 +35,7 @@ public class CalendarPane extends JPanel {
 	private static final int PICK_WEEKS_AFTER = 25;
 	
 	private Calendar calendar;
-
+	
 	public CalendarPane(Calendar calendar) {
 		super(new BorderLayout(20, 20));
 		
@@ -40,7 +44,7 @@ public class CalendarPane extends JPanel {
 
 		setBackground(new Color(90, 90, 90));
 		setBorder(new EmptyBorder(20, 20, 20, 20));
-
+		
 		addComponents();
 	}
 
@@ -52,7 +56,13 @@ public class CalendarPane extends JPanel {
 			addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					changeWeek(up);
+					if (up) {
+						calendar.add(Calendar.WEEK_OF_YEAR, 1);
+					} else {
+						calendar.add(Calendar.WEEK_OF_YEAR, -1);
+					}
+					
+					changeWeek(calendar.getTime());
 				}
 			});
 		}
@@ -85,35 +95,25 @@ public class CalendarPane extends JPanel {
 			setPreferredSize(new Dimension(150, 40));
 		}
 	}
-	
-	// change week up or down
-	private void changeWeek(boolean up) {	
-		removeAll();
-		
-		System.out.println(calendar.get(Calendar.DAY_OF_WEEK));
-
-		if (up == true) {
-			calendar.add(Calendar.DAY_OF_MONTH, 7);
-		} else {
-			calendar.add(Calendar.DAY_OF_MONTH, -7);
-		}
-		System.out.println(calendar.get(Calendar.DAY_OF_WEEK));
-
-
-		addComponents();
-		revalidate();
-		repaint();
-	}
 
 	// change week by specific date
 	private void changeWeek(Date date) {
-		removeAll();
-		
-		calendar.setTime(date);
-		
-		addComponents();
-		revalidate();
-		repaint();
+		LoadingPane loadingPane = new LoadingPane(
+				SwingUtilities.getRootPane(this));
+		loadingPane.show();
+
+		Thread queryThread = new Thread() {
+			@Override
+			public void run() {
+				removeAll();
+				
+				calendar.setTime(date);
+				addComponents();
+				
+				loadingPane.hide();
+			}
+	    };
+	    queryThread.start();
 	}
 	
 	// add all content to the week pane
@@ -132,12 +132,23 @@ public class CalendarPane extends JPanel {
 				BorderLayout.SOUTH);
         
 		add(container, BorderLayout.NORTH);
-		add(createDayPane(), BorderLayout.CENTER);
+		revalidate();
+		repaint();
+
+		try {
+			add(createDayPane(), BorderLayout.CENTER);
+			
+			revalidate();
+			repaint();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
-	private JScrollPane createDayPane() {
-		JScrollPane dayPane = new JScrollPane(new DayPane((Calendar) 
-				calendar.clone()));
+	private JScrollPane createDayPane() throws Exception {
+		JScrollPane dayPane = new JScrollPane(
+				new DayPane((Calendar) calendar.clone()));
+		
 		dayPane.setOpaque(false);
 		dayPane.setBorder(new LineBorder(new Color(255, 160, 0), 1));
 		dayPane.getVerticalScrollBar().setUnitIncrement(16);;

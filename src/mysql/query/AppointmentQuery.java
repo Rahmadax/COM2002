@@ -10,7 +10,7 @@ import mysql.MySQLAccess;
 
 public class AppointmentQuery extends QuerySQL {
 
-	protected AppointmentQuery(MySQLAccess access) {
+	public AppointmentQuery(MySQLAccess access) {
 		super(access);
 	}
 	
@@ -35,6 +35,8 @@ public class AppointmentQuery extends QuerySQL {
 					createDate(date, startTime), createDate(date, endTime), 
 					partner, patientID);
 		}
+
+		close();
 		
 		return appointments;
 	}

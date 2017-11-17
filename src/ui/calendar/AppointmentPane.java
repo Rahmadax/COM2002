@@ -47,9 +47,11 @@ public class AppointmentPane extends TimeSlotPane {
 				JPanel panel = (JPanel) e.getSource();
 				JRootPane rootPane = SwingUtilities.getRootPane(panel);
 
-				overlay = new OverlayPane(rootPane, detailsPane, panel);
+				overlay = new OverlayPane(rootPane, detailsPane);
 				overlay.setTitle("Appointment", "12 December 1999");
+				overlay.setTrigger(panel);
 				overlay.show();
+				
 				panel.removeMouseListener(this);
 			}
 		});
@@ -95,7 +97,7 @@ public class AppointmentPane extends TimeSlotPane {
 	}
 	
 	private JPanel createContentPane() {
-		JLabel patientName = new JLabel("John Smith");
+		JLabel patientName = new JLabel(new Integer(appointment.getPatientID()).toString());
 		patientName.setFont(new Font("Aller", Font.BOLD, 14));
 		patientName.setForeground(new Color(80, 50, 0));
 		

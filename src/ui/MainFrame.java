@@ -18,11 +18,18 @@ import ui.custom.tabbedpane.TitleTabStyle;
 
 public class MainFrame extends JFrame {
 	
+	public static MainFrame program;
+	public static SplashScreen splashScreen;
+	
 	public static void main(String[] args) {
+		splashScreen = new SplashScreen();
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				MainFrame app = new MainFrame();
-		        app.setVisible(true);
+				program = new MainFrame();
+				
+				splashScreen.setVisible(false);
+				program.setVisible(true);
 			}
 	    });
 	}
@@ -34,8 +41,6 @@ public class MainFrame extends JFrame {
 	    setMinimumSize(new Dimension(1024, 768));
 
 	    addComponents();
-	    
-	    setVisible(true);
 	}
 	
 	private void addComponents() {
@@ -57,7 +62,7 @@ public class MainFrame extends JFrame {
 	private JPanel createContentPane() {
 		// initialize tabs objects
 	    CustomTabbedPane mainTabbedPane = new CustomTabbedPane(new TitleTabStyle());
-	    CustomTabbedPane calendarTabbedPane = new CustomTabbedPane();
+	    CustomTabbedPane calendarTabbedPane	 = new CustomTabbedPane();
 	    JPanel mainTabsPane = mainTabbedPane.getTabsInstance();
 	    JPanel calendarTabsPane = calendarTabbedPane.getTabsInstance();
 	    
@@ -67,8 +72,8 @@ public class MainFrame extends JFrame {
 	    
 	    // add main tabs
 	    mainTabbedPane.addTab("Calendar", calendarTabbedPane);
-	    mainTabbedPane.addTab("Register", new CalendarPane(Calendar.getInstance(Locale.UK)));
-	    mainTabbedPane.addTab("Find", new CalendarPane(Calendar.getInstance(Locale.UK)));
+	    mainTabbedPane.addTab("Register", new JPanel());
+	    mainTabbedPane.addTab("Find", new JPanel());
 	    
 	    // remove standard location of tabs
 	    mainTabbedPane.remove(mainTabsPane);

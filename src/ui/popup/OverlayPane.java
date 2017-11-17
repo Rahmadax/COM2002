@@ -23,19 +23,57 @@ import ui.custom.CustomButton;
 
 public class OverlayPane extends PopupPane {
 
+	public static final int DEFAULT_STYLE = 0;
+	public static final int ERROR_STYLE = 1;
+	public static final int SUCCESS_STYLE = 2;
+	public static final int LOADING_STYLE = 3;
+	
+	private int minWidth = 600;
+	private int minHeignt = 400;
+	private int scale = 2;
+	
+	private JPanel mainPane;
 	private JPanel contentPane;
+	private JPanel titlePane;
 	
 	private ComponentAdapter resizeListener;
 	private MouseAdapter closeListener;
+	private OverlayStyle.Style style;
 	
-	public OverlayPane(JRootPane rootPane, JPanel panel, JPanel trigger) {
+	public OverlayPane(JRootPane rootPane, JPanel contentPane, int style) {
 		super(rootPane);
-		
-		contentPane = createContentPane(panel);
+
+		this.style = getStyle(style);
+		this.contentPane = contentPane;
+		mainPane = createMainPane();
 		
 		resizeListener = createResizeListener();
 		closeListener = createCloseListener();
+		
+		setLayout(null);
+		add(mainPane);
 
+		setBackground(new Color(0, 0, 0, 127));
+		setBounds(glass.getBounds());
+	}
+	
+	public OverlayPane(JRootPane rootPane, JPanel contentPane) {
+		this(rootPane, contentPane, DEFAULT_STYLE);
+	}
+	
+	public void setMinWidth(int minWidth) {
+		this.minWidth = minWidth;
+	}
+	
+	public void setMinHeight(int minHeignt) {
+		this.minHeignt = minHeignt;
+	}
+
+	public void setScale(int scale) {
+		this.scale = scale;
+	}
+	
+	public void setTrigger(JPanel trigger) {
 		OverlayPane overlay = this;
 		trigger.addMouseListener(new MouseAdapter() {
 			@Override
@@ -47,17 +85,14 @@ public class OverlayPane extends PopupPane {
 				}
 			}
 		});
-		
-		setLayout(null);
-		add(contentPane);
-
-		setBackground(new Color(0, 0, 0, 127));
-		setBounds(glass.getBounds());
 	}
 
 	public void show() {		
 		glass.addComponentListener(resizeListener);
-		glass.addMouseListener(closeListener);
+		
+		if (closeListener != null) {
+			glass.addMouseListener(closeListener);			
+		}
 
 		recalculateBounds();
 
@@ -67,13 +102,52 @@ public class OverlayPane extends PopupPane {
 	@Override
 	public void hide() {
 		glass.removeComponentListener(resizeListener);
-		glass.removeMouseListener(closeListener);
+		
+		if (closeListener != null) {
+			glass.removeMouseListener(closeListener);			
+		}
 		
 		super.hide();
 	}
 	
+	public void disableTitlePane() {
+		mainPane.remove(titlePane);
+	}
+	
+	public void disableOutOfBoundsClose() {
+		closeListener = new MouseAdapter() {};
+	}
+	
 	public void setTitle(String main, String second) {
-		contentPane.add(createTitlePane(main, second), BorderLayout.NORTH);
+		titlePane = createTitlePane(main, second);
+		
+		mainPane.add(titlePane, BorderLayout.NORTH);
+		
+		mainPane.setBorder(new CompoundBorder(
+				new MatteBorder(2, 0, 0, 0, new Color(255, 160, 0)),
+				new MatteBorder(0, 0, 20, 0, new Color(80, 80, 80)))
+				);
+	}
+	
+	private OverlayStyle.Style getStyle(int styleIndex) {
+		OverlayStyle.Style style = null;
+		
+		switch (styleIndex) {
+		case 0:
+			style = new OverlayStyle.DefaultStyle();
+			break;
+		case 1:
+			style = new OverlayStyle.ErrorStyle();
+			break;
+		case 2:
+			style = new OverlayStyle.SuccessStyle();
+			break;
+		case 3:
+			style = new OverlayStyle.LoadingStyle();
+			break;
+		}
+
+		return style;
 	}
 
 	private ComponentAdapter createResizeListener() {
@@ -82,8 +156,8 @@ public class OverlayPane extends PopupPane {
 			public void componentResized(ComponentEvent e) {
 				recalculateBounds();
 				
-				contentPane.revalidate();
-				contentPane.repaint();
+				mainPane.revalidate();
+				mainPane.repaint();
 			}
 		};
 	}
@@ -93,7 +167,7 @@ public class OverlayPane extends PopupPane {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				Point click = e.getPoint();
-				Rectangle bounds = contentPane.getBounds();
+				Rectangle bounds = mainPane.getBounds();
 				
 				if (click.x < bounds.x || click.y < bounds.y || 
 						click.x > bounds.x + bounds.width ||
@@ -104,18 +178,22 @@ public class OverlayPane extends PopupPane {
 		};
 	}
 	
-	private JPanel createContentPane(JPanel panel) {		
-		JPanel contentPane = new JPanel(new BorderLayout());
-		contentPane.setBackground(new Color(200, 200, 200));
-		contentPane.setBorder(new CompoundBorder(
-				new MatteBorder(2, 0, 0, 0, new Color(255, 160, 0)),
-				new MatteBorder(0, 0, 20, 0, new Color(80, 80, 80)))
+	private JPanel createMainPane() {		
+		JPanel mainPane = new JPanel(new BorderLayout());
+		mainPane.setBackground(new Color(200, 200, 200));
+		mainPane.setBorder(new CompoundBorder(
+				new MatteBorder(2, 0, 0, 0, style.TOP_BORDER),
+				new MatteBorder(30, 0, 20, 0, new Color(80, 80, 80)))
 				);
 		
-		contentPane.add(createTitlePane("", ""), BorderLayout.NORTH);
-		contentPane.add(panel, BorderLayout.CENTER);
+		titlePane = createTitlePane("", "");
 		
-		return contentPane;
+		mainPane.setPreferredSize(new Dimension(minWidth, minHeignt));
+		
+		mainPane.add(titlePane, BorderLayout.NORTH);
+		mainPane.add(contentPane, BorderLayout.CENTER);
+		
+		return mainPane;
 	}
 	
 	private JPanel createTitlePane(String main, String second) {
@@ -135,7 +213,7 @@ public class OverlayPane extends PopupPane {
 		
 		JLabel title = new JLabel(main);
 		Font large = new Font("serif", Font.BOLD, 25);
-		title.setForeground(new Color(230, 130, 0));
+		title.setForeground(style.TITLE_COLOR);
 		title.setFont(large);
 		
 		JLabel date = new JLabel(second);
@@ -167,13 +245,22 @@ public class OverlayPane extends PopupPane {
 	
 	private void recalculateBounds() {
 		Rectangle bounds = glass.getBounds();
-		int width = Math.max(bounds.width / 2, 600);
-		int height = Math.max(bounds.height / 2, 400);
+		int width, height;
 		
-		setBounds(bounds);
-		contentPane.setBounds(
+		if (scale != 0) {
+			width = Math.max(bounds.width / scale, minWidth);
+			height = Math.max(bounds.height / scale, minHeignt);
+		} else {
+			width = minWidth;
+			height = minHeignt;
+		}
+
+		mainPane.setBounds(
 				(bounds.width - width) / 2, (bounds.height - height) / 2,
 				width, height);
+
+		
+		setBounds(bounds);
 	}
 
 }
