@@ -2,40 +2,31 @@ package ui.calendar;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import calendar.Appointment;
 import calendar.AppointmentComparator;
-import calendar.EmptySlot;
 import mysql.MySQLAccess;
 import mysql.query.AppointmentQuery;
 import ui.MainFrame;
+import ui.popup.ErrorPane;
 
 public class DayPane extends JPanel {
 	
 	private static final int GAP_BETWEEN_APPOINTMENTS = 2;
 	private static final int GAP_BETWEEN_DAYS = 4;
 
-	public DayPane(Calendar calendar) throws Exception {
+	public DayPane(Calendar calendar) {
 		super();
 		calendar.set(Calendar.DAY_OF_WEEK, 2);
 
@@ -77,7 +68,22 @@ public class DayPane extends JPanel {
 				calendar.add(Calendar.DAY_OF_YEAR, 1);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+			JPanel glassPane = (JPanel) rootPane.getGlassPane();
+			boolean already = false;
+			
+			for (Component component: glassPane.getComponents()) {
+				if (component instanceof ErrorPane) {
+					already = true;
+					break;
+				}
+			}
+
+			if (!already) {
+				ErrorPane error = new ErrorPane(rootPane,
+						"Unable to connect to the database.");
+				error.show();
+			}
 		}
 
 		revalidate();

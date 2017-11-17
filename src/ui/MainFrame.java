@@ -27,36 +27,41 @@ public class MainFrame extends JFrame {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				program = new MainFrame();
-				
-				splashScreen.setVisible(false);
-				program.setVisible(true);
 			}
 	    });
 	}
 	
 	private MainFrame() {
-		setTitle("set title here");
+		setTitle("Sheffield Dental Care");
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setResizable(true);
 	    setMinimumSize(new Dimension(1024, 768));
 
-	    addComponents();
+	    SwingUtilities.invokeLater(new Runnable () {
+	    	@Override
+	    	public void run() {
+	    		addComponents();
+	    		
+	    		splashScreen.setVisible(false);
+				program.setVisible(true);
+	    	}
+	    });
 	}
 	
 	private void addComponents() {
 		// initialize root pane for pop-ups
 		JRootPane rootPane = new JRootPane();
-	    
-	    // main frame container to support custom pop-ups
-	    rootPane.setContentPane(createContentPane());
-	    
-	    // glass pane for pop-ups
+		
+		// glass pane for pop-ups
 	    JPanel glass = (JPanel) rootPane.getGlassPane();
 	    glass.setLayout(null);
 	    glass.setVisible(true);
 	    
 	    // add the calendar pane with the current date
-	    add(rootPane);
+	    setContentPane(rootPane);
+	    
+	    // main frame container to support custom pop-ups
+	    rootPane.setContentPane(createContentPane());
 	}
 	
 	private JPanel createContentPane() {

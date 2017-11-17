@@ -124,7 +124,7 @@ public class OverlayPane extends PopupPane {
 		mainPane.add(titlePane, BorderLayout.NORTH);
 		
 		mainPane.setBorder(new CompoundBorder(
-				new MatteBorder(2, 0, 0, 0, new Color(255, 160, 0)),
+				new MatteBorder(2, 0, 0, 0, style.TOP_BORDER),
 				new MatteBorder(0, 0, 20, 0, new Color(80, 80, 80)))
 				);
 	}
@@ -186,7 +186,7 @@ public class OverlayPane extends PopupPane {
 				new MatteBorder(30, 0, 20, 0, new Color(80, 80, 80)))
 				);
 		
-		titlePane = createTitlePane("", "");
+		titlePane = new JPanel();
 		
 		mainPane.setPreferredSize(new Dimension(minWidth, minHeignt));
 		

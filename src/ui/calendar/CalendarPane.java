@@ -145,7 +145,7 @@ public class CalendarPane extends JPanel {
 		}
 	}
 	
-	private JScrollPane createDayPane() throws Exception {
+	private JScrollPane createDayPane() {
 		JScrollPane dayPane = new JScrollPane(
 				new DayPane((Calendar) calendar.clone()));
 		

@@ -13,7 +13,7 @@ public class AppointmentQuery extends QuerySQL {
 	public AppointmentQuery(MySQLAccess access) {
 		super(access);
 	}
-	
+
 	public Appointment[] get(Date date) throws Exception {
 		preparedStatement = connect.prepareStatement(
 				"SELECT * FROM Appointments WHERE AppointmentDate = ?;");
