@@ -1,5 +1,6 @@
 package mysql.query;
 
+import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,12 +42,43 @@ public class AppointmentQuery extends QuerySQL {
 		return appointments;
 	}
 
-	public void add() {
+	public void add(String AppointmentDate, String StartTime, String Partner, String EndTime, int Empty, int PatientID) throws Exception {
 		
+		String appDate = AppointmentDate;
+		String startTime = StartTime;
+		String partner = Partner;
+		String endTime = EndTime;
+		int empty = Empty;
+		int patID = PatientID;
+		
+		try {
+			PreparedStatement insert = connect.prepareStatement("INSERT INTO Appoitment (AppointmentDate, StartTime, Partner, EndTime, Empty, PatientID) "
+					+ "VALUES (SELECT CONVERT(date, '+appDate+'), SELECT CONVERT(time, '+startTime+'), '+partner+', SELECT CONVERT(time, '+endTime+'), '+empty+', '+patientID+')"); 
+			insert.executeUpdate();
+		} catch (Exception e) {System.out.println(e);}
+		finally {
+			System.out.println("Insert Completed");
+		}
 	}
 	
-	public void remove() {
+	public void remove(int PatientID, String AppointmentDate) throws Exception {
 		
+		int patID = PatientID; 
+		String appDate = AppointmentDate;
+		
+		try {
+			PreparedStatement delete = connect.prepareStatement("DELETE FROM Appointment"
+					+ "WHERE PatientID = ? and AppointmentDate = ?");
+			
+			delete.setInt(1, patID);
+			delete.setString(2,  appDate);
+			
+			delete.executeUpdate();
+			
+		} catch (Exception e) {System.out.println(e);}
+		finally {
+			System.out.println("Deletion Completed");
+		}
 	}
 	
 	private Date createDate(Date date, Time time) {
