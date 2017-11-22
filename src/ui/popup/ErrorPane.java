@@ -14,9 +14,7 @@ public class ErrorPane extends OverlayPane {
 
 		setTitle("Error", reason);
 		disableOutOfBoundsClose();
-		setMinWidth(400);
-		setMinHeight(100);
-		setScale(0);
+		setConstraints(400, 100, 0, 0);
 	}
 	
 	private static JPanel createErrorPane() {

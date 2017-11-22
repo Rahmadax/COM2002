@@ -25,12 +25,6 @@ public class AppointmentPane extends TimeSlotPane {
 	
 	private static final Color BACKGROUND_COLOR = new Color(255, 200, 100);
 	private static final Color HOVER_COLOR = new Color(255, 180, 80);
-	
-	// overlay pane instance to show the appointment details
-	private OverlayPane overlay;
-	
-	// the appointment details pane
-	private AppointmentDetailsPane detailsPane;
 
 	private Appointment appointment;
 
@@ -38,7 +32,6 @@ public class AppointmentPane extends TimeSlotPane {
 		super(appointment);
 		
 		this.appointment = appointment;
-		detailsPane = new AppointmentDetailsPane(appointment);
 		
 		addMouseListener(new HoverListener(BACKGROUND_COLOR, HOVER_COLOR));
 		addMouseListener(new MouseAdapter() {
@@ -47,12 +40,15 @@ public class AppointmentPane extends TimeSlotPane {
 				JPanel panel = (JPanel) e.getSource();
 				JRootPane rootPane = SwingUtilities.getRootPane(panel);
 
-				overlay = new OverlayPane(rootPane, detailsPane);
-				overlay.setTitle("Appointment", "12 December 1999");
-				overlay.setTrigger(panel);
-				overlay.show();
+				SimpleDateFormat dateFormatter = 
+						new SimpleDateFormat("d MMMM yyyy");
 				
-				panel.removeMouseListener(this);
+				OverlayPane overlay = new OverlayPane(rootPane, 
+						new AppointmentDetailsPane(appointment));
+				overlay.setTitle("Appointment", 
+						dateFormatter.format(appointment.getStartDate()));
+				overlay.setConstraints(650, 500, 2, 1.9);
+				overlay.show();
 			}
 		});
 		

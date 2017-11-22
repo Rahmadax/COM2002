@@ -15,23 +15,24 @@ import javax.swing.SwingUtilities;
 import ui.calendar.CalendarPane;
 import ui.custom.tabbedpane.CustomTabbedPane;
 import ui.custom.tabbedpane.TitleTabStyle;
+import ui.popup.PopupPane;
 
 public class MainFrame extends JFrame {
 	
 	public static MainFrame program;
 	public static SplashScreen splashScreen;
-	
-	public static void main(String[] args) {
-		splashScreen = new SplashScreen();
+	public static ModeUI mode;
+
+	public MainFrame(ModeUI mode) {
+		MainFrame.mode = mode;
 		
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				program = new MainFrame();
-			}
-	    });
+		new MainFrame();
 	}
-	
+
 	private MainFrame() {
+		splashScreen = new SplashScreen();
+		program = this;
+
 		setTitle("Sheffield Dental Care");
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setResizable(true);
@@ -57,7 +58,6 @@ public class MainFrame extends JFrame {
 	    glass.setLayout(null);
 	    glass.setVisible(true);
 	    
-	    // add the calendar pane with the current date
 	    setContentPane(rootPane);
 	    
 	    // main frame container to support custom pop-ups
@@ -77,8 +77,11 @@ public class MainFrame extends JFrame {
 	    
 	    // add main tabs
 	    mainTabbedPane.addTab("Calendar", calendarTabbedPane);
-	    mainTabbedPane.addTab("Register", new JPanel());
-	    mainTabbedPane.addTab("Find", new JPanel());
+	    
+	    if (mode == ModeUI.SECRETARY) {
+	    	mainTabbedPane.addTab("Register", new JPanel());
+		    mainTabbedPane.addTab("Find", new JPanel());
+	    }
 	    
 	    // remove standard location of tabs
 	    mainTabbedPane.remove(mainTabsPane);

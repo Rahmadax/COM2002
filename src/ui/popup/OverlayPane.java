@@ -19,7 +19,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
-import ui.custom.CustomButton;
+import ui.custom.button.CustomButton;
 
 public class OverlayPane extends PopupPane {
 
@@ -30,7 +30,8 @@ public class OverlayPane extends PopupPane {
 	
 	private int minWidth = 600;
 	private int minHeignt = 400;
-	private int scale = 2;
+	private double scaleX = 2;
+	private double scaleY = 2;
 	
 	private JPanel mainPane;
 	private JPanel contentPane;
@@ -61,18 +62,14 @@ public class OverlayPane extends PopupPane {
 		this(rootPane, contentPane, DEFAULT_STYLE);
 	}
 	
-	public void setMinWidth(int minWidth) {
+	public void setConstraints(int minWidth, int minHeignt, 
+			double scaleX, double scaleY) {
 		this.minWidth = minWidth;
-	}
-	
-	public void setMinHeight(int minHeignt) {
 		this.minHeignt = minHeignt;
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
 	}
 
-	public void setScale(int scale) {
-		this.scale = scale;
-	}
-	
 	public void setTrigger(JPanel trigger) {
 		OverlayPane overlay = this;
 		trigger.addMouseListener(new MouseAdapter() {
@@ -230,7 +227,8 @@ public class OverlayPane extends PopupPane {
 	}
 	
 	private CustomButton createCloseButton() {
-		CustomButton closeButton = new CustomButton("x", CustomButton.REVERSED);
+		CustomButton closeButton = 
+				new CustomButton("x", CustomButton.REVERSED_STYLE);
 		closeButton.setPreferredSize(new Dimension(45, 45));
 		
 		closeButton.addMouseListener(new MouseAdapter() {
@@ -247,11 +245,15 @@ public class OverlayPane extends PopupPane {
 		Rectangle bounds = glass.getBounds();
 		int width, height;
 		
-		if (scale != 0) {
-			width = Math.max(bounds.width / scale, minWidth);
-			height = Math.max(bounds.height / scale, minHeignt);
+		if (scaleX != 0) {
+			width = (int) Math.max(bounds.width / scaleX, minWidth);
 		} else {
 			width = minWidth;
+		}
+		
+		if (scaleY != 0) {
+			height = (int) Math.max(bounds.height / scaleY, minHeignt);
+		} else {
 			height = minHeignt;
 		}
 

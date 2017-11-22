@@ -21,26 +21,21 @@ public class LoadingPane extends OverlayPane {
 
 		disableTitlePane();
 		disableOutOfBoundsClose();
-		setMinWidth(400);
-		setMinHeight(210);
-		setScale(0);
+		setConstraints(400, 210, 0, 0);
 	}
 	
 	private static JPanel createLoadingPane() {
 		JPanel loadingPane = new JPanel();
 		loadingPane.setBackground(new Color(100, 100, 100));
 		
-		ImageIcon image = new ImageIcon();
-		try {
-			image = new ImageIcon(
-					new URL("https://image.ibb.co/kKveL6/ajax_loader_1.gif"));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+		String loadingImagePath = 
+				System.getProperty("user.dir") + "\\lib\\images\\loading.gif";
+		
+		ImageIcon image = new ImageIcon(loadingImagePath);
     	Image scaleImage = image.getImage().getScaledInstance(
     			150, 150,Image.SCALE_DEFAULT);	 
     	image.setImage(scaleImage);
-		
+
 		loadingPane.add(new JLabel(image));
 		
 		return loadingPane;

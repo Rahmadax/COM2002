@@ -22,7 +22,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import ui.custom.CustomButton;
+import ui.MainFrame;
+import ui.ModeUI;
+import ui.custom.CustomComboBox;
+import ui.custom.button.CustomButton;
 import ui.popup.LoadingPane;
 import ui.popup.OverlayPane;
 
@@ -69,13 +72,12 @@ public class CalendarPane extends JPanel {
 	}
 	
 	// control combo box class to select a desired week
-	private class DatePicker extends JComboBox {
+	private class DatePicker extends CustomComboBox {
 		DatePicker(String[] strs) {
 			super(strs);
-
-			setFocusable(false);
-			setSelectedIndex(PICK_WEEKS_BEFORE);
 						
+			setSelectedIndex(PICK_WEEKS_BEFORE);
+			
 			addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -88,10 +90,7 @@ public class CalendarPane extends JPanel {
 					}
 				}
 			});
-
-			setFont(new Font("Serif", Font.BOLD, 20));
-			setBackground(new Color(80, 80, 80));
-			setForeground(new Color(255, 160, 0));
+			
 			setPreferredSize(new Dimension(150, 40));
 		}
 	}
@@ -121,10 +120,21 @@ public class CalendarPane extends JPanel {
 		JPanel container = new JPanel();
 		container.setOpaque(false);
 		container.setLayout(new BorderLayout(0, 10));
-		container.add(createBookButton(), BorderLayout.WEST);
+		
+		if (MainFrame.mode == ModeUI.SECRETARY) {
+			container.add(createBookButton(), BorderLayout.WEST);
+		}
 		
 		if (!isDateInCurrentWeek(calendar.getTime())) {
-			container.add(createBackButton(), BorderLayout.CENTER);
+			String alignment;
+			
+			if (MainFrame.mode == ModeUI.SECRETARY) {
+				alignment = BorderLayout.CENTER;
+			} else {
+				alignment = BorderLayout.WEST;
+			}
+			
+			container.add(createBackButton(), alignment);
 		}
 		
 		container.add(createControlPane(), BorderLayout.EAST);
@@ -187,9 +197,9 @@ public class CalendarPane extends JPanel {
 	
 	private JPanel createBookButton() {
 		CustomButton bookButton = new CustomButton("Book appoitnment", 
-				CustomButton.REVERSED);
+				CustomButton.REVERSED_STYLE);
 		bookButton.setPreferredSize(new Dimension(200, 40));
-		
+
 		JPanel bookPane = new JPanel();
 		bookPane.setOpaque(false);
 		bookPane.add(bookButton);

@@ -33,6 +33,8 @@ public class DayPane extends JPanel {
 		setLayout(new GridLayout(1, 5));
 
 		try {
+			MySQLAccess access = new MySQLAccess();
+			
 			// add day panes for all week days
 			for (int i = 0; i < 5; i++) {
 				// anchor pane for top alignment
@@ -47,12 +49,10 @@ public class DayPane extends JPanel {
 				// add horizontal gap between appointments
 				dayContainer.setBorder(
 						new EmptyBorder(0, GAP_BETWEEN_DAYS / 2, 0, GAP_BETWEEN_DAYS / 2));
-
-				MySQLAccess access = new MySQLAccess();
+				
 				AppointmentQuery appointmentQuery = new AppointmentQuery(access);
 				Appointment[] appointments = appointmentQuery.get(calendar.getTime());
 				Arrays.sort(appointments, new AppointmentComparator());
-				access.close();
 				
 				for (int j = 0; j < appointments.length; j++) {				
 					dayContainer.add(new AppointmentPane(appointments[j]));
@@ -66,7 +66,10 @@ public class DayPane extends JPanel {
 				add(anchorTopContainer);
 				
 				calendar.add(Calendar.DAY_OF_YEAR, 1);
+				
 			}
+			
+			access.close();
 		} catch (Exception e) {
 			JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 			JPanel glassPane = (JPanel) rootPane.getGlassPane();
