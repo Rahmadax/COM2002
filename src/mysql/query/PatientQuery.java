@@ -10,7 +10,7 @@ public final class PatientQuery extends QuerySQL {
 		super(access);
 	}
 
-	public String get(Int ID) throws Exception {
+	public String getPatientName(int ID) throws Exception {
         preparedStatement = connect.prepareStatement(
             "SELECT * FROM Patients WHERE PatientID = ID;");
         resultSet = preparedStatement.executeQuery();

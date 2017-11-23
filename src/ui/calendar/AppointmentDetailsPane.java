@@ -27,6 +27,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import calendar.Appointment;
+import mysql.query.PatientQuery;
 import ui.MainFrame;
 import ui.ModeUI;
 import ui.custom.CustomComboBox;
@@ -73,11 +74,11 @@ public class AppointmentDetailsPane extends JPanel {
 		JPanel leftPane = new JPanel();
 		leftPane.setOpaque(false);
 		leftPane.setLayout(new BoxLayout(leftPane, BoxLayout.Y_AXIS));
-		
+
 		JPanel patientPane = new JPanel();
 		patientPane.setOpaque(false);
 		patientPane.add(new JLabel("Patient: "));
-		patientPane.add(new JLabel(new Integer(appointment.getPatientID()).toString()));
+		patientPane.add(new JLabel(Integer.toString(appointment.getPatientID())));
 		
 		JPanel partnerPane = new JPanel();
 		partnerPane.setOpaque(false);
