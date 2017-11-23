@@ -1,6 +1,7 @@
 package ui.custom;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
@@ -19,20 +20,22 @@ public class CustomTextField extends JTextField{
 	
 	public CustomTextField(String replacement, int columns) {
 		super(replacement, columns);
-		
+
 		setForeground(LIGHT_GRAY);
 		setBackground(DARK_GRAY);
 		setBorder(new CompoundBorder(
-				new LineBorder(GRAY, 1),
-				new EmptyBorder(0, 5, 0, 0)));
+				new LineBorder(LIGHT_GRAY, 1),
+				new EmptyBorder(5, 10, 5, 10)));
+		
+		setFont(new Font(getFont().getFontName(), Font.BOLD, 15));
 				
 		addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				setBackground(DARK_GRAY);
 				setBorder(new CompoundBorder(
-						new LineBorder(GRAY, 1),
-						new EmptyBorder(0, 5, 0, 5)));
+						new LineBorder(LIGHT_GRAY, 1),
+						new EmptyBorder(5, 10, 5, 10)));
 				
 				if (getText().equals("")) {
 					setForeground(LIGHT_GRAY);
@@ -46,7 +49,7 @@ public class CustomTextField extends JTextField{
 				setBackground(GRAY);
 				setBorder(new CompoundBorder(
 						new LineBorder(ORANGE, 1),
-						new EmptyBorder(0, 5, 0, 5)));
+						new EmptyBorder(5, 10, 5, 10)));
 				
 				if (getText().equals(replacement)) {
 					setText("");

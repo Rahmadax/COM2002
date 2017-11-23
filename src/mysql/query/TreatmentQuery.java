@@ -1,5 +1,9 @@
 package mysql.query;
 
+import java.sql.SQLException;
+import java.sql.Time;
+
+import calendar.Appointment;
 import mysql.MySQLAccess;
 
 public class TreatmentQuery extends QuerySQL {
@@ -8,8 +12,8 @@ public class TreatmentQuery extends QuerySQL {
 		super(access);
 	}
 
-	public void get() {
-		
+	public void get(String date, String startTime, String partner) throws Exception {
+
 	}
 	
 	public void add() {

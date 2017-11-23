@@ -15,6 +15,8 @@ import javax.swing.SwingUtilities;
 import ui.calendar.CalendarPane;
 import ui.custom.tabbedpane.CustomTabbedPane;
 import ui.custom.tabbedpane.TitleTabStyle;
+import ui.form.book.BookPane;
+import ui.form.register.RegisterPane;
 import ui.popup.PopupPane;
 
 public class MainFrame extends JFrame {
@@ -79,8 +81,9 @@ public class MainFrame extends JFrame {
 	    mainTabbedPane.addTab("Calendar", calendarTabbedPane);
 	    
 	    if (mode == ModeUI.SECRETARY) {
-	    	mainTabbedPane.addTab("Register", new JPanel());
+	    	mainTabbedPane.addTab("Register", new RegisterPane());
 		    mainTabbedPane.addTab("Find", new JPanel());
+		    mainTabbedPane.addTab("Book", new BookPane());
 	    }
 	    
 	    // remove standard location of tabs

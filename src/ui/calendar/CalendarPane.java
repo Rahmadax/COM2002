@@ -180,7 +180,6 @@ public class CalendarPane extends JPanel {
 	
 	private JPanel createBackButton() {
 		CustomButton backButton = new CustomButton("Back to current week");
-		backButton.setPreferredSize(new Dimension(230, 40));
 		backButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -198,7 +197,6 @@ public class CalendarPane extends JPanel {
 	private JPanel createBookButton() {
 		CustomButton bookButton = new CustomButton("Book appoitnment", 
 				CustomButton.REVERSED_STYLE);
-		bookButton.setPreferredSize(new Dimension(200, 40));
 
 		JPanel bookPane = new JPanel();
 		bookPane.setOpaque(false);
