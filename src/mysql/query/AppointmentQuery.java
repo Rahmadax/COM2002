@@ -64,17 +64,14 @@ public class AppointmentQuery extends QuerySQL {
 		close();
 	}
 	
-	public void remove(int PatientID, String AppointmentDate) throws Exception {
-		int patID = PatientID; 
-		String appDate = AppointmentDate;
+	public void remove(int patID, String appDate) throws Exception {
 		
 		try {
-			PreparedStatement delete = connect.prepareStatement("DELETE FROM Appointment"
-					+ "WHERE PatientID = ? and AppointmentDate = ?");
+			PreparedStatement useDB = connect.prepareStatement("USE team049;");
+			PreparedStatement delete = connect.prepareStatement("DELETE FROM Appointments"
+					+ "WHERE PatientID = "+patID+ " and AppointmentDate = '"+appDate+"');");
 			
-			delete.setInt(1, patID);
-			delete.setString(2,  appDate);
-			
+			useDB.executeUpdate();
 			delete.executeUpdate();
 			
 		} catch (Exception e) {System.out.println(e);}
