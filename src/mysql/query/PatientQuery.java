@@ -19,40 +19,30 @@ public final class PatientQuery extends QuerySQL {
 		return resultSet.getString("FirstName");
 	}
 	
-	public void add(int PatientID, String FirstName, String LastName, String DOB, int ContactNumber, int HouseNumber, String PostCode) throws Exception {
-		
-		int patID = PatientID;
-		String fName = FirstName;
-		String lName = LastName;
-		String dob = DOB;
-		int cNumber = ContactNumber;
-		int hNumber = HouseNumber;
-		String pCode = PostCode;
+	public void add(int patID, String firstName, String lastName, String dob, int contactNumber, int houseNumber, String postCode) throws Exception {
 		
 		try {
-			PreparedStatement insert = connect.prepareStatement("INSERT INTO Patient (PatientID, FirstName, LastName, DOB, ContactNumber, HouseNumber, PostCode) "
-					+ "VALUES '+patID+', '+fName+', '+lName+', SELECT CONVERT (date, '+dob+'), '+cNumber+', '+hNumber+', '+pCode+')"); 
+			PreparedStatement useDB = connect.prepareStatement("USE team049;");
+			PreparedStatement insert = connect.prepareStatement("INSERT INTO Patients VALUES ("
+					+patID+ ", '" +firstName+ "', '" +lastName+ "', '" +dob+ "', " +contactNumber+ ", " +houseNumber+ ", '" +postCode+ "');");
+			
+			useDB. executeUpdate();
 			insert.executeUpdate();
+			    
 		} catch (Exception e) {System.out.println(e);}
 		finally {
 			System.out.println("Insert Completed");
 		}
 	}
 
-	public void edit() {
-		
-	}
-
-	public void remove(int PatientID) throws Exception {
-		
-		int patID = PatientID; 
+	public void remove(int patID) throws Exception {
 		
 		try {
-			PreparedStatement delete = connect.prepareStatement("DELETE FROM Patient"
-					+ "WHERE PatientID = ?");
+			PreparedStatement useDB = connect.prepareStatement("USE team049;");
+			PreparedStatement delete = connect.prepareStatement("DELETE FROM Patients"
+					+ " WHERE PatientID = " +patID+ ";");
 			
-			delete.setInt(1, patID);
-			
+			useDB.executeUpdate();
 			delete.executeUpdate();
 			
 		} catch (Exception e) {System.out.println(e);}
