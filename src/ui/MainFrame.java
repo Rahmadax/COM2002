@@ -3,6 +3,9 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -10,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import ui.calendar.CalendarPane;
@@ -22,8 +26,15 @@ import ui.popup.PopupPane;
 public class MainFrame extends JFrame {
 	
 	public static MainFrame program;
+	
 	public static SplashScreen splashScreen;
 	public static ModeUI mode;
+	
+	public static CustomTabbedPane mainMenu;
+	public static int MENU_CALENDAR_INDEX = 0;
+	public static int MENU_REGISTER_INDEX = 1;
+	public static int MENU_FIND_INDEX = 2;
+	public static int MENU_BOOK_INDEX = 3;
 
 	public MainFrame(ModeUI mode) {
 		MainFrame.mode = mode;
@@ -76,7 +87,7 @@ public class MainFrame extends JFrame {
 	    // add calendar tabs
 	    calendarTabbedPane.addTab("Dentist", new CalendarPane(Calendar.getInstance(Locale.UK)));
 	    calendarTabbedPane.addTab("Hygienist", new CalendarPane(Calendar.getInstance(Locale.UK)));
-	    
+
 	    // add main tabs
 	    mainTabbedPane.addTab("Calendar", calendarTabbedPane);
 	    
@@ -85,6 +96,8 @@ public class MainFrame extends JFrame {
 		    mainTabbedPane.addTab("Find", new JPanel());
 		    mainTabbedPane.addTab("Book", new BookPane());
 	    }
+	    
+	    mainMenu = mainTabbedPane;
 	    
 	    // remove standard location of tabs
 	    mainTabbedPane.remove(mainTabsPane);

@@ -4,35 +4,57 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Calendar;
+import java.util.Date;
 
+import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class TimePicker extends JPanel {
-	
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-		
-		frame.setTitle("Sheffield Dental Care");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(true);
-		frame.setMinimumSize(new Dimension(1024, 768));
-		
-		frame.add(new TimePicker());
-		frame.setVisible(true);
-	}
 	
 	private CustomTextField hourField;
 	private CustomTextField minuteField;
 	private CustomComboBox periodField;
 
 	public TimePicker() {
-		super(new FlowLayout(FlowLayout.CENTER, 5, 0));
+		super(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		
 		setOpaque(false);
 
 		initFields();
 		addComponents();
+	}
+	
+	public Calendar getTime() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR, Integer.parseInt(getHour()));
+		calendar.set(Calendar.MINUTE, Integer.parseInt(getMinute()));
+		
+		if (getPeriod() == "AM") {
+			calendar.set(Calendar.AM_PM, Calendar.AM);
+		} else {
+			calendar.set(Calendar.AM_PM, Calendar.PM);
+		}
+		
+		return calendar;
+	}
+	
+	public void setTime(int hour, int minute) {
+		String period = null;
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, hour);
+		calendar.set(Calendar.MINUTE, minute);
+		
+		if (calendar.get(Calendar.AM_PM) == Calendar.AM) {
+			period = "AM";
+		} else {
+			period = "PM";
+		}
+		
+		hourField.setText(Integer.toString(calendar.get(Calendar.HOUR)));
+		minuteField.setText(Integer.toString(calendar.get(Calendar.MINUTE)));
+		periodField.setSelectedItem(period);
 	}
 	
 	public String getHour() {
@@ -49,7 +71,9 @@ public class TimePicker extends JPanel {
 	
 	private void addComponents() {
 		add(hourField);
+		add(Box.createRigidArea(new Dimension(5, 0)));
 		add(minuteField);
+		add(Box.createRigidArea(new Dimension(5, 0)));
 		add(periodField);
 	}
 	

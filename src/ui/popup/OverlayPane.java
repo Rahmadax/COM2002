@@ -83,6 +83,14 @@ public class OverlayPane extends PopupPane {
 			}
 		});
 	}
+	
+	public void setContentPane(JPanel contentPane) {
+		this.contentPane = contentPane;
+		this.mainPane.add(contentPane, BorderLayout.CENTER);
+		
+		mainPane.revalidate();
+		mainPane.repaint();
+	}
 
 	public void show() {		
 		glass.addComponentListener(resizeListener);

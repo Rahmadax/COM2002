@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 import calendar.Appointment;
@@ -16,8 +17,9 @@ public class AppointmentQuery extends QuerySQL {
 	}
 
 	public Appointment[] get(Date date) throws Exception {
-		preparedStatement = connect.prepareStatement(
-				"SELECT * FROM Appointments WHERE AppointmentDate = ?;");
+		preparedStatement = prepareStatement(
+				"SELECT StartTime, Partner, EndTime, PatientID "
+				+ "FROM Appointments WHERE AppointmentDate = ?;");
 		preparedStatement.setDate(1, new java.sql.Date(date.getTime()));
 		resultSet = preparedStatement.executeQuery();
 		
@@ -27,10 +29,10 @@ public class AppointmentQuery extends QuerySQL {
 		while (resultSet.next()) {
 			int currRow = resultSet.getRow() - 1;
 			
-			Time startTime = resultSet.getTime(2);
-			String partner = resultSet.getString(3);
-			Time endTime = resultSet.getTime(4);
-			int patientID = resultSet.getInt(6);
+			Time startTime = resultSet.getTime(1);
+			String partner = resultSet.getString(2);
+			Time endTime = resultSet.getTime(3);
+			int patientID = resultSet.getInt(4);
 
 			appointments[currRow] = new Appointment(
 					createDate(date, startTime), createDate(date, endTime), 
@@ -42,27 +44,27 @@ public class AppointmentQuery extends QuerySQL {
 		return appointments;
 	}
 
-	public void add(String AppointmentDate, String StartTime, String Partner, String EndTime, int Empty, int PatientID) throws Exception {
+	public void add(HashMap<String, String> map) throws Exception {
+		String appDate = (String) map.get("AppointmentDate");
+		String startTime = (String) map.get("StartTime");
+		String partner = (String) map.get("Partner");
+		String endTime = (String) map.get("EndTime");
+		int patID = Integer.parseInt(map.get("PatientID"));
 		
-		String appDate = AppointmentDate;
-		String startTime = StartTime;
-		String partner = Partner;
-		String endTime = EndTime;
-		int empty = Empty;
-		int patID = PatientID;
+		preparedStatement = prepareStatement("INSERT INTO Appoitment (AppointmentDate, StartTime, Partner, EndTime, Empty, PatientID) "
+				+ "VALUES (SELECT CONVERT(date, ?), SELECT CONVERT(time, ?), '+partner+', SELECT CONVERT(time, ?), ?, ?)"); 
+		preparedStatement.setString(1, appDate);
+		preparedStatement.setString(2, startTime);
+		preparedStatement.setString(3, partner);
+		preparedStatement.setString(4, endTime);
+		preparedStatement.setInt(5, patID);
 		
-		try {
-			PreparedStatement insert = connect.prepareStatement("INSERT INTO Appoitment (AppointmentDate, StartTime, Partner, EndTime, Empty, PatientID) "
-					+ "VALUES (SELECT CONVERT(date, '+appDate+'), SELECT CONVERT(time, '+startTime+'), '+partner+', SELECT CONVERT(time, '+endTime+'), '+empty+', '+patientID+')"); 
-			insert.executeUpdate();
-		} catch (Exception e) {System.out.println(e);}
-		finally {
-			System.out.println("Insert Completed");
-		}
+		preparedStatement.executeUpdate();
+		
+		close();
 	}
 	
 	public void remove(int PatientID, String AppointmentDate) throws Exception {
-		
 		int patID = PatientID; 
 		String appDate = AppointmentDate;
 		

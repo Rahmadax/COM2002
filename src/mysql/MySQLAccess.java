@@ -6,16 +6,18 @@ import java.sql.SQLException;
 
 public class MySQLAccess {
 	
-	public static final String URL  = "jdbc:mysql://stusql.dcs.shef.ac.uk/team031";
-	public static final String USER = "team031";
-	public static final String PASS = "f1e07e09";
+	public static final int LOGIN_TIMEOUT = 5;
+	
+	public static final String URL  = "jdbc:mysql://stusql.dcs.shef.ac.uk/team049";
+	public static final String USER = "team049";
+	public static final String PASS = "efb1faf5";
 	
     private Connection connect = null;
 
     public MySQLAccess() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
 
-        DriverManager.setLoginTimeout(5);
+        DriverManager.setLoginTimeout(LOGIN_TIMEOUT);
         connect = DriverManager.getConnection(URL, USER, PASS);
     }
     

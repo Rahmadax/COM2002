@@ -20,6 +20,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -35,16 +36,19 @@ import ui.custom.CustomTextField;
 import ui.custom.button.CustomButton;
 import ui.layout.AnchorTopPane;
 import ui.layout.CenteredPane;
+import ui.popup.DialogPane;
+import ui.popup.OverlayContentPane;
+import ui.popup.OverlayPane;
 
-public class AppointmentDetailsPane extends JPanel {
+public class AppointmentDetailsPane extends OverlayContentPane {
 
 	private Appointment appointment;
 	
 	private ArrayList<TreatmentPane> treatmentList;
 	private JPanel treatmentsPane;
 
-	public AppointmentDetailsPane(Appointment appointment) {
-		super();
+	public AppointmentDetailsPane(Appointment appointment, OverlayPane overlay) {
+		super(overlay);
 		this.appointment = appointment;
 		treatmentList = new ArrayList<TreatmentPane>();
 		
@@ -183,17 +187,65 @@ public class AppointmentDetailsPane extends JPanel {
 				new MatteBorder(0, 15, 15, 15, new Color(70, 70, 70)),
 				new EmptyBorder(10, 10, 10, 10)));
 
-		CustomButton cancelButton = 
-				new CustomButton("Cancel appointment", CustomButton.ERROR_STYLE);
-		CustomButton finishedButton = new CustomButton("Save and finish");
+		CustomButton cancelButton = createCancelButton();
+		CustomButton finishButton = createFinishButton();
 		
 		if (MainFrame.mode == ModeUI.SECRETARY) {
 			controlPane.add(cancelButton, BorderLayout.CENTER);
 		} else {
-			controlPane.add(finishedButton, BorderLayout.CENTER);
+			controlPane.add(finishButton, BorderLayout.CENTER);
 		}
 
 		return controlPane;
+	}
+	
+	private CustomButton createFinishButton() {
+		CustomButton finishButton = new CustomButton("Save and finish");
+		finishButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+				
+				DialogPane dialogPane = new DialogPane(rootPane,
+						"Are you sure you want to mark this appointnet as finished?");
+				
+				dialogPane.getOKButton().addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						
+					}
+				});
+				
+				dialogPane.show();
+			}
+		});
+		
+		return finishButton;
+	}
+	
+	private CustomButton createCancelButton() {
+		CustomButton cancelButton = 
+				new CustomButton("Cancel appointment", CustomButton.ERROR_STYLE);
+		cancelButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+				
+				DialogPane dialogPane = new DialogPane(rootPane,
+						"Are you sure you want to delete this appointnet?");
+				
+				dialogPane.getOKButton().addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						
+					}
+				});
+				
+				dialogPane.show();
+			}
+		});
+		
+		return cancelButton;
 	}
 	
 	private JPanel createAddTreatmentPane() {
@@ -254,10 +306,12 @@ public class AppointmentDetailsPane extends JPanel {
 	private class TreatmentPane extends JPanel {
 				
 		private double price;
+		private String name;
 		
 		TreatmentPane(String name, double price) {
 			super(new BorderLayout());
 			this.price = price;
+			this.name = name;
 			
 			setBackground(new Color(90, 90, 90));
 			
@@ -272,6 +326,10 @@ public class AppointmentDetailsPane extends JPanel {
 			
 			setPreferredSize(new Dimension(200, 30));
 			setBorder(new EmptyBorder(5, 10, 5, 10));
+		}
+		
+		public String getName() {
+			return name;
 		}
 		
 		public double getPrice() {

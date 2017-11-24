@@ -18,6 +18,7 @@ abstract class FormData<T> extends JPanel {
 
 	protected String dbField;
 	protected JComponent dataComponent;
+	protected String helper;
 	
 	public abstract T getValue();
 	
@@ -30,6 +31,7 @@ abstract class FormData<T> extends JPanel {
 		setOpaque(false);
 		
 		this.dbField = dbField;
+		this.helper = helper;
 		this.dataComponent = dataComponent;
 		
 		CustomRowPane rowPane = new CustomRowPane();
@@ -38,6 +40,20 @@ abstract class FormData<T> extends JPanel {
 		rowPane.addCell(createDataField(dataComponent) , 50.0);
 		
 		add(rowPane);
+	}
+	
+	public void setRowDistribution(double dist1, double dist2) {
+		removeAll();
+		
+		CustomRowPane rowPane = new CustomRowPane();
+		
+		rowPane.addCell(createHelperPane(helper), dist1);
+		rowPane.addCell(createDataField(dataComponent) , dist2);
+		
+		add(rowPane);
+		
+		revalidate();
+		repaint();
 	}
 	
 	private JPanel createDataField(JComponent dataField) {

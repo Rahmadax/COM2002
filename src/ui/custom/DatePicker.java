@@ -8,22 +8,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
+import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class DatePicker extends JPanel {
-	
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-		
-		frame.setTitle("Sheffield Dental Care");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(true);
-		frame.setMinimumSize(new Dimension(1024, 768));
-		
-		frame.add(new DatePicker(20, 10));
-		frame.setVisible(true);
-	}
 	
 	private int yearsBehind;
 	private int yearsAfter;
@@ -37,7 +26,7 @@ public class DatePicker extends JPanel {
 	private String[] years;
 
 	public DatePicker(int yearsBehind, int yearsAfter) {
-		super(new FlowLayout(FlowLayout.CENTER, 5, 0));
+		super(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		this.yearsBehind = yearsBehind;
 		this.yearsAfter = yearsAfter;
 		
@@ -47,6 +36,12 @@ public class DatePicker extends JPanel {
 		initComboBoxes();
 		addComponents();
 		adjustDay();
+	}
+	
+	public void setDate(int day, int month, int year) {
+		dayCB.setSelectedItem(Integer.toString(day));
+		monthCB.setSelectedItem(Integer.toString(month));
+		yearCB.setSelectedItem(Integer.toString(year));
 	}
 	
 	public String getDay() {
@@ -63,7 +58,9 @@ public class DatePicker extends JPanel {
 	
 	private void addComponents() {
 		add(dayCB);
+		add(Box.createRigidArea(new Dimension(5, 0)));
 		add(monthCB);
+		add(Box.createRigidArea(new Dimension(5, 0)));
 		add(yearCB);
 	}
 	

@@ -26,6 +26,7 @@ import ui.MainFrame;
 import ui.ModeUI;
 import ui.custom.CustomComboBox;
 import ui.custom.button.CustomButton;
+import ui.form.book.BookPane;
 import ui.popup.LoadingPane;
 import ui.popup.OverlayPane;
 
@@ -197,6 +198,16 @@ public class CalendarPane extends JPanel {
 	private JPanel createBookButton() {
 		CustomButton bookButton = new CustomButton("Book appoitnment", 
 				CustomButton.REVERSED_STYLE);
+		
+		bookButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				MainFrame.mainMenu.selectTab(MainFrame.MENU_BOOK_INDEX);
+				BookPane bookPane = (BookPane) MainFrame.mainMenu.getCurrentContentPane();
+				
+				bookPane.setInitialDate(calendar);
+			}
+		});
 
 		JPanel bookPane = new JPanel();
 		bookPane.setOpaque(false);

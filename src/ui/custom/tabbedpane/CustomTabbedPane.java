@@ -86,11 +86,15 @@ public class CustomTabbedPane extends JPanel {
 		return tabsPane;
 	}
 	
+	public JPanel getCurrentContentPane() {
+		return contentList.get(currentTabIndex);
+	}
+
 	public void setChangeTabListener(ChangeTabListener tabListener) {
 		this.tabListener = tabListener;
 	}
 
-	private void selectTab(int tabIndex) {
+	public void selectTab(int tabIndex) {
 		JPanel oldContentPane = contentList.get(currentTabIndex);
 		JPanel oldTabPane = tabList.get(currentTabIndex);
 		JPanel newContentPane = contentList.get(tabIndex);

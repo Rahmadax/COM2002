@@ -13,6 +13,7 @@ public final class PatientQuery extends QuerySQL {
 	public String getPatientName(int ID) throws Exception {
         preparedStatement = connect.prepareStatement(
             "SELECT * FROM Patients WHERE PatientID = ID;");
+		preparedStatement.setQueryTimeout(5);
         resultSet = preparedStatement.executeQuery();
 		close();
 		return resultSet.getString("FirstName");

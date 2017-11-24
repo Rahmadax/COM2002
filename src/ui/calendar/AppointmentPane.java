@@ -44,7 +44,8 @@ public class AppointmentPane extends TimeSlotPane {
 						new SimpleDateFormat("d MMMM yyyy");
 				
 				OverlayPane overlay = new OverlayPane(rootPane, 
-						new AppointmentDetailsPane(appointment));
+						new JPanel());
+				overlay.setContentPane(new AppointmentDetailsPane(appointment, overlay));
 				overlay.setTitle("Appointment", 
 						dateFormatter.format(appointment.getStartDate()));
 				overlay.setConstraints(650, 500, 2, 1.9);

@@ -40,16 +40,20 @@ public class RegisterPane extends JPanel {
 		
 		addFormData(new FormComboBox(new String[] {"Mr", "Mrs", 
 				"Miss", "Ms", "Sir", "Dr"},
-				"Title", "Title"));
-		addFormData(new FormField("First Name", "FirstName"));
-		addFormData(new FormField("Last Name", "LastName"));
-		addFormData(new FormDatePicker("Date of birth", "DOB"));
-		addFormData(new FormField("Contact Number", "ContactNumber"));
-		addFormData(new FormField("House Number", "HouseNumber"));
-		addFormData(new FormField("Postcode", "Postcode"));
-		addFormData(new FormSwitch("Subscribe to dental plan", "Subscribe"));
+				"Title", "Title"), formPane, 50, 50);
+		addFormData(new FormField("First Name", "FirstName"), formPane, 50, 50);
+		addFormData(new FormField("Last Name", "LastName"), formPane, 50, 50);
+		addFormData(new FormDatePicker("Date of birth", "DOB"), formPane, 50, 50);
+		
+		JPanel[] addressPanes = createAddressPanes();
+		
+		for (JPanel addressPane: addressPanes) {
+			formPane.add(addressPane);
+		}
+		
+		addFormData(new FormSwitch("Subscribe to dental plan", "Subscribe"), formPane, 50, 50);
 		addFormData(new FormComboBox(new String[] {"Plan 1", "Plan 2", "Plan 3"},
-				"Dental Plan", "Plan"));
+				"Dental Plan", "Plan"), formPane, 50, 50);
 	
 		JPanel contentPane = createContentPane();
 		
@@ -57,7 +61,7 @@ public class RegisterPane extends JPanel {
 		contentPane.add(createSubmitPane(), BorderLayout.SOUTH);
 		
 		AbsoluteCenteredPane container = new AbsoluteCenteredPane(contentPane, this);
-		container.setConstraints(600, 550, 2, 1.5);
+		container.setConstraints(750, 550, 3, 1.5);
 		
 		add(container);
 	}
@@ -72,6 +76,24 @@ public class RegisterPane extends JPanel {
 		return contentPane;
 	}
 	
+	private JPanel[] createAddressPanes() {
+		JPanel[] addressPanes = new JPanel[3];
+		
+		for (int i = 0; i < 3; i++) {
+			addressPanes[i] = new JPanel(new GridLayout(1, 2));
+			addressPanes[i].setOpaque(false);
+		}
+		
+		addFormData(new FormField("House No.", "HouseNumber"), addressPanes[0], 40, 60);
+		addFormData(new FormField("Street Name", "StreetName"), addressPanes[0], 35, 65);
+		addFormData(new FormField("District", "DistrictName"), addressPanes[1], 40, 60);
+		addFormData(new FormField("City", "CityName"), addressPanes[1], 35, 65);
+		addFormData(new FormField("Postcode", "Postcode"), addressPanes[2], 40, 60);
+		addFormData(new FormField("Contact No.", "ContactNumber"), addressPanes[2], 35, 65);
+		
+		return addressPanes;
+	}
+	
 	private JPanel createFormPane() {
 		JPanel formPane = new JPanel(new GridLayout(0, 1));
 		formPane.setOpaque(false);
@@ -80,8 +102,10 @@ public class RegisterPane extends JPanel {
 		return formPane;
 	}
 	
-	private void addFormData(FormData formData) {
-		formPane.add(formData);
+	private void addFormData(FormData formData, JPanel container,
+			double dist1, double dist2) {
+		formData.setRowDistribution(dist1, dist2);
+		container.add(formData);
 		dataList.add(formData);
 	}
 

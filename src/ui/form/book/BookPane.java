@@ -8,22 +8,29 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
-import javafx.scene.shape.Box;
 import ui.MainFrame;
 import ui.custom.CustomTextField;
+import ui.custom.DatePicker;
+import ui.custom.TimePicker;
 import ui.custom.button.CustomButton;
 import ui.layout.AbsoluteCenteredPane;
+import ui.popup.ErrorPane;
 
 public class BookPane extends JPanel {
 	
@@ -42,7 +49,100 @@ public class BookPane extends JPanel {
 	}
 	
 	public void sendForm() {
+		HashMap<String, Object> data = getFormData();
 		
+		if (validateData(data)) {
+			
+		}
+	}
+	
+	private boolean validateData(HashMap<String, Object> data) {
+		Calendar start = null;
+		Calendar end = null;
+
+		try {			
+			start = convertStringToDate(
+					(String) data.get("StartTime"), (String) data.get("AppointmentDate"));
+			end = convertStringToDate(
+					(String) data.get("EndTime"), (String) data.get("AppointmentDate"));
+			
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+			new ErrorPane(rootPane, "Times do not form a period of day.").show();
+			
+			return false;
+		}
+		
+		if (start.compareTo(end) > -1) {
+			JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+			new ErrorPane(rootPane, "Times do not form a period of day.").show();
+			
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public void setInitialDate(Calendar date) {
+		for (FormData formData: dataList) {
+			if (formData.dbField == "AppointmentDate") {
+				((DatePicker) formData.dataComponent).setDate(
+						date.get(Calendar.DAY_OF_MONTH), 
+						date.get(Calendar.MONTH) + 1,
+						date.get(Calendar.YEAR));
+			}
+		}
+	}
+	
+	public void setInitialTimes(Date startTime, Date endTime) {
+		Calendar start = Calendar.getInstance();
+		start.setTime(startTime);
+		Calendar end = Calendar.getInstance();
+		end.setTime(endTime);
+		
+		for (FormData formData: dataList) {
+			if (formData.dbField == "StartTime") {
+				((TimePicker) formData.dataComponent).setTime(
+						start.get(Calendar.HOUR_OF_DAY),
+						start.get(Calendar.MINUTE));
+			}
+			
+			if (formData.dbField == "EndTime") {
+				((TimePicker) formData.dataComponent).setTime(
+						end.get(Calendar.HOUR_OF_DAY),
+						end.get(Calendar.MINUTE));
+			}
+		}
+	}
+	
+	public static Calendar convertStringToDate(String time, String date) {
+		Calendar calendar = Calendar.getInstance(Locale.UK);
+		Pattern p1 = Pattern.compile("^(\\d{2}):(\\d{2})\\s(AM|PM)$");
+		Matcher m1 = p1.matcher(time);
+		Pattern p2 = Pattern.compile("^(\\d{4})-(\\d{2})-(\\d{2})$");
+		Matcher m2 = p2.matcher(date);
+	
+		if (m1.find() && m2.find()) {
+			if (m1.group(3) == "AM") {
+				calendar.set(Calendar.AM_PM, Calendar.AM);
+			} else {
+				calendar.set(Calendar.AM_PM, Calendar.PM);
+			}
+			
+			calendar.set(Calendar.HOUR, Integer.parseInt(m1.group(1)));
+			calendar.set(Calendar.MINUTE, Integer.parseInt(m1.group(2)));
+			
+			calendar.set(Calendar.YEAR, Integer.parseInt(m2.group(1)));
+			calendar.set(Calendar.MONTH, Integer.parseInt(m2.group(2) + 1));
+			calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(m2.group(3)));
+			
+			System.out.println(calendar.getTime());
+		} else {
+			throw new IllegalStateException();
+		}
+		
+		return calendar;
 	}
 	
 	private void addComponents() {
@@ -63,7 +163,7 @@ public class BookPane extends JPanel {
 		contentPane.add(createSubmitPane(), BorderLayout.SOUTH);
 		
 		AbsoluteCenteredPane container = new AbsoluteCenteredPane(contentPane, this);
-		container.setConstraints(800, 550, 2, 1.5);
+		container.setConstraints(700, 500, 3, 2);
 		
 		return container;
 	}
@@ -113,13 +213,12 @@ public class BookPane extends JPanel {
 		JPanel appointmentPane = new JPanel(new GridLayout(0, 1, 10, 10));
 		appointmentPane.setOpaque(false);
 		
-		FormField patientFIeld = new FormField("Patient", "patientID");
+		FormField patientFIeld = new FormField("Patient", "PatientName");
 		dataList.add(patientFIeld);
 		
 		FormComboBox practice = new FormComboBox(
 				new String[] {"Hygenist", "Dentist"}, "Partner", "Partner");
-		FormDatePicker startDate = new FormDatePicker("Start Date", "StartDate");
-		FormDatePicker endDate = new FormDatePicker("End Date", "EndDate");
+		FormDatePicker startDate = new FormDatePicker("Date", "AppointmentDate");
 		FormTimePicker startTime = new FormTimePicker("Start Time", "StartTime");
 		FormTimePicker endTime = new FormTimePicker("End Time", "EndTime");
 		
@@ -127,12 +226,10 @@ public class BookPane extends JPanel {
 		appointmentPane.add(practice);
 		appointmentPane.add(startDate);
 		appointmentPane.add(startTime);
-		appointmentPane.add(endDate);
 		appointmentPane.add(endTime);
 		
 		dataList.add(practice);
 		dataList.add(startDate);
-		dataList.add(endDate);
 		dataList.add(startTime);
 		dataList.add(endTime);
 		
@@ -142,7 +239,7 @@ public class BookPane extends JPanel {
 	private HashMap<String, Object> getFormData() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("patientID", patientID);
+		map.put("PatientID", patientID);
 		
 		for (FormData formData: dataList) {
 			map.put(formData.dbField, formData.getValue());
@@ -161,7 +258,7 @@ public class BookPane extends JPanel {
 		submitButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				System.out.println(getFormData());
+				sendForm();
 			}
 		});
 		

@@ -19,19 +19,20 @@ class FormTimePicker extends FormData<String> {
 		TimePicker dayPicker = (TimePicker) dataComponent;
 		String hour = dayPicker.getHour();
 		String minute = dayPicker.getMinute();
+		String period = dayPicker.getPeriod();
 		String time = "";
-		
-		if (minute.length() == 1) {
-			time += "0";
-		}
-		
-		time += hour + ":";
 		
 		if (hour.length() == 1) {
 			time += "0";
 		}
 		
-		time += minute;
+		time += hour + ":";
+		
+		if (minute.length() == 1) {
+			time += "0";
+		}
+		
+		time += minute + " " + period;
 		
 		return time;
 	}
