@@ -1,6 +1,7 @@
 package mysql.query;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import mysql.MySQLAccess;
 
@@ -50,5 +51,9 @@ public final class PatientQuery extends QuerySQL {
 			System.out.println("Deletion Completed");
 		}
 	}
-
+	public ResultSet findFirstName(String firstName) throws Exception {		
+		 preparedStatement = connect.prepareStatement("SELECT PatientID, FirstName, LastName, DOB, ContactNumber, HouseNumber, Postcode FROM Patient WHERE FirstName LIKE '% " + firstName + " '%");
+	     resultSet = preparedStatement.executeQuery();	
+		return resultSet;				
+}
 }
