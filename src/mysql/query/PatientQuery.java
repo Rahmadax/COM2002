@@ -20,30 +20,30 @@ public final class PatientQuery extends QuerySQL {
 		return resultSet.getString("FirstName");
 	}
 	
-	public void add(int patID, String firstName, String lastName, String dob, int contactNumber, int houseNumber, String postCode) throws Exception {
+	public void add(String title, String firstName, String lastName, String dob, String contactNumber, int houseNumber, String postCode) {
 		
 		try {
-			PreparedStatement useDB = connect.prepareStatement("USE team049;");
-			PreparedStatement insert = connect.prepareStatement("INSERT INTO Patients VALUES ("
-					+patID+ ", '" +firstName+ "', '" +lastName+ "', '" +dob+ "', " +contactNumber+ ", " +houseNumber+ ", '" +postCode+ "');");
+			preparedStatement = prepareStatement("INSERT INTO Patients (Title, FirstName, LastName, DOB, ContactNumber, HouseNumber, Postcode)"
+					+ " VALUES (?,?,?,?,?,?,?)");
+			preparedStatement.setString(1, title);
+			preparedStatement.setString(2, firstName);
+			preparedStatement.setString(3, lastName);
+			preparedStatement.setString(4, dob);
+			preparedStatement.setString(5, contactNumber);
+			preparedStatement.setInt(6, houseNumber);
+			preparedStatement.setString(7, postCode);
 			
-			useDB. executeUpdate();
-			insert.executeUpdate();
+			preparedStatement.executeUpdate();
 			    
 		} catch (Exception e) {System.out.println(e);}
-		finally {
-			System.out.println("Insert Completed");
-		}
 	}
 
 	public void remove(int patID) throws Exception {
 		
 		try {
-			PreparedStatement useDB = connect.prepareStatement("USE team049;");
 			PreparedStatement delete = connect.prepareStatement("DELETE FROM Patients"
 					+ " WHERE PatientID = " +patID+ ";");
 			
-			useDB.executeUpdate();
 			delete.executeUpdate();
 			
 		} catch (Exception e) {System.out.println(e);}
@@ -51,6 +51,7 @@ public final class PatientQuery extends QuerySQL {
 			System.out.println("Deletion Completed");
 		}
 	}
+	
 	public ResultSet findFirstName(String firstName) throws Exception {		
 		 preparedStatement = connect.prepareStatement("SELECT PatientID, FirstName, LastName, DOB, ContactNumber, HouseNumber, Postcode FROM Patient WHERE FirstName LIKE '% " + firstName + " '%");
 	     resultSet = preparedStatement.executeQuery();	
