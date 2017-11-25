@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,6 +15,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
+import mysql.MySQLAccess;
+import mysql.query.AddressQuery;
+import mysql.query.PatientQuery;
 import ui.custom.button.CustomButton;
 import ui.layout.AbsoluteCenteredPane;
 
@@ -129,7 +133,35 @@ public class RegisterPane extends JPanel {
 		submitButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				System.out.println(getFormData());
+				HashMap<String, Object> map = getFormData();
+				
+			
+				try {
+					MySQLAccess access = new MySQLAccess();
+					AddressQuery adQuery = new AddressQuery(access);
+					PatientQuery patQuery = new PatientQuery(access);
+					
+					
+					int houseNumber = Integer.parseInt((String) map.get("HouseNumber"));
+					String postCode = map.get("Postcode").toString();
+					String streetName = map.get("StreetName").toString();
+					String districtName = map.get("DistrictName").toString();
+					String cityName = map.get("CityName").toString();
+					String title = map.get("Title").toString();
+					String firstName = map.get("FirstName").toString();
+					String lastName = map.get("LastName").toString();
+					String dob = map.get("DOB").toString();
+					String contactNumber = map.get("ContactNumber").toString();
+					
+					
+					adQuery.add(houseNumber, postCode, streetName, districtName, cityName);
+	
+					patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
+					
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				
 			}
 		});
 		
