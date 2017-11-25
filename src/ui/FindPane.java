@@ -156,13 +156,13 @@ public class FindPane extends JPanel {
 			String[] allHouseNums = new String[10];
 			String[] allPostCodes = new String[10];
 			while(searchInput.next()){
-				allPatientIDs[searchInput.getRow()] = Integer.toString(searchInput.getInt(1));
-				allFirstNames[searchInput.getRow()] = searchInput.getString(2);
-				allSecondNames[searchInput.getRow()] = searchInput.getString(3);
-				allDOB[searchInput.getRow()] = searchInput.getDate(4).toString();
-				allContactNumbers[searchInput.getRow()] = (searchInput.getString(5));
-				allHouseNums[searchInput.getRow()] = searchInput.getString(6);
-				allPostCodes[searchInput.getRow()] = searchInput.getString(7);
+				allPatientIDs[searchInput.getRow()-1] = Integer.toString(searchInput.getInt(1));
+				allFirstNames[searchInput.getRow()-1] = searchInput.getString(2);
+				allSecondNames[searchInput.getRow()-1] = searchInput.getString(3);
+				allDOB[searchInput.getRow()-1] = searchInput.getDate(4).toString();
+				allContactNumbers[searchInput.getRow()-1] = (searchInput.getString(5));
+				allHouseNums[searchInput.getRow()-1] = searchInput.getString(6);
+				allPostCodes[searchInput.getRow()-1] = searchInput.getString(7);
 			}
 			String[][] resultsBack = new String[10][7];
 			for(int i = 0; i < 10; i++) {
