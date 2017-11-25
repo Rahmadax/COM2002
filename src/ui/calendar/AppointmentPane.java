@@ -17,6 +17,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import calendar.Appointment;
+import mysql.MySQLAccess;
+import mysql.query.Patient;
+import mysql.query.PatientQuery;
 import ui.layout.CenteredPane;
 import ui.listener.HoverListener;
 import ui.popup.OverlayPane;
@@ -28,7 +31,7 @@ public class AppointmentPane extends TimeSlotPane {
 
 	private Appointment appointment;
 
-	public AppointmentPane(Appointment appointment) {
+	public AppointmentPane(Appointment appointment) throws Exception {
 		super(appointment);
 		
 		this.appointment = appointment;
@@ -45,8 +48,12 @@ public class AppointmentPane extends TimeSlotPane {
 				
 				OverlayPane overlay = new OverlayPane(rootPane, 
 						new JPanel());
-				overlay.setContentPane(new AppointmentDetailsPane(appointment, overlay));
-				overlay.setTitle("Appointment", 
+                try {
+                    overlay.setContentPane(new AppointmentDetailsPane(appointment, overlay));
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+                overlay.setTitle("Appointment",
 						dateFormatter.format(appointment.getStartDate()));
 				overlay.setConstraints(650, 500, 2, 1.9);
 				overlay.show();
@@ -60,7 +67,7 @@ public class AppointmentPane extends TimeSlotPane {
 		addComponents();
 	}
 	
-	private void addComponents() {
+	private void addComponents() throws Exception {
 		add(createTimePane(), BorderLayout.NORTH);
 		add(createContentPane(), BorderLayout.CENTER);
 	}
@@ -93,8 +100,10 @@ public class AppointmentPane extends TimeSlotPane {
 		return panel;
 	}
 	
-	private JPanel createContentPane() {
-		JLabel patientName = new JLabel(new Integer(appointment.getPatientID()).toString());
+	private JPanel createContentPane() throws Exception {
+        MySQLAccess access = new MySQLAccess();
+        PatientQuery q = new PatientQuery(access);
+		JLabel patientName = new JLabel(q.getFullName(appointment.getPatientID()));
 		patientName.setFont(new Font("Aller", Font.BOLD, 14));
 		patientName.setForeground(new Color(80, 50, 0));
 		
