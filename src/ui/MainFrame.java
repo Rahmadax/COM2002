@@ -95,7 +95,7 @@ public class MainFrame extends JFrame {
 	    
 	    if (mode == ModeUI.SECRETARY) {
 	    	mainTabbedPane.addTab("Register", new RegisterPane());
-		    mainTabbedPane.addTab("Find", new JPanel());
+		    mainTabbedPane.addTab("Find", new FindPane());
 		    mainTabbedPane.addTab("Book", new BookPane());
 	    }
 	    
