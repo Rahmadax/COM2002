@@ -1,30 +1,31 @@
 package mysql.query;
 
-import calendar.TreatmentsStore;
 import mysql.MySQLAccess;
+
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class TreatmentsStoreQuery extends QuerySQL {
     public TreatmentsStoreQuery(MySQLAccess access) {super(access);}
 
-    public TreatmentsStore[] getAll() throws Exception {
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = preparedStatement.executeQuery("SELECT (TreatmentName, TreatmentCost) "
+    public String[] getAll() throws Exception {
+        PreparedStatement preparedStatement = prepareStatement("SELECT TreatmentName, TreatmentCost "
                 + "FROM TreatmentsStore;");
+        ResultSet resultSet = preparedStatement.executeQuery();
 
         int rows = getRowCount(resultSet);
-        TreatmentsStore[] treatmentsStore = new TreatmentsStore[rows];
+        String[] treatmentsStore = new String[rows];
 
         while (resultSet.next()) {
             int currRow = resultSet.getRow() - 1;
 
             String treatmentName = resultSet.getString(1);
-            int treatmentCost = resultSet.getInt(2);
+            BigDecimal treatmentCost = resultSet.getBigDecimal(2);
 
-            treatmentsStore[currRow] = new TreatmentsStore(
-                    treatmentName, treatmentCost
-                    );
+            treatmentsStore[currRow] = treatmentName + " (" + 
+            		String.format("%.2f", treatmentCost) + ")";
+            ;
         }
 
         close();

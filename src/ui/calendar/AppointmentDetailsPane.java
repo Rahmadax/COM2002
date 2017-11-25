@@ -26,6 +26,7 @@ import calendar.Appointment;
 import mysql.MySQLAccess;
 import mysql.query.AppointmentQuery;
 import mysql.query.PatientQuery;
+import mysql.query.TreatmentsStoreQuery;
 import ui.MainFrame;
 import ui.ModeUI;
 import ui.custom.CustomComboBox;
@@ -245,34 +246,41 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 				new BoxLayout(addTreatmentPane, BoxLayout.Y_AXIS));
 		addTreatmentPane.setOpaque(false);
 		
-		CustomComboBox comboBox = new CustomComboBox(
-				new String[] {"test1 (12.32)", "test2 (5.32)", "test3 (11.32)"});
-		comboBox.setPreferredSize(new Dimension(200, 40));
-		
-		CustomButton addButton = new CustomButton("Add treatment", CustomButton.REVERSED_STYLE);
-		addButton.setPreferredSize(new Dimension(150, 40));
-		
-		addButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				String string = (String) comboBox.getSelectedItem();
-				String pattern = "^(.*)\\s\\((([1-9]\\d*|0)\\.\\d{2})\\)$";
-				Pattern p = Pattern.compile(pattern);
-				Matcher m = p.matcher(string);
-				
-				if (m.find()) {
-					String name = m.group(1);
-					double price = Double.parseDouble(m.group(2));
-					
-					addTreatment(new TreatmentPane(name, price));
+		try {
+			MySQLAccess access = new MySQLAccess();
+			TreatmentsStoreQuery q = new TreatmentsStoreQuery(access);
+			String[] treatments = q.getAll();
+			
+			CustomComboBox comboBox = new CustomComboBox(treatments);
+			comboBox.setPreferredSize(new Dimension(200, 40));
+			
+			CustomButton addButton = new CustomButton("Add treatment", CustomButton.REVERSED_STYLE);
+			addButton.setPreferredSize(new Dimension(150, 40));
+			
+			addButton.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					String string = (String) comboBox.getSelectedItem();
+					String pattern = "^(.*)\\s\\((([1-9]\\d*|0)\\.\\d{2})\\)$";
+					Pattern p = Pattern.compile(pattern);
+					Matcher m = p.matcher(string);
+					System.out.println(string);
+					if (m.find()) {
+						String name = m.group(1);
+						double price = Double.parseDouble(m.group(2));
+						
+						addTreatment(new TreatmentPane(name, price));
+					}
 				}
-			}
-		});
-		
-		addTreatmentPane.add(comboBox);
-		addTreatmentPane.add(Box.createRigidArea(new Dimension(0, 15)));
-		addTreatmentPane.add(addButton);
-		
+			});
+			
+			addTreatmentPane.add(comboBox);
+			addTreatmentPane.add(Box.createRigidArea(new Dimension(0, 15)));
+			addTreatmentPane.add(addButton);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;

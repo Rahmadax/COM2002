@@ -36,9 +36,8 @@ public final class PatientQuery extends QuerySQL {
 			preparedStatement.setString(7, postCode);
 			
 			preparedStatement.executeUpdate();
-			    
+			close();
 		} catch (Exception e) {System.out.println(e);}
-		close();
 	}
 
 	public void remove(int patID) throws Exception {
