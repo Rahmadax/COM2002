@@ -53,6 +53,16 @@ public class CustomSwitch extends JPanel {
 		return this.value;
 	}
 	
+	public void makeSwitch(int button) {
+		value = button != 0;
+		addButtons();
+	}
+	
+	private void makeSwitch(CustomButton button) {
+		value = button1 != button;
+		addButtons();
+	}
+	
 	private class SwitchButton extends CustomButton {
 		public SwitchButton(String text, int style) {
 			super(text, style);
@@ -65,8 +75,7 @@ public class CustomSwitch extends JPanel {
 			addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					value = button != button1;
-					addButtons();
+					makeSwitch(button);
 				}
 			});
 		}

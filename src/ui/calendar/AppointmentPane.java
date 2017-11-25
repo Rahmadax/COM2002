@@ -104,8 +104,11 @@ public class AppointmentPane extends TimeSlotPane {
         MySQLAccess access = new MySQLAccess();
         PatientQuery q = new PatientQuery(access);
 		JLabel patientName = new JLabel(q.getFullName(appointment.getPatientID()));
+		
 		patientName.setFont(new Font("Aller", Font.BOLD, 14));
 		patientName.setForeground(new Color(80, 50, 0));
+		
+		access.close();
 		
 		return new CenteredPane(patientName);
 	}

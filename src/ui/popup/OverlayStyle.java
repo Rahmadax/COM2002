@@ -25,8 +25,8 @@ public class OverlayStyle {
 	
 	public static class SuccessStyle extends Style {
 		public SuccessStyle() {
-			TOP_BORDER = Color.GREEN;
-			TITLE_COLOR = Color.GREEN;
+			TOP_BORDER = new Color(0, 200, 0);
+			TITLE_COLOR = new Color(0, 200, 0);;
 		}
 	}
 	

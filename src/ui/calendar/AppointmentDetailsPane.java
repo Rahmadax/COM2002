@@ -79,9 +79,12 @@ public class AppointmentDetailsPane extends OverlayContentPane {
         MySQLAccess access = new MySQLAccess();
         PatientQuery q = new PatientQuery(access);
 		JPanel patientPane = new JPanel();
+		String patientName = q.getFullName(appointment.getPatientID());
+		access.close();
+		
 		patientPane.setOpaque(false);
 		patientPane.add(new JLabel("Patient: "));
-        Component add = patientPane.add(new JLabel(q.getFullName(appointment.getPatientID())));
+        patientPane.add(new JLabel(patientName));
 
         JPanel partnerPane = new JPanel();
 		partnerPane.setOpaque(false);
@@ -229,8 +232,11 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		cancelButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
+            	getOverlay().hide();
             }
-        } );return  cancelButton;
+        });
+		
+		return  cancelButton;
 	}
 	
 	private JPanel createAddTreatmentPane() {

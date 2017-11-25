@@ -6,10 +6,13 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -18,8 +21,15 @@ import javax.swing.border.MatteBorder;
 import mysql.MySQLAccess;
 import mysql.query.AddressQuery;
 import mysql.query.PatientQuery;
+import ui.MainFrame;
+import ui.custom.CustomComboBox;
+import ui.custom.CustomSwitch;
+import ui.custom.CustomTextField;
+import ui.custom.DatePicker;
 import ui.custom.button.CustomButton;
 import ui.layout.AbsoluteCenteredPane;
+import ui.popup.ErrorPane;
+import ui.popup.SuccessPane;
 
 public class RegisterPane extends JPanel {
 	
@@ -35,8 +45,20 @@ public class RegisterPane extends JPanel {
 		addComponents();
 	}
 	
-	public void sendForm() {
-		
+	private void clearInputs() {
+		for (FormData formData: dataList) {
+			JComponent component = formData.dataComponent;
+			
+			if (component instanceof CustomComboBox) {
+				((CustomComboBox) component).setSelectedIndex(0);
+			} else if (component instanceof CustomTextField) {
+				((CustomTextField) component).setText("");
+			} else if (component instanceof DatePicker) {
+				// -----------
+			} else if (component instanceof CustomSwitch) {
+				((CustomSwitch) component).makeSwitch(0);
+			}
+		}
 	}
 	
 	private void addComponents() {
@@ -134,14 +156,12 @@ public class RegisterPane extends JPanel {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				HashMap<String, Object> map = getFormData();
-				
-			
+
 				try {
 					MySQLAccess access = new MySQLAccess();
 					AddressQuery adQuery = new AddressQuery(access);
 					PatientQuery patQuery = new PatientQuery(access);
-					
-					
+
 					int houseNumber = Integer.parseInt((String) map.get("HouseNumber"));
 					String postCode = map.get("Postcode").toString();
 					String streetName = map.get("StreetName").toString();
@@ -152,14 +172,23 @@ public class RegisterPane extends JPanel {
 					String lastName = map.get("LastName").toString();
 					String dob = map.get("DOB").toString();
 					String contactNumber = map.get("ContactNumber").toString();
-					
-					
+
 					adQuery.add(houseNumber, postCode, streetName, districtName, cityName);
-	
 					patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
 					
-				} catch (Exception e1) {
-					e1.printStackTrace();
+					access.close();
+					
+					clearInputs();
+					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+					new SuccessPane(rootPane, "New Patient added successfully!").show();
+				} catch (SQLException e1) {
+					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+					new ErrorPane(rootPane, "Unable to connect to the database.").show();
+				} catch (Exception e2) {
+					e2.printStackTrace();
+					
+					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+					new ErrorPane(rootPane, "Something went wrong. Please check your imput.").show();
 				}
 				
 			}
