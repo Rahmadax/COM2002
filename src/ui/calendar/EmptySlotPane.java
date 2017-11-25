@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import calendar.EmptySlot;
 import ui.MainFrame;
+import ui.ModeUI;
 import ui.form.book.BookPane;
 import ui.layout.CenteredPane;
 import ui.listener.HoverListener;
@@ -25,22 +26,26 @@ public class EmptySlotPane extends TimeSlotPane {
 		super(timeSlot);
 		
 		setBackground(BACKGROUND_COLOR);
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				MainFrame.mainMenu.selectTab(MainFrame.MENU_BOOK_INDEX);
-				
-				Calendar calendar = Calendar.getInstance(Locale.UK);
-				calendar.setTime(timeSlot.getStartDate());
+		
+		if (MainFrame.mode == ModeUI.SECRETARY) {
+			addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					MainFrame.mainMenu.selectTab(MainFrame.MENU_BOOK_INDEX);
+					
+					Calendar calendar = Calendar.getInstance(Locale.UK);
+					calendar.setTime(timeSlot.getStartDate());
 
-				BookPane bookPane = (BookPane) MainFrame.mainMenu.getCurrentContentPane();
-				bookPane.setInitialTimes(timeSlot.getStartDate(), timeSlot.getEndDate());			
-				bookPane.setInitialDate(calendar);
-				bookPane.setInitialPartner(timeSlot.getPartner());
-				
-				setBackground(BACKGROUND_COLOR);
-			}
-		});
+					BookPane bookPane = (BookPane) MainFrame.mainMenu.getCurrentContentPane();
+					bookPane.setInitialTimes(timeSlot.getStartDate(), timeSlot.getEndDate());			
+					bookPane.setInitialDate(calendar);
+					bookPane.setInitialPartner(timeSlot.getPartner());
+					
+					setBackground(BACKGROUND_COLOR);
+				}
+			});
+		}
+		
 		addMouseListener(new HoverListener(BACKGROUND_COLOR, HOVER_COLOR));
 
 		setLayout(new BorderLayout());
@@ -48,8 +53,16 @@ public class EmptySlotPane extends TimeSlotPane {
 	}
 	
 	private JPanel createContentPane() {
-		JLabel label = new JLabel(
-				"<html><center>Empty slot<br>(Click to book)</center></html>");
+		String text1 = "<html><center>Empty slot<br>(Click to book)</center></html>";
+		String text2 = "<html><center>Empty slot</center></html>";
+		
+		JLabel label = new JLabel();
+		if (MainFrame.mode == ModeUI.PRACTICE) {
+			label.setText(text2);
+		} else {
+			label.setText(text1);
+		}
+		
 		label.setForeground(new Color(255, 140, 0));
 
 		return new CenteredPane(label);

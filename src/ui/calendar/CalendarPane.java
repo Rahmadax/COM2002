@@ -209,6 +209,7 @@ public class CalendarPane extends JPanel {
 				BookPane bookPane = (BookPane) MainFrame.mainMenu.getCurrentContentPane();
 				
 				bookPane.setInitialDate(calendar);
+				bookPane.setInitialPartner(partner);
 			}
 		});
 

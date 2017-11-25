@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.border.EmptyBorder;
@@ -46,7 +47,7 @@ public class DayPane extends JPanel {
 			e.printStackTrace();
 			
 			JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-			JPanel glassPane = (JPanel) rootPane.getGlassPane();
+			JLayeredPane glassPane = (JLayeredPane) rootPane.getGlassPane();
 			boolean already = false;
 			
 			for (Component component: glassPane.getComponents()) {
