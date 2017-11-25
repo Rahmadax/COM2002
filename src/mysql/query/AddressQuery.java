@@ -27,7 +27,7 @@ public class AddressQuery extends QuerySQL {
 			pc = resultSet.getString(2);
 		}
 		return hn.toString() + pc;
-		close;
+		close();
 		
 	}
 	public void add(int houseNumber, String postCode, String streetName, String districtName, String cityName) {
@@ -40,7 +40,7 @@ public class AddressQuery extends QuerySQL {
 			
 		} catch(Exception e) {System.out.println(e);}
 		
-		close;
+		close();
 	}
 	
 	
