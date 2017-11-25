@@ -18,6 +18,7 @@ public final class PatientQuery extends QuerySQL {
         resultSet = preparedStatement.executeQuery();
 		close();
 		return resultSet.getString("FirstName");
+		
 	}
 	
 	public void add(String title, String firstName, String lastName, String dob, String contactNumber, int houseNumber, String postCode) {
@@ -36,6 +37,7 @@ public final class PatientQuery extends QuerySQL {
 			preparedStatement.executeUpdate();
 			    
 		} catch (Exception e) {System.out.println(e);}
+		close();
 	}
 
 	public void remove(int patID) throws Exception {
@@ -47,9 +49,8 @@ public final class PatientQuery extends QuerySQL {
 			delete.executeUpdate();
 			
 		} catch (Exception e) {System.out.println(e);}
-		finally {
-			System.out.println("Deletion Completed");
-		}
+		
+		close();
 	}
 	
 	public ResultSet findFirstName(String firstName) throws Exception {		
@@ -73,6 +74,7 @@ public final class PatientQuery extends QuerySQL {
             ln = resultSet.getString(2);
 
         }
+	close();
         return (fn + " " + ln);
     }
 }
