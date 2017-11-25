@@ -2,6 +2,7 @@ package mysql.query;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 import mysql.MySQLAccess;
 
@@ -35,9 +36,9 @@ public final class PatientQuery extends QuerySQL {
 			preparedStatement.setString(7, postCode);
 			
 			preparedStatement.executeUpdate();
-			close();
 			    
 		} catch (Exception e) {System.out.println(e);}
+		close();
 	}
 
 	public void remove(int patID) throws Exception {
@@ -47,9 +48,10 @@ public final class PatientQuery extends QuerySQL {
 					+ " WHERE PatientID = " +patID+ ";");
 			
 			delete.executeUpdate();
-			close();
 			
 		} catch (Exception e) {System.out.println(e);}
+		
+		close();
 	}
 	
 	public ResultSet findFirstName(String firstName) throws Exception {		
