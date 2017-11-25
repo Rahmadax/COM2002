@@ -71,11 +71,10 @@ public class AppointmentQuery extends QuerySQL {
 					+ "WHERE PatientID = "+patID+ " and AppointmentDate = '"+appDate+"');");
 			
 			delete.executeUpdate();
+			close();
 			
 		} catch (Exception e) {System.out.println(e);}
-		finally {
-			System.out.println("Deletion Completed");
-		}
+
 	}
 	
 	private Date createDate(Date date, Time time) {
