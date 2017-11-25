@@ -178,3 +178,4 @@ public class FindPane extends JPanel {
 	}
 
 }
+}

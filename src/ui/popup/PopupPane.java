@@ -4,13 +4,16 @@ import java.awt.Color;
 import java.awt.Point;
 
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 
 public class PopupPane extends JPanel {
 
+	private int layer = 0;
+	
 	protected JRootPane rootPane;
-	protected JPanel glass;
+	protected JLayeredPane glass;
 	
 	protected boolean hidden;
 
@@ -18,7 +21,7 @@ public class PopupPane extends JPanel {
 	// at a specific location and rootPane
 	public PopupPane(JRootPane rootPane) {
 		this.rootPane = rootPane;
-		glass = (JPanel) rootPane.getGlassPane();
+		glass = (JLayeredPane) rootPane.getGlassPane();
 		
 		hidden = true;
 	}
@@ -27,7 +30,7 @@ public class PopupPane extends JPanel {
 		return rootPane;
 	}
 	
-	public JPanel getGlass() {
+	public JLayeredPane	getGlass() {
 		return glass;
 	}
 	
@@ -39,7 +42,8 @@ public class PopupPane extends JPanel {
 	public void show(Point location) {
 		setLocation(location);
 
-		glass.add(this);
+		layer += 1;
+		glass.add(this, new Integer(layer));
 		
 		hidden = false;
 		

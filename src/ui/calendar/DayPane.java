@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,12 +32,13 @@ public class DayPane extends JPanel {
 	
 	private Date beginDate;
 	private Date finishDate;
+	private String partner;
 	
-	public DayPane(Calendar calendar) {
+	public DayPane(Calendar calendar, String partner) {
 		super(new GridLayout(1, 5));
+		this.partner = partner;
+		
 		calendar.set(Calendar.DAY_OF_WEEK, 2);
-
-		initTimelineDates(calendar);
 
 		try {
 			addAppointments(calendar);
@@ -89,46 +91,103 @@ public class DayPane extends JPanel {
 			AppointmentQuery appointmentQuery = new AppointmentQuery(access);
 			Appointment[] appointments = appointmentQuery.get(calendar.getTime());
 			Arrays.sort(appointments, new AppointmentComparator());
-			
-			int length = appointments.length;
-			
-			if (length != 0 && hasEmptySlot(null, appointments[0])) {
-				dayContainer.add(new EmptySlotPane(
-						new EmptySlot(beginDate, 
-								appointments[0].getStartDate())));
-				
-
-				// add vertical gap between appointments
-				dayContainer.add(Box.createRigidArea(
-						new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
-			} else {
-				dayContainer.add(new EmptySlotPane(
-						new EmptySlot(beginDate, finishDate)));
-				
+			ArrayList<Appointment> selectedApps = new ArrayList<Appointment>();
+						
+			for (Appointment appointment: appointments) {				
+				if (appointment.getPartner().equals(partner)) {
+					selectedApps.add(appointment);
+				}
 			}
+						
+			int length = selectedApps.size();
 			
-			for (int j = 0; j < length - 1; j++) {
-				dayContainer.add(new AppointmentPane(appointments[j]));
+			if (length > 0) {
+				initTimelineDates(selectedApps.get(0).getStartDate());
 				
-				if (length > 1 && hasEmptySlot(appointments[j], appointments[j + 1])) {
+				if (hasEmptySlot(null, selectedApps.get(0))) {
+					dayContainer.add(new EmptySlotPane(
+							new EmptySlot(beginDate, selectedApps.get(0).getStartDate(), partner)));
 					// add vertical gap between appointments
 					dayContainer.add(Box.createRigidArea(
 							new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
-					
-					dayContainer.add(new EmptySlotPane(
-							new EmptySlot(appointments[j].getEndDate(), 
-									appointments[j + 1].getStartDate())));
 				}
+				
+				dayContainer.add(new AppointmentPane(selectedApps.get(0)));
 				
 				// add vertical gap between appointments
 				dayContainer.add(Box.createRigidArea(
 						new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
 			}
 			
-			if (length != 0 && hasEmptySlot(appointments[length - 1], null)) {
-				dayContainer.add(new EmptySlotPane(
-						new EmptySlot(appointments[length - 1].getEndDate(), 
-								finishDate)));
+			for (int j = 1; j < length - 1; j++) {
+				if (j == 1) {
+					initTimelineDates(selectedApps.get(0).getStartDate());
+					
+					if (hasEmptySlot(selectedApps.get(0), selectedApps.get(1))) {
+						dayContainer.add(new EmptySlotPane(new EmptySlot(
+								selectedApps.get(0).getEndDate(), selectedApps.get(1).getStartDate(),
+								partner)));
+						// add vertical gap between appointments
+						dayContainer.add(Box.createRigidArea(
+								new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
+					}
+				}
+				
+				dayContainer.add(new AppointmentPane(selectedApps.get(j)));
+				
+				// add vertical gap between appointments
+				dayContainer.add(Box.createRigidArea(
+						new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
+				
+				initTimelineDates(selectedApps.get(0).getStartDate());
+				
+				if (hasEmptySlot(selectedApps.get(j), selectedApps.get(j + 1))) {
+					dayContainer.add(new EmptySlotPane(new EmptySlot(
+							selectedApps.get(j).getEndDate(), selectedApps.get(j + 1).getStartDate(),
+							partner)));
+					// add vertical gap between appointments
+					dayContainer.add(Box.createRigidArea(
+							new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
+				}
+			}
+			
+			if (length == 0) {
+				initTimelineDates(calendar.getTime());
+				
+				dayContainer.add(new EmptySlotPane(new EmptySlot(beginDate, finishDate,partner)));
+			}
+			
+			if (length == 2) {
+				initTimelineDates(selectedApps.get(0).getStartDate());
+				
+				if (hasEmptySlot(selectedApps.get(0), selectedApps.get(1))) {
+					dayContainer.add(new EmptySlotPane(new EmptySlot(
+							selectedApps.get(0).getEndDate(), selectedApps.get(1).getStartDate(),
+							partner)));
+					// add vertical gap between appointments
+					dayContainer.add(Box.createRigidArea(
+							new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
+				}
+			}
+			
+			if (length > 0) {
+				if (length != 1) {
+					dayContainer.add(new AppointmentPane(selectedApps.get(length - 1)));
+				}
+			
+				// add vertical gap between appointments
+				dayContainer.add(Box.createRigidArea(
+						new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
+				
+				initTimelineDates(selectedApps.get(0).getStartDate());
+				
+				if (hasEmptySlot(selectedApps.get(length - 1), null)) {
+					dayContainer.add(new EmptySlotPane(new EmptySlot(
+							selectedApps.get(length - 1).getEndDate(), finishDate, partner)));
+					// add vertical gap between appointments
+					dayContainer.add(Box.createRigidArea(
+							new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
+				}
 			}
 			
 			anchorTopContainer.add(dayContainer, BorderLayout.NORTH);
@@ -140,14 +199,19 @@ public class DayPane extends JPanel {
 		access.close();
 	}
 
-	private void initTimelineDates(Calendar calendar) {
+	private void initTimelineDates(Date date) {
+		Calendar calendar = Calendar.getInstance(Locale.UK);
+		calendar.setTime(date);
+		
 		calendar.set(Calendar.HOUR_OF_DAY, 9);
 		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
 		
 		beginDate = calendar.getTime();
-		
+				
 		calendar.set(Calendar.HOUR_OF_DAY, 17);
 		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
 		
 		finishDate = calendar.getTime();
 	}
@@ -155,28 +219,22 @@ public class DayPane extends JPanel {
 	private boolean hasEmptySlot(Appointment a1, Appointment a2) {
 		Date startDate = null;
 		Date endDate = null;
-		Calendar calendar = Calendar.getInstance(Locale.UK);
-		
-		if (a1 == null && a2 == null) {
+
+		if (a1 == null) {
 			endDate = (Date) beginDate.clone();
-			startDate = (Date) beginDate.clone();
 		} else {
-			if (a1 == null) {
-				endDate = (Date) beginDate.clone();
-			} else {
-				endDate = a1.getEndDate();
-			}
-			
-			if (a2 == null) {
-				startDate = (Date) finishDate.clone();
-			} else {
-				startDate = a2.getStartDate();
-			}
+			endDate = a1.getEndDate();
 		}
 		
+		if (a2 == null) {
+			startDate = (Date) finishDate.clone();
+		} else {
+			startDate = a2.getStartDate();
+		}
 		
-		if (endDate.compareTo(startDate) == -1 && 
-				startDate.getTime() - endDate.getTime() > 900000) {
+		long gap = startDate.getTime() - endDate.getTime();
+		
+		if (endDate.compareTo(startDate) < 0 && gap > 600000) {
 			return true;
 		}
 		

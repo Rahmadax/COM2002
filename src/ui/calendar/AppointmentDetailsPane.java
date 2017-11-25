@@ -25,7 +25,6 @@ import javax.swing.border.MatteBorder;
 import calendar.Appointment;
 import mysql.MySQLAccess;
 import mysql.query.AppointmentQuery;
-import mysql.query.Patient;
 import mysql.query.PatientQuery;
 import ui.MainFrame;
 import ui.ModeUI;
@@ -41,8 +40,7 @@ import ui.popup.OverlayPane;
 public class AppointmentDetailsPane extends OverlayContentPane {
 
 	private Appointment appointment;
-	private Patient patient;
-	
+
 	private ArrayList<TreatmentPane> treatmentList;
 	private JPanel treatmentsPane;
 
@@ -217,7 +215,8 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 					}
 				});
 				
-				dialogPane.show();
+				getOverlay().hide();
+				dialogPane.show();				
 			}
 		});
 		

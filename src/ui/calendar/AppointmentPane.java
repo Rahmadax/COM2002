@@ -18,8 +18,9 @@ import javax.swing.border.MatteBorder;
 
 import calendar.Appointment;
 import mysql.MySQLAccess;
-import mysql.query.Patient;
 import mysql.query.PatientQuery;
+
+import ui.MainFrame;
 import ui.layout.CenteredPane;
 import ui.listener.HoverListener;
 import ui.popup.OverlayPane;
@@ -40,8 +41,7 @@ public class AppointmentPane extends TimeSlotPane {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				JPanel panel = (JPanel) e.getSource();
-				JRootPane rootPane = SwingUtilities.getRootPane(panel);
+				JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 
 				SimpleDateFormat dateFormatter = 
 						new SimpleDateFormat("d MMMM yyyy");

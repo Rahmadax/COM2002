@@ -25,6 +25,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import ui.MainFrame;
+import ui.custom.CustomComboBox;
 import ui.custom.CustomTextField;
 import ui.custom.DatePicker;
 import ui.custom.TimePicker;
@@ -84,6 +85,14 @@ public class BookPane extends JPanel {
 		return true;
 	}
 	
+	public void setInitialPartner(String partner) {
+		for (FormData formData: dataList) {
+			if (formData.dbField == "Partner") {
+				((CustomComboBox) formData.dataComponent).setSelectedItem(partner);;
+			}
+		}
+	}
+	
 	public void setInitialDate(Calendar date) {
 		for (FormData formData: dataList) {
 			if (formData.dbField == "AppointmentDate") {
@@ -124,17 +133,19 @@ public class BookPane extends JPanel {
 		Matcher m2 = p2.matcher(date);
 	
 		if (m1.find() && m2.find()) {
-			if (m1.group(3) == "AM") {
+			if (m1.group(3).equals("AM")) {
 				calendar.set(Calendar.AM_PM, Calendar.AM);
 			} else {
 				calendar.set(Calendar.AM_PM, Calendar.PM);
 			}
 			
+			
+			
 			calendar.set(Calendar.HOUR, Integer.parseInt(m1.group(1)));
 			calendar.set(Calendar.MINUTE, Integer.parseInt(m1.group(2)));
-			
+
 			calendar.set(Calendar.YEAR, Integer.parseInt(m2.group(1)));
-			calendar.set(Calendar.MONTH, Integer.parseInt(m2.group(2) + 1));
+			calendar.set(Calendar.MONTH, Integer.parseInt(m2.group(2)) - 1);
 			calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(m2.group(3)));
 			
 			System.out.println(calendar.getTime());

@@ -21,7 +21,12 @@ public class CustomTextField extends JTextField{
 	public CustomTextField(String replacement, int columns) {
 		super(replacement, columns);
 
-		setForeground(LIGHT_GRAY);
+		if (!replacement.equals("")) {
+			setForeground(LIGHT_GRAY);
+		} else {
+			setForeground(FONT_COLOR);
+		}
+		
 		setBackground(DARK_GRAY);
 		setBorder(new CompoundBorder(
 				new LineBorder(LIGHT_GRAY, 1),

@@ -7,7 +7,7 @@ import mysql.MySQLAccess;
 
 public final class PatientQuery extends QuerySQL {
 
-	protected PatientQuery(MySQLAccess access) {
+	public PatientQuery(MySQLAccess access) {
 		super(access);
 	}
 

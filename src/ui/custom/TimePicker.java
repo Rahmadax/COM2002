@@ -78,23 +78,9 @@ public class TimePicker extends JPanel {
 	}
 	
 	private void initFields() {		
-		hourField = new CustomTextField("h", 2);
-		minuteField = new CustomTextField("m", 2);
+		hourField = new CustomTextField("", 2);
+		minuteField = new CustomTextField("", 2);
 		periodField = new CustomComboBox(new String[] {"AM", "PM"});
-				
-		hourField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				adjustInputs();
-			}
-		});
-		
-		minuteField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				adjustInputs();
-			}
-		});
 	}
 	
 	private void adjustInputs() {
