@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
@@ -65,9 +66,10 @@ public class MainFrame extends JFrame {
 	private void addComponents() {
 		// initialize root pane for pop-ups
 		JRootPane rootPane = new JRootPane();
+		rootPane.setGlassPane(new JLayeredPane());
 		
 		// glass pane for pop-ups
-	    JPanel glass = (JPanel) rootPane.getGlassPane();
+		JLayeredPane glass = (JLayeredPane) rootPane.getGlassPane();
 	    glass.setLayout(null);
 	    glass.setVisible(true);
 	    
@@ -85,8 +87,8 @@ public class MainFrame extends JFrame {
 	    JPanel calendarTabsPane = calendarTabbedPane.getTabsInstance();
 	    
 	    // add calendar tabs
-	    calendarTabbedPane.addTab("Dentist", new CalendarPane(Calendar.getInstance(Locale.UK)));
-	    calendarTabbedPane.addTab("Hygienist", new CalendarPane(Calendar.getInstance(Locale.UK)));
+	    calendarTabbedPane.addTab("Dentist", new CalendarPane(Calendar.getInstance(Locale.UK), "Dentist"));
+	    calendarTabbedPane.addTab("Hygienist", new CalendarPane(Calendar.getInstance(Locale.UK), "Hygienist"));
 
 	    // add main tabs
 	    mainTabbedPane.addTab("Calendar", calendarTabbedPane);

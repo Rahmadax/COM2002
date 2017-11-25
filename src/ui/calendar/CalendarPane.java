@@ -39,10 +39,13 @@ public class CalendarPane extends JPanel {
 	private static final int PICK_WEEKS_AFTER = 25;
 	
 	private Calendar calendar;
+
+	private String partner;
 	
-	public CalendarPane(Calendar calendar) {
+	public CalendarPane(Calendar calendar, String partner) {
 		super(new BorderLayout(20, 20));
 		
+		this.partner = partner;
 		this.calendar = calendar;
 		this.calendar.set(Calendar.DAY_OF_WEEK, 2);
 
@@ -158,7 +161,7 @@ public class CalendarPane extends JPanel {
 	
 	private JScrollPane createDayPane() {
 		JScrollPane dayPane = new JScrollPane(
-				new DayPane((Calendar) calendar.clone()));
+				new DayPane((Calendar) calendar.clone(), partner));
 		
 		dayPane.setOpaque(false);
 		dayPane.setBorder(new LineBorder(new Color(255, 160, 0), 1));

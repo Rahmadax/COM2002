@@ -43,7 +43,7 @@ import ui.popup.OverlayPane;
 public class AppointmentDetailsPane extends OverlayContentPane {
 
 	private Appointment appointment;
-	
+
 	private ArrayList<TreatmentPane> treatmentList;
 	private JPanel treatmentsPane;
 
@@ -216,7 +216,8 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 					}
 				});
 				
-				dialogPane.show();
+				getOverlay().hide();
+				dialogPane.show();				
 			}
 		});
 		

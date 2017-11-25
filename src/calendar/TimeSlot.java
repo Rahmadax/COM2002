@@ -1,5 +1,6 @@
 package calendar;
 
+import java.sql.Time;
 import java.util.Date;
 
 public abstract class TimeSlot {
@@ -19,5 +20,5 @@ public abstract class TimeSlot {
 	public Date getEndDate() {
 		return endDate;
 	}
-	
+
 }

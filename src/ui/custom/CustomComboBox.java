@@ -73,7 +73,6 @@ public class CustomComboBox extends JComboBox<String> {
 	        this.selectedItem = item;
 	        label.setText(item.toString());
 	    }
-		    
 	}
 
 	private class CustomRenderer extends JPanel implements ListCellRenderer {

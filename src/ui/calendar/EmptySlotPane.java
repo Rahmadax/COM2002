@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Calendar;
+import java.util.Locale;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,9 +29,16 @@ public class EmptySlotPane extends TimeSlotPane {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				MainFrame.mainMenu.selectTab(MainFrame.MENU_BOOK_INDEX);
+				
+				Calendar calendar = Calendar.getInstance(Locale.UK);
+				calendar.setTime(timeSlot.getStartDate());
 
 				BookPane bookPane = (BookPane) MainFrame.mainMenu.getCurrentContentPane();
 				bookPane.setInitialTimes(timeSlot.getStartDate(), timeSlot.getEndDate());			
+				bookPane.setInitialDate(calendar);
+				bookPane.setInitialPartner(timeSlot.getPartner());
+				
+				setBackground(BACKGROUND_COLOR);
 			}
 		});
 		addMouseListener(new HoverListener(BACKGROUND_COLOR, HOVER_COLOR));
