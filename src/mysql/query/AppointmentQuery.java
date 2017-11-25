@@ -67,11 +67,9 @@ public class AppointmentQuery extends QuerySQL {
 	public void remove(int patID, String appDate) throws Exception {
 		
 		try {
-			PreparedStatement useDB = connect.prepareStatement("USE team049;");
 			PreparedStatement delete = connect.prepareStatement("DELETE FROM Appointments"
 					+ "WHERE PatientID = "+patID+ " and AppointmentDate = '"+appDate+"');");
 			
-			useDB.executeUpdate();
 			delete.executeUpdate();
 			
 		} catch (Exception e) {System.out.println(e);}
