@@ -24,5 +24,18 @@ public class TreatmentApp_LinkerQuery extends QuerySQL {
 
         return idList;
     }
+    /*
+    public int[] getAppointment(int treatmentID) throws Exception{
+        PreparedStatement get = prepareStatement("SELECT (AppointmentDate,StartTime,Partner) FROM Treatments WHERE " +
+                "TreatmentID = ?");
+        preparedStatement.setDate(1, treatmentID);
+        resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            int currRow = resultSet.getRow() - 1;
+
+
+
+        }
+    }*/
 
 }

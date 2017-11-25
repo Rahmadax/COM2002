@@ -13,11 +13,16 @@ public class TreatmentQuery extends QuerySQL {
 		super(access);
 	}
 
-    public String getTreatmentName(int treatmentID) throws Exception{
-        PreparedStatement get = prepareStatement("SELECT (TreatmentName) FROM Treatments WHERE " +
-                "TreatmentID = ?");
-        preparedStatement.setInt(1, treatmentID);
-        return String.valueOf(preparedStatement.executeQuery());
+    public String[] getTreatmentName(int[] treatmentIDList) throws Exception {
+        String[] treatmentNameList = new String[treatmentIDList.length];
+        for (int i = 0; i < treatmentIDList.length; i++) {
+            PreparedStatement get = prepareStatement("SELECT (TreatmentName) FROM Treatments WHERE " +
+                    "TreatmentID = ?");
+            preparedStatement.setInt(1, treatmentIDList[i]);
 
-	}
+
+            treatmentNameList[i] = String.valueOf(preparedStatement.executeQuery());
+
+        } return treatmentNameList;
+    }
 }
