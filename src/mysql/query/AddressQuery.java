@@ -37,10 +37,10 @@ public class AddressQuery extends QuerySQL {
 					+houseNumber+ ", '" +postCode+ "', '" +streetName+ "', '" +districtName+ "', '" +cityName+ "');");
 			
 			insert.executeUpdate();
+			close();
 			
 		} catch(Exception e) {System.out.println(e);}
 		
-		close();
 	}
 	
 	
