@@ -18,8 +18,6 @@ public class AddressQuery extends QuerySQL {
 		
 	resultSet = get.executeQuery();
 		
-	close(); 
-		
 	return resultSet;
 	}
 	
