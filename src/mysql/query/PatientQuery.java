@@ -56,6 +56,7 @@ public final class PatientQuery extends QuerySQL {
 		 String query = "SELECT FirstName FROM Patients WHERE FirstName LIKE  '%" + firstName + "%'; ";
 	     Statement st = connect.createStatement(); 
 		 ResultSet rs = st.executeQuery(query);	
+		close();
 		return rs;				
 	}
 	
