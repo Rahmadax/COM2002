@@ -96,7 +96,7 @@ public class FindPane extends JPanel {
 			searchButton.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					model.removeAllElements();
+				
 					String searchTextForename = findTextForename.getText();
 					String searchTextSurname = findTextSurname.getText();
 					System.out.println(searchTextForename);					
