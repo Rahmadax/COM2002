@@ -53,16 +53,7 @@ public class EmptySlotPane extends TimeSlotPane {
 	}
 	
 	private JPanel createContentPane() {
-		String text1 = "<html><center>Empty slot<br>(Click to book)</center></html>";
-		String text2 = "<html><center>Empty slot</center></html>";
-		
-		JLabel label = new JLabel();
-		if (MainFrame.mode == ModeUI.PRACTICE) {
-			label.setText(text2);
-		} else {
-			label.setText(text1);
-		}
-		
+		JLabel label = new JLabel("<html><center>Empty slot<br>(Click to book)</center></html>");
 		label.setForeground(new Color(255, 140, 0));
 
 		return new CenteredPane(label);

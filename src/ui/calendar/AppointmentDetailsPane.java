@@ -210,7 +210,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 				JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 				
 				DialogPane dialogPane = new DialogPane(rootPane,
-						"Are you sure you want to mark this appointnet as finished?");
+						"Are you sure you want to finish this appointment?");
 				
 				dialogPane.getOKButton().addMouseListener(new MouseAdapter() {
 					@Override
@@ -233,6 +233,17 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		cancelButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
+            	try {
+                	MySQLAccess access = new MySQLAccess();
+                	new AppointmentQuery(access).remove(appointment);
+                	
+                	access.close();
+            		
+            		MainFrame.program.refreshCalendar();
+            	} catch (Exception e1) {
+            		e1.printStackTrace();
+            	}
+            	
             	getOverlay().hide();
             }
         });
@@ -249,7 +260,27 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		try {
 			MySQLAccess access = new MySQLAccess();
 			TreatmentsStoreQuery q = new TreatmentsStoreQuery(access);
-			String[] treatments = q.getAll(appointment.getPartner());
+			String[] treatments;
+			
+			if (appointment.getPartner().equals("Dentist")) {
+				String[] repair = q.getAll("Repair");
+				String[] checkup = q.getAll("Checkup");
+				
+				treatments = new String[repair.length + checkup.length];
+				for (int i = 0; i < repair.length; i++) {
+					treatments[i] = repair[i];
+				}
+				for (int i = 0; i < checkup.length; i++) {
+					treatments[repair.length + i] = checkup[i];
+				}
+			} else {
+				String[] hygiene = q.getAll("Hygiene");
+				treatments = new String[hygiene.length];
+				for (int i = 0; i < hygiene.length; i++) {
+					treatments[i] = hygiene[i];
+				}
+			}
+			
 			access.close();
 
 			CustomComboBox comboBox = new CustomComboBox(treatments);
@@ -265,7 +296,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 					String pattern = "^(.*)\\s\\((([1-9]\\d*|0)\\.\\d{2})\\)$";
 					Pattern p = Pattern.compile(pattern);
 					Matcher m = p.matcher(string);
-					System.out.println(string);
+
 					if (m.find()) {
 						String name = m.group(1);
 						double price = Double.parseDouble(m.group(2));

@@ -36,6 +36,9 @@ public class MainFrame extends JFrame {
 	public static int MENU_REGISTER_INDEX = 1;
 	public static int MENU_FIND_INDEX = 2;
 	public static int MENU_BOOK_INDEX = 3;
+	
+	private CalendarPane dentistCalendar;
+	private CalendarPane hygienistCalendar;
 
 	public MainFrame(ModeUI mode) {
 		MainFrame.mode = mode;
@@ -63,6 +66,11 @@ public class MainFrame extends JFrame {
 	    });
 	}
 	
+	public void refreshCalendar() {
+		dentistCalendar.changeWeek(dentistCalendar.getCalendar().getTime());
+		hygienistCalendar.changeWeek(hygienistCalendar.getCalendar().getTime());
+	}
+	
 	private void addComponents() {
 		// initialize root pane for pop-ups
 		JRootPane rootPane = new JRootPane();
@@ -87,8 +95,11 @@ public class MainFrame extends JFrame {
 	    JPanel calendarTabsPane = calendarTabbedPane.getTabsInstance();
 	    
 	    // add calendar tabs
-	    calendarTabbedPane.addTab("Dentist", new CalendarPane(Calendar.getInstance(Locale.UK), "Dentist"));
-	    calendarTabbedPane.addTab("Hygienist", new CalendarPane(Calendar.getInstance(Locale.UK), "Hygienist"));
+	    dentistCalendar = new CalendarPane(Calendar.getInstance(Locale.UK), "Dentist");
+	    hygienistCalendar = new CalendarPane(Calendar.getInstance(Locale.UK), "Hygienist");
+	    
+	    calendarTabbedPane.addTab("Dentist", dentistCalendar);
+	    calendarTabbedPane.addTab("Hygienist", hygienistCalendar);
 
 	    // add main tabs
 	    mainTabbedPane.addTab("Calendar", calendarTabbedPane);

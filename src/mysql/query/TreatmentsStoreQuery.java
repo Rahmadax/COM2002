@@ -9,10 +9,10 @@ import java.sql.ResultSet;
 public class TreatmentsStoreQuery extends QuerySQL {
     public TreatmentsStoreQuery(MySQLAccess access) {super(access);}
 
-    public String[] getAll(String partner) throws Exception {
+    public String[] getAll(String type) throws Exception {
         PreparedStatement preparedStatement = prepareStatement("SELECT TreatmentName, TreatmentCost "
-                + "FROM TreatmentsStore WHERE Partner = ?;");
-        preparedStatement.setString(1, partner);
+                + "FROM TreatmentsStore WHERE Type = ?;");
+        preparedStatement.setString(1, type);
         
         ResultSet resultSet = preparedStatement.executeQuery();
 

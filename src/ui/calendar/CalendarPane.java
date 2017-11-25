@@ -99,10 +99,14 @@ public class CalendarPane extends JPanel {
 		}
 	}
 
+	public Calendar getCalendar() {
+		return calendar;
+	}
+	
 	// change week by specific date
-	private void changeWeek(Date date) {
-		LoadingPane loadingPane = new LoadingPane(
-				SwingUtilities.getRootPane(this));
+	public void changeWeek(Date date) {
+		JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+		LoadingPane loadingPane = new LoadingPane(rootPane);
 		loadingPane.show();
 
 		Thread queryThread = new Thread() {
