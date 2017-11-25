@@ -21,6 +21,7 @@ import javax.swing.border.MatteBorder;
 
 import mysql.MySQLAccess;
 import mysql.query.AddressQuery;
+import mysql.query.HCPStoreQuery;
 import mysql.query.PatientQuery;
 import ui.MainFrame;
 import ui.custom.CustomComboBox;
@@ -79,8 +80,18 @@ public class RegisterPane extends JPanel {
 		}
 		
 		addFormData(new FormSwitch("Subscribe to dental plan", "Subscribe"), formPane, 50, 50);
-		addFormData(new FormComboBox(new String[] {"Plan 1", "Plan 2", "Plan 3"},
-				"Dental Plan", "Plan"), formPane, 50, 50);
+		
+		try {
+			MySQLAccess access = new MySQLAccess();
+			HCPStoreQuery q = new HCPStoreQuery(access);
+			String[] strs = q.getAll();
+			access.close();
+
+			addFormData(new FormComboBox(strs, "Dental Plan", "Plan"), 
+					formPane, 50, 50);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	
 		JPanel contentPane = createContentPane();
 		
@@ -182,15 +193,15 @@ public class RegisterPane extends JPanel {
 							
 							JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 							new SuccessPane(rootPane, "New Patient added successfully!").show();
-							} 
-						} else {
-							adQuery.add(houseNumber, postCode, streetName, districtName, cityName);
-							patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
-							System.out.println("hello");
-							
-							JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-							new SuccessPane(rootPane, "New Patient added successfully!").show();
-						}
+						} 
+					} else {
+						adQuery.add(houseNumber, postCode, streetName, districtName, cityName);
+						patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
+						System.out.println("hello");
+						
+						JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+						new SuccessPane(rootPane, "New Patient added successfully!").show();
+					}
 					
 					access.close();
 					

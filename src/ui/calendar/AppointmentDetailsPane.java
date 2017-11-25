@@ -249,8 +249,9 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		try {
 			MySQLAccess access = new MySQLAccess();
 			TreatmentsStoreQuery q = new TreatmentsStoreQuery(access);
-			String[] treatments = q.getAll();
-			
+			String[] treatments = q.getAll(appointment.getPartner());
+			access.close();
+
 			CustomComboBox comboBox = new CustomComboBox(treatments);
 			comboBox.setPreferredSize(new Dimension(200, 40));
 			

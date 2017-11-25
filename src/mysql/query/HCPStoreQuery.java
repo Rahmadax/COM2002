@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 
 public class HCPStoreQuery extends QuerySQL {
 	
-	protected HCPStoreQuery(MySQLAccess access) {
+	public HCPStoreQuery(MySQLAccess access) {
 		super(access);
 	}
 	
@@ -21,7 +21,8 @@ public class HCPStoreQuery extends QuerySQL {
         String[] HCPStore = new String[rows];
         
         while (rs.next()) {
-            int currRow = rs.getRow() - 1;
+            System.out.println("test");
+        	int currRow = rs.getRow() - 1;
 
             String HCPName = rs.getString(1);
             BigDecimal monthPay = rs.getBigDecimal(2);
@@ -29,8 +30,9 @@ public class HCPStoreQuery extends QuerySQL {
             int hygieneMax = rs.getInt(4);
             int repairsMax = rs.getInt(5);
             
-            HCPStore[currRow] = HCPName + " (" +String.format("%.2f", monthPay)+ ", " +checkupMax+ ", " +hygieneMax+ ", " +repairsMax+ ")";
+            HCPStore[currRow] = HCPName + " (" +String.format("%.2f", monthPay) + ")";
         }
+        
 		return HCPStore;
 	}
 }

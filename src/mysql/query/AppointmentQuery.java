@@ -59,7 +59,7 @@ public class AppointmentQuery extends QuerySQL {
 		
 		preparedStatement.executeUpdate();
 	}
-	
+
 	public void remove(Date appDate, Time startTime, String partner) throws Exception {
 
 		preparedStatement = prepareStatement("DELETE FROM Appointments WHERE (AppointmentDate, startTime, Partner) = " +
