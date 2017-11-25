@@ -1,14 +1,9 @@
 package ui.calendar;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +23,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import calendar.Appointment;
+import mysql.MySQLAccess;
+import mysql.query.AppointmentQuery;
+import mysql.query.Patient;
 import mysql.query.PatientQuery;
 import ui.MainFrame;
 import ui.ModeUI;
@@ -43,11 +41,12 @@ import ui.popup.OverlayPane;
 public class AppointmentDetailsPane extends OverlayContentPane {
 
 	private Appointment appointment;
+	private Patient patient;
 	
 	private ArrayList<TreatmentPane> treatmentList;
 	private JPanel treatmentsPane;
 
-	public AppointmentDetailsPane(Appointment appointment, OverlayPane overlay) {
+	public AppointmentDetailsPane(Appointment appointment, OverlayPane overlay) throws Exception {
 		super(overlay);
 		this.appointment = appointment;
 		treatmentList = new ArrayList<TreatmentPane>();
@@ -59,7 +58,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		addComponents();
 	}
 	
-	private void addComponents() {
+	private void addComponents() throws Exception {
 		JPanel detailsContainer = new JPanel(new GridLayout(1, 2));
 		detailsContainer.setOpaque(false);
 		detailsContainer.setBorder(new CompoundBorder(
@@ -74,17 +73,19 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		add(createControlPane(), BorderLayout.SOUTH);
 	}
 	
-	private JPanel createLeftPane() {
+	private JPanel createLeftPane() throws Exception {
 		JPanel leftPane = new JPanel();
 		leftPane.setOpaque(false);
 		leftPane.setLayout(new BoxLayout(leftPane, BoxLayout.Y_AXIS));
 
+        MySQLAccess access = new MySQLAccess();
+        PatientQuery q = new PatientQuery(access);
 		JPanel patientPane = new JPanel();
 		patientPane.setOpaque(false);
 		patientPane.add(new JLabel("Patient: "));
-		patientPane.add(new JLabel(Integer.toString(appointment.getPatientID())));
-		
-		JPanel partnerPane = new JPanel();
+        Component add = patientPane.add(new JLabel(q.getFullName(appointment.getPatientID())));
+
+        JPanel partnerPane = new JPanel();
 		partnerPane.setOpaque(false);
 		partnerPane.add(new JLabel("Partner: "));
 		partnerPane.add(new JLabel(appointment.getPartner()));
@@ -227,25 +228,10 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		CustomButton cancelButton = 
 				new CustomButton("Cancel appointment", CustomButton.ERROR_STYLE);
 		cancelButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-				
-				DialogPane dialogPane = new DialogPane(rootPane,
-						"Are you sure you want to delete this appointnet?");
-				
-				dialogPane.getOKButton().addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseReleased(MouseEvent e) {
-						
-					}
-				});
-				
-				dialogPane.show();
-			}
-		});
-		
-		return cancelButton;
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+        } );return  cancelButton;
 	}
 	
 	private JPanel createAddTreatmentPane() {
