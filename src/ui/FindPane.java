@@ -57,9 +57,7 @@ public class FindPane extends JPanel {
 		this.setLayout(new GridLayout(1,3));
 		setBackground(new Color(90,90,90));		
 		this.add(new SearchBarPane());	
-		if(data[0][0] != "") {
-			System.out.println(data);
-		}
+
 	}
 	
 	public class SearchBarPane extends JPanel {		
