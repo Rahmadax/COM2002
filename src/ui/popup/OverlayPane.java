@@ -36,6 +36,7 @@ public class OverlayPane extends PopupPane {
 	private JPanel mainPane;
 	private JPanel contentPane;
 	private JPanel titlePane;
+	private CustomButton closeButton;
 	
 	private ComponentAdapter resizeListener;
 	private MouseAdapter closeListener;
@@ -44,6 +45,7 @@ public class OverlayPane extends PopupPane {
 	public OverlayPane(JRootPane rootPane, JPanel contentPane, int style) {
 		super(rootPane);
 
+		this.closeButton = new CustomButton("");
 		this.style = getStyle(style);
 		this.contentPane = contentPane;
 		mainPane = createMainPane();
@@ -60,6 +62,10 @@ public class OverlayPane extends PopupPane {
 	
 	public OverlayPane(JRootPane rootPane, JPanel contentPane) {
 		this(rootPane, contentPane, DEFAULT_STYLE);
+	}
+	
+	public void setCloseButtonVisibility(boolean visible) {
+		closeButton.setVisible(visible);
 	}
 	
 	public void setConstraints(int minWidth, int minHeignt, 
@@ -205,7 +211,9 @@ public class OverlayPane extends PopupPane {
 		JPanel container = new JPanel(new BorderLayout());
 		container.setBorder(new CompoundBorder(
 				new EmptyBorder(10, 15, 10, 15),
-				new MatteBorder(0, 0, 2, 0, new Color(130, 130, 130))));
+				new CompoundBorder(
+						new MatteBorder(0, 0, 2, 0, new Color(130, 130, 130)),
+						new EmptyBorder(0, 0, 6, 0))));
 		container.setBackground(new Color(70, 70, 70));
 		
 		JPanel closeButtonPane = new JPanel();
@@ -221,12 +229,12 @@ public class OverlayPane extends PopupPane {
 		title.setForeground(style.TITLE_COLOR);
 		title.setFont(large);
 		
-		JLabel date = new JLabel(second);
-		date.setForeground(new Color(200, 200, 200));
-		date.setBorder(new EmptyBorder(0, 5, 0, 0));
+		JLabel small = new JLabel(second);
+		small.setForeground(new Color(200, 200, 200));
+		small.setBorder(new EmptyBorder(0, 5, 0, 0));
 		
 		titlePane.add(title);
-		titlePane.add(date);
+		titlePane.add(small);
 
 		container.add(closeButtonPane, BorderLayout.EAST);
 		container.add(titlePane, BorderLayout.WEST);
@@ -245,6 +253,8 @@ public class OverlayPane extends PopupPane {
 				hide();
 			}
 		});
+		
+		this.closeButton = closeButton;
 		
 		return closeButton;
 	}

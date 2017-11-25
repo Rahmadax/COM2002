@@ -23,6 +23,8 @@ import mysql.query.PatientQuery;
 import ui.MainFrame;
 import ui.layout.CenteredPane;
 import ui.listener.HoverListener;
+import ui.popup.ErrorPane;
+import ui.popup.LoadingPane;
 import ui.popup.OverlayPane;
 
 public class AppointmentPane extends TimeSlotPane {
@@ -48,15 +50,28 @@ public class AppointmentPane extends TimeSlotPane {
 				
 				OverlayPane overlay = new OverlayPane(rootPane, 
 						new JPanel());
-                try {
-                    overlay.setContentPane(new AppointmentDetailsPane(appointment, overlay));
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-                overlay.setTitle("Appointment",
-						dateFormatter.format(appointment.getStartDate()));
-				overlay.setConstraints(650, 500, 2, 1.9);
-				overlay.show();
+				
+				LoadingPane loading = new LoadingPane(rootPane);
+				loading.show();
+                
+            	new Thread() {
+					@Override
+					public void run() {
+						try {
+    						overlay.setContentPane(new AppointmentDetailsPane(appointment, overlay));
+		                    overlay.setTitle("Appointment",
+		    						dateFormatter.format(appointment.getStartDate()));
+		    				overlay.setConstraints(650, 500, 2, 1.9);
+		    				loading.hide();
+		    				overlay.show();
+						} catch (Exception e1) {
+		                    e1.printStackTrace();
+		                    
+		                    new ErrorPane(rootPane, "Unable to view the appointment.").show();
+		                }
+					}
+				}.start();
+                
 			}
 		});
 		

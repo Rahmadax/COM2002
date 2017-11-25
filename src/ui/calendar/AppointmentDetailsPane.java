@@ -208,6 +208,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+				getOverlay().hide();
 				
 				DialogPane dialogPane = new DialogPane(rootPane,
 						"Are you sure you want to finish this appointment?");
@@ -219,8 +220,14 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 					}
 				});
 				
-				getOverlay().hide();
-				dialogPane.show();				
+				dialogPane.getCancelButton().addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						getOverlay().show();
+					}
+				});
+
+				dialogPane.show();
 			}
 		});
 		
@@ -233,18 +240,36 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		cancelButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-            	try {
-                	MySQLAccess access = new MySQLAccess();
-                	new AppointmentQuery(access).remove(appointment);
-                	
-                	access.close();
-            		
-            		MainFrame.program.refreshCalendar();
-            	} catch (Exception e1) {
-            		e1.printStackTrace();
-            	}
-            	
-            	getOverlay().hide();
+            	JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+				getOverlay().hide();
+				
+				DialogPane dialogPane = new DialogPane(rootPane,
+						"Are you sure you want to delete this appointment?");
+				
+				dialogPane.getOKButton().addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						try {
+		                	MySQLAccess access = new MySQLAccess();
+		                	new AppointmentQuery(access).remove(appointment);
+		                	
+		                	access.close();
+		            		
+		            		MainFrame.program.refreshCalendar();
+		            	} catch (Exception e1) {
+		            		e1.printStackTrace();
+		            	}
+					}
+				});
+				
+				dialogPane.getCancelButton().addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						getOverlay().show();
+					}
+				});
+
+				dialogPane.show();
             }
         });
 		

@@ -17,9 +17,10 @@ public class DialogPane extends OverlayPane {
 
 	public DialogPane(JRootPane rootPane, String dialog) {
 		super(rootPane, new JPanel());
-		setContentPane(createDIalogPane());
-
+		setContentPane(createDialogPane());
 		setTitle("Warning", dialog);
+		setCloseButtonVisibility(false);
+		
 		disableOutOfBoundsClose();
 		setConstraints(400, 160, 0, 0);
 	}
@@ -32,7 +33,7 @@ public class DialogPane extends OverlayPane {
 		return cancelButton;
 	}
 	
-	private JPanel createDIalogPane() {
+	private JPanel createDialogPane() {
 		JPanel dialogPane = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 		dialogPane.setBackground(new Color(100, 100, 100));
 		
