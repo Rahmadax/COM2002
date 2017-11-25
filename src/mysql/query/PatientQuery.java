@@ -55,5 +55,21 @@ public final class PatientQuery extends QuerySQL {
 		 preparedStatement = connect.prepareStatement("SELECT PatientID, FirstName, LastName, DOB, ContactNumber, HouseNumber, Postcode FROM Patient WHERE FirstName LIKE '% " + firstName + " '%");
 	     resultSet = preparedStatement.executeQuery();	
 		return resultSet;				
-}
+       }
+	
+	public String getFullName (int patientID) throws Exception {
+        String fn = null;
+        String ln = null;
+        preparedStatement = prepareStatement(
+                "SELECT FirstName, LastName "
+                        + "FROM Patients WHERE PatientID = ?;");
+        preparedStatement.setInt(1, patientID);
+        resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            fn = resultSet.getString(1);
+            ln = resultSet.getString(2);
+
+        }
+        return (fn + " " + ln);
+    }
 }
