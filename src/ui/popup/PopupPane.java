@@ -21,6 +21,7 @@ public class PopupPane extends JPanel {
 	// at a specific location and rootPane
 	public PopupPane(JRootPane rootPane) {
 		this.rootPane = rootPane;
+		
 		glass = (JLayeredPane) rootPane.getGlassPane();
 		
 		hidden = true;

@@ -21,7 +21,6 @@ public class HCPStoreQuery extends QuerySQL {
         String[] HCPStore = new String[rows];
         
         while (rs.next()) {
-            System.out.println("test");
         	int currRow = rs.getRow() - 1;
 
             String HCPName = rs.getString(1);

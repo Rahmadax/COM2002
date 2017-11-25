@@ -60,14 +60,23 @@ public class AppointmentQuery extends QuerySQL {
 		preparedStatement.executeUpdate();
 	}
 
-	public void remove(Date appDate, Time startTime, String partner) throws Exception {
-
-		preparedStatement = prepareStatement("DELETE FROM Appointments WHERE (AppointmentDate, startTime, Partner) = " +
-				"VALUES (?,?,?);");
-		preparedStatement.setDate(1, (java.sql.Date) appDate);
-		preparedStatement.setTime(2, startTime);
-		preparedStatement.setString(3, partner);
-        	preparedStatement.executeQuery();
+	public void remove(Appointment a) throws Exception {
+		
+		java.sql.Date date = new java.sql.Date(a.getStartDate().getTime());		
+		
+		java.sql.Time time = new java.sql.Time(a.getStartDate().getTime());
+		String partner = a.getPartner();
+		System.out.println(date);
+		System.out.println(time);
+		System.out.println(partner);
+		
+		preparedStatement = prepareStatement("DELETE FROM Appointments WHERE "
+				+ "AppointmentDate = ? AND StartTime = ? AND Partner = ?;");
+		preparedStatement.setDate(1, new java.sql.Date(a.getStartDate().getTime()));
+		preparedStatement.setTime(2, new java.sql.Time(a.getStartDate().getTime()));
+		preparedStatement.setString(3, a.getPartner());
+		
+    	preparedStatement.executeUpdate();
 	}
 	
 	private Date createDate(Date date, Time time) {
@@ -78,6 +87,7 @@ public class AppointmentQuery extends QuerySQL {
 		calendar.setTime(date);
 		calendar.set(Calendar.HOUR_OF_DAY, timeC.get(Calendar.HOUR_OF_DAY));
 		calendar.set(Calendar.MINUTE, timeC.get(Calendar.MINUTE));
+		calendar.set(Calendar.SECOND, timeC.get(Calendar.SECOND));
 
 		return calendar.getTime();
 	}

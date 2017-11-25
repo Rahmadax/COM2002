@@ -24,6 +24,7 @@ import calendar.EmptySlot;
 import mysql.MySQLAccess;
 import mysql.query.AppointmentQuery;
 import ui.MainFrame;
+import ui.ModeUI;
 import ui.popup.ErrorPane;
 
 public class DayPane extends JPanel {
@@ -105,7 +106,7 @@ public class DayPane extends JPanel {
 			if (length > 0) {
 				initTimelineDates(selectedApps.get(0).getStartDate());
 				
-				if (hasEmptySlot(null, selectedApps.get(0))) {
+				if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(null, selectedApps.get(0))) {
 					dayContainer.add(new EmptySlotPane(
 							new EmptySlot(beginDate, selectedApps.get(0).getStartDate(), partner)));
 					// add vertical gap between appointments
@@ -124,7 +125,7 @@ public class DayPane extends JPanel {
 				if (j == 1) {
 					initTimelineDates(selectedApps.get(0).getStartDate());
 					
-					if (hasEmptySlot(selectedApps.get(0), selectedApps.get(1))) {
+					if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(selectedApps.get(0), selectedApps.get(1))) {
 						dayContainer.add(new EmptySlotPane(new EmptySlot(
 								selectedApps.get(0).getEndDate(), selectedApps.get(1).getStartDate(),
 								partner)));
@@ -142,7 +143,7 @@ public class DayPane extends JPanel {
 				
 				initTimelineDates(selectedApps.get(0).getStartDate());
 				
-				if (hasEmptySlot(selectedApps.get(j), selectedApps.get(j + 1))) {
+				if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(selectedApps.get(j), selectedApps.get(j + 1))) {
 					dayContainer.add(new EmptySlotPane(new EmptySlot(
 							selectedApps.get(j).getEndDate(), selectedApps.get(j + 1).getStartDate(),
 							partner)));
@@ -152,7 +153,7 @@ public class DayPane extends JPanel {
 				}
 			}
 			
-			if (length == 0) {
+			if (MainFrame.mode == ModeUI.SECRETARY && length == 0) {
 				initTimelineDates(calendar.getTime());
 				
 				dayContainer.add(new EmptySlotPane(new EmptySlot(beginDate, finishDate,partner)));
@@ -161,7 +162,7 @@ public class DayPane extends JPanel {
 			if (length == 2) {
 				initTimelineDates(selectedApps.get(0).getStartDate());
 				
-				if (hasEmptySlot(selectedApps.get(0), selectedApps.get(1))) {
+				if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(selectedApps.get(0), selectedApps.get(1))) {
 					dayContainer.add(new EmptySlotPane(new EmptySlot(
 							selectedApps.get(0).getEndDate(), selectedApps.get(1).getStartDate(),
 							partner)));
@@ -182,7 +183,7 @@ public class DayPane extends JPanel {
 				
 				initTimelineDates(selectedApps.get(0).getStartDate());
 				
-				if (hasEmptySlot(selectedApps.get(length - 1), null)) {
+				if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(selectedApps.get(length - 1), null)) {
 					dayContainer.add(new EmptySlotPane(new EmptySlot(
 							selectedApps.get(length - 1).getEndDate(), finishDate, partner)));
 					// add vertical gap between appointments
