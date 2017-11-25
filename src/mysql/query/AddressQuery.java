@@ -11,12 +11,22 @@ public class AddressQuery extends QuerySQL {
 		super(access);
 	}
 	
-	public ResultSet get(int houseNumber, String postCode) throws Exception {
-		PreparedStatement get = connect.prepareStatement("SELECT HouseNumer Postcode FROM Address "
-				+ "HouseNumber = " +houseNumber+ " and Postcode = " +postCode+ ";");
-		return resultSet;
+	public String get(int houseNumber, String postCode) throws Exception {
+		PreparedStatement get = prepareStatement("SELECT HouseNumer, Postcode FROM Address WHERE "
+				+ "HouseNumber = ? and Postcode = ?;");
+		preparedStatement.setInt(1, houseNumber);
+		preparedStatement.setString(2, postCode);
 		
+		resultSet = preparedStatement.executeQuery();
 		
+		int hn = 0;
+		String pc = null;
+		
+		while (resultSet.next()) {
+			hn = resultSet.getInt(1);
+			pc = resultSet.getString(2);
+		}
+		return hn.toString() + pc;
 		
 	}
 	public void add(int houseNumber, String postCode, String streetName, String districtName, String cityName) {
