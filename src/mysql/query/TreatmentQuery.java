@@ -1,5 +1,6 @@
 package mysql.query;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Time;
 
@@ -12,12 +13,11 @@ public class TreatmentQuery extends QuerySQL {
 		super(access);
 	}
 
-	public void get(String date, String startTime, String partner) throws Exception {
+    public String getTreatmentName(int treatmentID) throws Exception{
+        PreparedStatement get = prepareStatement("SELECT (TreatmentName) FROM Treatments WHERE " +
+                "TreatmentID = ?");
+        preparedStatement.setInt(1, treatmentID);
+        return String.valueOf(preparedStatement.executeQuery());
 
 	}
-	
-	public void add() {
-		
-	}
-	
 }
