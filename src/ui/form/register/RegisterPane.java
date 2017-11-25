@@ -173,14 +173,27 @@ public class RegisterPane extends JPanel {
 					String dob = map.get("DOB").toString();
 					String contactNumber = map.get("ContactNumber").toString();
 
-					adQuery.add(houseNumber, postCode, streetName, districtName, cityName);
-					patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
+					ResultSet rs = adQuery.get(houseNumber, postCode);
+					
+					if (rs.next()) {
+						if (postCode == rs.getString(2) && houseNumber == rs.getInt(1)) {
+							patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
+							
+							JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+							new SuccessPane(rootPane, "New Patient added successfully!").show();
+							} 
+						} else {
+							adQuery.add(houseNumber, postCode, streetName, districtName, cityName);
+							patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
+							System.out.println("hello");
+							
+							JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+							new SuccessPane(rootPane, "New Patient added successfully!").show();
+						}
 					
 					access.close();
 					
 					clearInputs();
-					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-					new SuccessPane(rootPane, "New Patient added successfully!").show();
 				} catch (SQLException e1) {
 					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 					new ErrorPane(rootPane, "Unable to connect to the database.").show();
