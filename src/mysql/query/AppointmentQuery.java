@@ -14,7 +14,17 @@ public class AppointmentQuery extends QuerySQL {
 	public AppointmentQuery(MySQLAccess access) {
 		super(access);
 	}
-	
+	public int appointmentToPatientID(String appDate, String startTime, String partner) throws Exception{
+		String query = "SELECT PatientID FROM Appointments WHERE (AppointmentData =" + appDate + " AND StartTime =" +startTime +" AND Partner =" + partner + "; ";
+	 	Statement st = connect.createStatement(); 
+	        ResultSet rs = st.executeQuery(query);	
+		int patientID = 0;
+		while(rs.next()) {
+	        	patientID = rs.getInt(1);				
+		}
+		close();
+		return patientID;				
+	}
 	public boolean isValidTimeSlot(HashMap<String, Object> map) throws Exception {
 		String appDate = (String) map.get("AppointmentDate");
 		String startTime = (String) map.get("StartTime");
