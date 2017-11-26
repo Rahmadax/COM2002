@@ -81,14 +81,22 @@ public class RegisterPane extends JPanel {
 		
 		addFormData(new FormSwitch("Subscribe to dental plan", "Subscribe"), formPane, 50, 50);
 		
+		HashMap<String, Object> map = getFormData();
+
 		try {
 			MySQLAccess access = new MySQLAccess();
 			HCPStoreQuery q = new HCPStoreQuery(access);
+			HCPsQuery hcpQuery = new HCPsQuery(access);
 			String[] strs = q.getAll();
+			
+			addFormData(new FormComboBox(strs, "Dental Plan", "Plan"), formPane, 50, 50);
+			
+			if ((boolean) map.get("Subscribe")) {
+				hcpQuery.addHCP(map.get("Plan").toString());
+			}
+			
 			access.close();
-
-			addFormData(new FormComboBox(strs, "Dental Plan", "Plan"), 
-					formPane, 50, 50);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
