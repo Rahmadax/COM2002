@@ -11,6 +11,14 @@ public final class PatientQuery extends QuerySQL {
 	public PatientQuery(MySQLAccess access) {
 		super(access);
 	}
+	
+	public int getLastadded() throws Exception {
+		preparedStatement = prepareStatement("SELECT MAX (PatientID) FROM Patients");
+		resultSet = preparedStatement.executeQuery();
+		resultSet.next();
+		
+		return resultSet.getInt(1);
+	}
 
 	public String getPatientName(int ID) throws Exception {
         preparedStatement = connect.prepareStatement(

@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class HCPsQuery extends QuerySQL {
-    protected HCPsQuery(MySQLAccess access) {super(access);}
+    public HCPsQuery(MySQLAccess access) {super(access);}
 
     public void removeHCP(int patientID) throws Exception {
         preparedStatement = prepareStatement("DELETE FROM HCPs WHERE "

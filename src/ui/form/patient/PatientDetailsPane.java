@@ -4,7 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.HashMap;
 
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
 import ui.custom.tabbedpane.CustomTabbedPane;
 import ui.popup.OverlayContentPane;
@@ -47,8 +53,24 @@ public class PatientDetailsPane extends OverlayContentPane {
 	private JPanel createAppointmentsPane() {
 		JPanel appointmentsPane = new JPanel();
 		appointmentsPane.setOpaque(false);
+		appointmentsPane.setLayout(new BoxLayout(appointmentsPane, BoxLayout.Y_AXIS));
+				
+		JPanel anchorTopContainer = new JPanel(new BorderLayout());
+		anchorTopContainer.setBackground(new Color(90, 90, 90));
+		anchorTopContainer.add(appointmentsPane, BorderLayout.NORTH);
+
+		JScrollPane scrollPane = new JScrollPane(anchorTopContainer);
 		
-		return appointmentsPane;
+		scrollPane.setBorder(new LineBorder(new Color(200, 200, 200), 1));
+		scrollPane.getVerticalScrollBar().setUnitIncrement(16);;
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+		JPanel container = new JPanel(new BorderLayout());
+		container.setOpaque(false);
+		container.add(scrollPane);
+		
+		return container;
 	}
 	
 	private JPanel createCostsPane() {
