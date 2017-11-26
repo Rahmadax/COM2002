@@ -107,7 +107,7 @@ public class AppointmentQuery extends QuerySQL {
 	public String[][] get(int patientID) throws Exception {
 		preparedStatement = prepareStatement(
 				"SELECT AppointmentDate, StartTime, Partner, PaidFor "
-						+ "FROM Appointments WHERE PatientID = ?;");
+						+ "FROM Appointments WHERE PatientID = ? ORDER BY AppointmentDate DESC;");
 		preparedStatement.setInt(1, patientID);
 		resultSet = preparedStatement.executeQuery();
 
