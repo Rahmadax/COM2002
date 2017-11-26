@@ -201,6 +201,59 @@ public class FindPane extends JPanel {
 								ResultSet resultSet = query.findWithWholeNamePostCodeHouseNumDOB(searchTextForename,
 										searchTextSurname, searchTextPostcode, searchTextHouseNum, searchTextDOB);
 								data = handleSearch(resultSet);
+							}else if (searchTextForename.equals("") && searchTextSurname.equals("") && !searchTextPostcode.equals("")
+									&& searchTextHouseNum.equals("") && !searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithPostCodeDOB(searchTextPostcode, searchTextDOB);
+								data = handleSearch(resultSet);
+							}else if (!searchTextForename.equals("") && searchTextSurname.equals("") && !searchTextPostcode.equals("")
+									&& !searchTextHouseNum.equals("") && !searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithFirstNamePostCodeHouseNumDOB(searchTextForename,
+										searchTextPostcode, searchTextHouseNum, searchTextDOB);
+								data = handleSearch(resultSet);
+							}else if (searchTextForename.equals("") && !searchTextSurname.equals("") && !searchTextPostcode.equals("")
+									&& !searchTextHouseNum.equals("") && !searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithLastNamePostCodeHouseNumDOB(searchTextSurname,
+										searchTextPostcode, searchTextHouseNum, searchTextDOB);
+								data = handleSearch(resultSet);
+							}else if (!searchTextForename.equals("") && searchTextSurname.equals("") && searchTextPostcode.equals("")
+									&& !searchTextHouseNum.equals("") && searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithFirstNameHouseNum(searchTextForename,
+										searchTextHouseNum);
+								data = handleSearch(resultSet);
+							}else if (searchTextForename.equals("") && !searchTextSurname.equals("") && searchTextPostcode.equals("")
+									&& !searchTextHouseNum.equals("") && searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithLastNameHouseNum(searchTextSurname,
+										searchTextHouseNum);
+								data = handleSearch(resultSet);
+							}else if (!searchTextForename.equals("") && searchTextSurname.equals("") && !searchTextPostcode.equals("")
+									&& searchTextHouseNum.equals("") && !searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithFirstNamePostCodeDOB(searchTextForename,
+										searchTextPostcode, searchTextDOB);
+								data = handleSearch(resultSet);
+							}else if (searchTextForename.equals("") && !searchTextSurname.equals("") && !searchTextPostcode.equals("")
+									&& searchTextHouseNum.equals("") && !searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithLastNamePostCodeDOB(searchTextSurname, 
+										searchTextPostcode, searchTextDOB);
+								data = handleSearch(resultSet);
+							}else if (!searchTextForename.equals("") && !searchTextSurname.equals("") && searchTextPostcode.equals("")
+									&& searchTextHouseNum.equals("") && !searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithWholeNameDOB(searchTextForename,
+										searchTextSurname, searchTextDOB);
+								data = handleSearch(resultSet);
+							}else if (!searchTextForename.equals("") && !searchTextSurname.equals("") && searchTextPostcode.equals("")
+									&& !searchTextHouseNum.equals("") && searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithWholeNameHouseNum(searchTextForename,
+										searchTextSurname, searchTextHouseNum);
+								data = handleSearch(resultSet);
+							}else if (searchTextForename.equals("") && searchTextSurname.equals("") && searchTextPostcode.equals("")
+									&& !searchTextHouseNum.equals("") && searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithHouseNum(searchTextHouseNum);
+								data = handleSearch(resultSet);
+							}else if (searchTextForename.equals("") && searchTextSurname.equals("") && searchTextPostcode.equals("")
+									&& !searchTextHouseNum.equals("") && !searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithHouseNumDOB(searchTextHouseNum,
+										searchTextDOB);
+								data = handleSearch(resultSet);
 							}
 							access.close();
 
