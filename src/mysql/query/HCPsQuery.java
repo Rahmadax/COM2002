@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class HCPsQuery extends QuerySQL {
-    protected HCPsQuery(MySQLAccess access) {super(access);}
+    public HCPsQuery(MySQLAccess access) {super(access);}
 
     public void removeHCP(int patientID) throws Exception {
         preparedStatement = prepareStatement("DELETE FROM HCPs WHERE "

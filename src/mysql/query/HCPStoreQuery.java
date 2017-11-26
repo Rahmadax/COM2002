@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 
 public class HCPStoreQuery extends QuerySQL {
 	
-	protected HCPStoreQuery(MySQLAccess access) {
+	public HCPStoreQuery(MySQLAccess access) {
 		super(access);
 	}
 	

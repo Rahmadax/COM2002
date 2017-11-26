@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -22,6 +24,7 @@ import javax.swing.border.MatteBorder;
 import mysql.MySQLAccess;
 import mysql.query.AddressQuery;
 import mysql.query.HCPStoreQuery;
+import mysql.query.HCPsQuery;
 import mysql.query.PatientQuery;
 import ui.MainFrame;
 import ui.custom.CustomComboBox;
@@ -86,14 +89,9 @@ public class RegisterPane extends JPanel {
 		try {
 			MySQLAccess access = new MySQLAccess();
 			HCPStoreQuery q = new HCPStoreQuery(access);
-			HCPsQuery hcpQuery = new HCPsQuery(access);
 			String[] strs = q.getAll();
 			
 			addFormData(new FormComboBox(strs, "Dental Plan", "Plan"), formPane, 50, 50);
-			
-			if ((boolean) map.get("Subscribe")) {
-				hcpQuery.addHCP(map.get("Plan").toString());
-			}
 			
 			access.close();
 			
@@ -205,7 +203,17 @@ public class RegisterPane extends JPanel {
 					} else {
 						adQuery.add(houseNumber, postCode, streetName, districtName, cityName);
 						patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
-						System.out.println("hello");
+						
+						int patientID = patQuery.getLastadded();
+						
+						Pattern p = Pattern.compile("^(.*)\\s");
+						Matcher m = p.matcher(map.get("Plan").toString());
+						
+						if (m.find()) {
+							String planName = m.group(1);
+							
+							
+						}
 						
 						JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 						new SuccessPane(rootPane, "New Patient added successfully!").show();
