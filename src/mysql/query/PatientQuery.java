@@ -164,6 +164,83 @@ public final class PatientQuery extends QuerySQL {
 		 ResultSet rs = st.executeQuery(query);	
 		close();
 		return rs;				
+	}
+	public ResultSet findWithPostCodeDOB(String postCode, String DoB) throws Exception {		
+		 String query = "SELECT * FROM Patients WHERE (Postcode LIKE '%" + postCode + "%' AND DOB LIKE '%" + DoB + "%'); ";
+	     Statement st = connect.createStatement(); 
+		 ResultSet rs = st.executeQuery(query);	
+		close();
+		return rs;				
+	}
+	public ResultSet findWithFirstNamePostCodeHouseNumDOB(String firstName,String postCode, String houseNum, String DoB) throws Exception {		
+		 String query = "SELECT * FROM Patients WHERE (FirstName LIKE '%" + firstName + "%' AND Postcode LIKE '%" + postCode + "%' AND HouseNumber LIKE '%" + houseNum + "%' AND DOB LIKE '%" + DoB + "%'); ";
+	     Statement st = connect.createStatement(); 
+		 ResultSet rs = st.executeQuery(query);	
+		close();
+		return rs;				
+	}
+	public ResultSet findWithLastNamePostCodeHouseNumDOB(String lastName,String postCode, String houseNum, String DoB) throws Exception {		
+		 String query = "SELECT * FROM Patients WHERE (LastName LIKE '%" + lastName + "%' AND Postcode LIKE '%" + postCode + "%' AND HouseNumber LIKE '%" + houseNum + "%' AND DOB LIKE '%" + DoB + "%'); ";
+	     Statement st = connect.createStatement(); 
+		 ResultSet rs = st.executeQuery(query);	
+		close();
+		return rs;				
+	}
+	public ResultSet findWithFirstNameHouseNum(String firstName, String houseNum) throws Exception {		
+		 String query = "SELECT * FROM Patients WHERE (FirstName LIKE '%" + firstName + "%' AND HouseNumber LIKE '%" + houseNum + "%'); ";
+	     Statement st = connect.createStatement(); 
+		 ResultSet rs = st.executeQuery(query);	
+		close();
+		return rs;				
+	}
+	public ResultSet findWithLastNameHouseNum(String lastName, String houseNum) throws Exception {		
+		 String query = "SELECT * FROM Patients WHERE (LastName LIKE '%" + lastName + "%' AND HouseNumber LIKE '%" + houseNum + "%'); ";
+	     Statement st = connect.createStatement(); 
+		 ResultSet rs = st.executeQuery(query);	
+		close();
+		return rs;				
+	}
+	public ResultSet findWithLastNamePostCodeDOB(String lastName, String postCode, String DoB) throws Exception {		
+		 String query = "SELECT * FROM Patients WHERE (LastName LIKE '%" + lastName + "%' AND Postcode LIKE '%" + postCode + "%' AND DOB LIKE '%" + DoB + "%'); ";
+	     Statement st = connect.createStatement(); 
+		 ResultSet rs = st.executeQuery(query);	
+		close();
+		return rs;				
+	}
+	public ResultSet findWithFirstNamePostCodeDOB(String firstName, String postCode, String DoB) throws Exception {		
+		 String query = "SELECT * FROM Patients WHERE (FirstName LIKE '%" + firstName + "%' AND Postcode LIKE '%" + postCode + "%' AND DOB LIKE '%" + DoB + "%'); ";
+	     Statement st = connect.createStatement(); 
+		 ResultSet rs = st.executeQuery(query);	
+		close();
+		return rs;				
+	}
+	public ResultSet findWithWholeNameNamePostCodeDOB(String firstName, String lastName, String postCode, String DoB) throws Exception {		
+		 String query = "SELECT * FROM Patients WHERE (FirstName LIKE '%" + firstName + "%' AND LastName LIKE '%" + lastName + "%' AND Postcode LIKE '%" + postCode + "%' AND DOB LIKE '%" + DoB + "%'); ";
+	     Statement st = connect.createStatement(); 
+		 ResultSet rs = st.executeQuery(query);	
+		close();
+		return rs;				
+	}
+	public ResultSet findWithWholeNameHouseNum(String firstName, String lastName, String houseNum) throws Exception {		
+		 String query = "SELECT * FROM Patients WHERE (FirstName LIKE '%" + firstName + "%' AND LastName LIKE '%" + lastName + "%' AND HouseNumber LIKE '%" + houseNum + "%'); ";
+	     Statement st = connect.createStatement(); 
+		 ResultSet rs = st.executeQuery(query);	
+		close();
+		return rs;				
+	}
+	public ResultSet findWithHouseNum(String houseNum) throws Exception {		
+		 String query = "SELECT * FROM Patients WHERE (HouseNumber LIKE '%" + houseNum + "%' ); ";
+	     Statement st = connect.createStatement(); 
+		 ResultSet rs = st.executeQuery(query);	
+		close();
+		return rs;				
+	}
+	public ResultSet findWithHouseNumDOB(String houseNum, String DoB) throws Exception {		
+		 String query = "SELECT * FROM Patients WHERE (HouseNumber LIKE '%" + houseNum + "%' AND DOB LIKE '%" + DoB + "%'); ";
+	     Statement st = connect.createStatement(); 
+		 ResultSet rs = st.executeQuery(query);	
+		close();
+		return rs;				
 	}	
 	
 	public String getFullName (int patientID) throws Exception {
