@@ -10,7 +10,7 @@ import mysql.MySQLAccess;
 
 public abstract class QuerySQL {
 	
-	public static final int QUERY_TIMEOUT = 1;
+	public static final int QUERY_TIMEOUT = 5;
 
 	protected Connection connect;
 	protected Statement statement;

@@ -61,15 +61,6 @@ public class AppointmentQuery extends QuerySQL {
 	}
 
 	public void remove(Appointment a) throws Exception {
-		
-		java.sql.Date date = new java.sql.Date(a.getStartDate().getTime());		
-		
-		java.sql.Time time = new java.sql.Time(a.getStartDate().getTime());
-		String partner = a.getPartner();
-		System.out.println(date);
-		System.out.println(time);
-		System.out.println(partner);
-		
 		preparedStatement = prepareStatement("DELETE FROM Appointments WHERE "
 				+ "AppointmentDate = ? AND StartTime = ? AND Partner = ?;");
 		preparedStatement.setDate(1, new java.sql.Date(a.getStartDate().getTime()));

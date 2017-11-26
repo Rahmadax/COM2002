@@ -21,6 +21,7 @@ import ui.calendar.CalendarPane;
 import ui.custom.tabbedpane.CustomTabbedPane;
 import ui.custom.tabbedpane.TitleTabStyle;
 import ui.form.book.BookPane;
+import ui.form.patient.FindPane;
 import ui.form.register.RegisterPane;
 import ui.popup.PopupPane;
 

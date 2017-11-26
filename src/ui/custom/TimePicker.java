@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -81,6 +82,20 @@ public class TimePicker extends JPanel {
 		hourField = new CustomTextField("", 2);
 		minuteField = new CustomTextField("", 2);
 		periodField = new CustomComboBox(new String[] {"AM", "PM"});
+		
+		hourField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				adjustInputs();
+			}
+		});
+		
+		minuteField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				adjustInputs();
+			}
+		});
 	}
 	
 	private void adjustInputs() {
