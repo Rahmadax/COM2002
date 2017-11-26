@@ -104,4 +104,25 @@ public class AppointmentQuery extends QuerySQL {
 		return calendar.getTime();
 	}
 	
+	public String[][] get(int patientID) throws Exception {
+		preparedStatement = prepareStatement(
+				"SELECT AppointmentDate, StartTime, Partner, PaidFor "
+						+ "FROM Appointments WHERE PatientID = ?;");
+		preparedStatement.setInt(1, patientID);
+		resultSet = preparedStatement.executeQuery();
+
+		int rows = getRowCount(resultSet);
+		String[][] apps = new String[rows][4];
+
+		while (resultSet.next()) {
+			int currRow = resultSet.getRow() - 1;
+			apps[currRow][0] = resultSet.getString(1);
+			apps[currRow][1] = resultSet.getString(2);
+			apps[currRow][2] = resultSet.getString(3);
+            apps[currRow][3] = resultSet.getString(4);
+		}
+
+		return apps;
+	}
+	
 }
