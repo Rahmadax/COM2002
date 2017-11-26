@@ -32,7 +32,7 @@ public class TreatmentQuery extends QuerySQL {
         return treatmentNameList;
     }
 
-    public void add(String[] treatments, String date, String startTime, String partner) throws SQLException {
+    public void add(String[] treatments, Date date, Time startTime, String partner) throws SQLException {
 	    for (int i = 0; i < treatments.length; i++){
 
             preparedStatement = prepareStatement("INSERT INTO Treatments (TreatmentName) " +
@@ -50,8 +50,8 @@ public class TreatmentQuery extends QuerySQL {
             preparedStatement = prepareStatement("INSERT INTO TreatmentApp_Linker (TreatmentID, AppointmentDate, StartTime, Partner) " +
                     "VALUES (?,?,?,?)");
             preparedStatement.setInt(1, treatmentID);
-            preparedStatement.setString(2, date);
-            preparedStatement.setString(3, startTime);
+            preparedStatement.setDate(2, date);
+            preparedStatement.setTime(3, startTime);
             preparedStatement.setString(4, partner);
             preparedStatement.executeUpdate();
 
