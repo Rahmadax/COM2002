@@ -99,6 +99,8 @@ public class AppointmentPane extends TimeSlotPane {
 			
 			setBackground(new Color(200, 200, 200));
 		}
+		
+		access.close();
 	}
 	
 	private void addComponents() throws Exception {
