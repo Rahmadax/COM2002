@@ -73,4 +73,19 @@ public class HCPsQuery extends QuerySQL {
         preparedStatement.setInt(2, hcpID);
         preparedStatement.executeUpdate();
     }
+    
+    public int[] get(int hcpID) throws Exception  {
+        preparedStatement = prepareStatement("SELECT * FROM HCPs WHERE "
+                + "HCPID = ?;");
+        preparedStatement.setInt(1, hcpID);
+        resultSet = preparedStatement.executeQuery();
+        int[] list = new int[4];
+        while(resultSet.next()){
+            list[0] = resultSet.getInt(1);
+            list[1] = resultSet.getInt(4);
+            list[2] = resultSet.getInt(5);
+            list[3] = resultSet.getInt(6);
+        }
+        return list;
+    }
 }
