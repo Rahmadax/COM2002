@@ -1,6 +1,5 @@
 package mysql.query;
 
-import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +13,28 @@ public class AppointmentQuery extends QuerySQL {
 
 	public AppointmentQuery(MySQLAccess access) {
 		super(access);
+	}
+	
+	public boolean isValidTimeSlot(HashMap<String, Object> map) throws Exception {
+		String appDate = (String) map.get("AppointmentDate");
+		String startTime = (String) map.get("StartTime");
+		String partner = (String) map.get("Partner");
+		String endTime = (String) map.get("EndTime");
+		
+		preparedStatement = prepareStatement("SELECT * FROM Appointments WHERE "
+				+ "AppointmentDate = (SELECT STR_TO_DATE(?, '%Y-%m-%d')) AND Partner = ? AND "
+				+ "((StartTime >= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND StartTime <= (SELECT STR_TO_DATE(?, '%h:%i %p'))) OR "
+				+ "(EndTime >= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND EndTime <= (SELECT STR_TO_DATE(?, '%h:%i %p'))));"); 
+		preparedStatement.setString(1, appDate);
+		preparedStatement.setString(2, partner);
+		preparedStatement.setString(3, startTime);
+		preparedStatement.setString(4, startTime);
+		preparedStatement.setString(5, endTime);
+		preparedStatement.setString(6, endTime);
+		
+		resultSet = preparedStatement.executeQuery();
+		
+		return !resultSet.next();
 	}
 
 	public Appointment[] get(Date date) throws Exception {
@@ -42,15 +63,15 @@ public class AppointmentQuery extends QuerySQL {
 		return appointments;
 	}
 
-	public void add(HashMap<String, String> map) throws Exception {
+	public void add(HashMap<String, Object> map) throws Exception {
 		String appDate = (String) map.get("AppointmentDate");
 		String startTime = (String) map.get("StartTime");
 		String partner = (String) map.get("Partner");
 		String endTime = (String) map.get("EndTime");
-		int patID = Integer.parseInt(map.get("PatientID"));
+		int patID = (int) map.get("PatientID");
 		
-		preparedStatement = prepareStatement("INSERT INTO Appoitment (AppointmentDate, StartTime, Partner, EndTime, Empty, PatientID) "
-				+ "VALUES (SELECT CONVERT(date, ?), SELECT CONVERT(time, ?), '+partner+', SELECT CONVERT(time, ?), ?, ?)"); 
+		preparedStatement = prepareStatement("INSERT INTO Appointments (AppointmentDate, StartTime, Partner, EndTime, PatientID) "
+				+ "VALUES ((SELECT STR_TO_DATE(?, '%Y-%m-%d')), (SELECT STR_TO_DATE(?, '%h:%i %p')), ?, (SELECT STR_TO_DATE(?, '%h:%i %p')), ?)"); 
 		preparedStatement.setString(1, appDate);
 		preparedStatement.setString(2, startTime);
 		preparedStatement.setString(3, partner);

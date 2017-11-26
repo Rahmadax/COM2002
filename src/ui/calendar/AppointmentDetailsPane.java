@@ -85,7 +85,8 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 			TreatmentsStoreQuery q3 = new TreatmentsStoreQuery(access);
 			
 			String[][] ts = q3.getAll(q2.getTreatmentName(q1.getIDs(appointment)));
-
+			access.close();
+			
 			treatments = ts;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -283,6 +284,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		                	access.close();
 		            		
 		            		MainFrame.program.refreshCalendar();
+		            		dialogPane.hide();
 		            	} catch (Exception e1) {
 		            		e1.printStackTrace();
 		            	}

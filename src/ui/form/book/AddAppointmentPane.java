@@ -40,7 +40,7 @@ public class AddAppointmentPane extends OverlayPane {
 		addPane.setOpaque(false);
 		
 		FormComboBox practice = new FormComboBox(
-				new String[] {"Hygenist", "Dentist"}, "Partner", "Partner");
+				new String[] {"Hygienist", "Dentist"}, "Partner", "Partner");
 		FormDatePicker startDate = new FormDatePicker("Start Date", "StartDate");
 		FormDatePicker endDate = new FormDatePicker("End Date", "EndDate");
 		FormTimePicker startTime = new FormTimePicker("Start Time", "StartTime");
