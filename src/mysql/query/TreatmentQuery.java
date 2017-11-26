@@ -1,5 +1,6 @@
 package mysql.query;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -29,5 +30,31 @@ public class TreatmentQuery extends QuerySQL {
         close();
         
         return treatmentNameList;
+    }
+
+    public void add(String[] treatments, String date, String startTime, String partner) throws SQLException {
+	    for (int i = 0; i < treatments.length; i++){
+
+            preparedStatement = prepareStatement("INSERT INTO Treatments (TreatmentName) " +
+                    "VALUES (?);");
+            preparedStatement.setString(1, treatments[i]);
+            preparedStatement.executeUpdate();
+
+            preparedStatement = prepareStatement("SELECT * FROM TreatmentApp_Linker WHERE TreatmentID=(SELECT MAX(TreatmentID) FROM TreatmentApp_Linker);");
+            resultSet = preparedStatement.executeQuery();
+            int treatmentID = 0;
+            while(resultSet.next()){
+                treatmentID = resultSet.getInt(1);
+            }
+
+            preparedStatement = prepareStatement("INSERT INTO TreatmentApp_Linker (TreatmentID, AppointmentDate, StartTime, Partner) " +
+                    "VALUES (?,?,?,?)");
+            preparedStatement.setInt(1, treatmentID);
+            preparedStatement.setString(2, date);
+            preparedStatement.setString(3, startTime);
+            preparedStatement.setString(4, partner);
+            preparedStatement.executeUpdate();
+
+        }
     }
 }
