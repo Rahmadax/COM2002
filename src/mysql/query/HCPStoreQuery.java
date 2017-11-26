@@ -25,11 +25,11 @@ public class HCPStoreQuery extends QuerySQL {
 
             String HCPName = rs.getString(1);
             BigDecimal monthPay = rs.getBigDecimal(2);
-            int checkupsLeft = rs.getInt(3);
-            int hygieneLeft = rs.getInt(4);
-            int repairsLeft = rs.getInt(5);
+            int checkupsMax = rs.getInt(3);
+            int hygieneMax = rs.getInt(4);
+            int repairsMax = rs.getInt(5);
             
-            HCPStore[currRow] = HCPName + " (" +String.format("%.2f", monthPay)+ ", " +checkupsLeft + ", " +hygieneLeft+ ", " +repairsLeft+ ")";
+            HCPStore[currRow] = HCPName + " (" +String.format("%.2f", monthPay)+ ", " +checkupsMax + ", " +hygieneMax+ ", " +repairsMax+ ")";
         }
 		return HCPStore;
 	}
