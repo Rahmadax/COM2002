@@ -10,12 +10,26 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class HCPsQuery extends QuerySQL {
-    public HCPsQuery(MySQLAccess access) {super(access);}
+    protected HCPsQuery(MySQLAccess access) {super(access);}
 
     public void removeHCP(int patientID) throws Exception {
-        preparedStatement = prepareStatement("DELETE FROM HCPs WHERE "
+        preparedStatement = prepareStatement("SELECT (HCPID) FROM HCPPatient_Linker WHERE "
                 + "PatientID = ?;");
         preparedStatement.setInt(1, patientID);
+        resultSet = preparedStatement.executeQuery();
+        int hcpID = 0;
+        while(resultSet.next()){
+           hcpID = resultSet.getInt(1);
+        }
+
+        preparedStatement = prepareStatement("DELETE FROM HCPPatient_Linker WHERE "
+                + "HCPID = ?;");
+        preparedStatement.setInt(1, hcpID);
+        preparedStatement.executeUpdate();
+
+        preparedStatement = prepareStatement("DELETE FROM HCPs WHERE "
+                + "HCPID = ?;");
+        preparedStatement.setInt(1, hcpID);
         preparedStatement.executeUpdate();
     }
 
