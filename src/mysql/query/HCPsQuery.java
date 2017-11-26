@@ -11,7 +11,13 @@ import java.time.format.DateTimeFormatter;
 
 public class HCPsQuery extends QuerySQL {
     protected HCPsQuery(MySQLAccess access) {super(access);}
-
+    
+	public void HCPUpdate(int hCPID, int checkUpsLeft, int hygieneLeft, int repairsLeft) throws Exception{
+		 String query = "UPDATE Appointments SET CheckupsLeft = " + checkUpsLeft  + ", HygieneLeft = " + hygieneLeft + ", RepairsLeft = " + repairsLeft +" WHERE HCPID = " + hCPID + "; ";
+	     Statement st = connect.createStatement(); 
+		 st.executeQuery(query);			 
+		 close();						
+	}
     public void removeHCP(int patientID) throws Exception {
         preparedStatement = prepareStatement("SELECT (HCPID) FROM HCPPatient_Linker WHERE "
                 + "PatientID = ?;");
