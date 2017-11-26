@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 
 import javax.swing.JLabel;
@@ -19,7 +20,7 @@ import javax.swing.border.MatteBorder;
 import calendar.Appointment;
 import mysql.MySQLAccess;
 import mysql.query.PatientQuery;
-
+import mysql.query.TreatmentApp_LinkerQuery;
 import ui.MainFrame;
 import ui.layout.CenteredPane;
 import ui.listener.HoverListener;
@@ -80,6 +81,24 @@ public class AppointmentPane extends TimeSlotPane {
 		
 		setLayout(new BorderLayout());
 		addComponents();
+		
+		MySQLAccess access = new MySQLAccess();
+		TreatmentApp_LinkerQuery q1 = new TreatmentApp_LinkerQuery(access);
+		
+		if (q1.getIDs(appointment).length != 0) {
+			MouseListener[] ls = getMouseListeners();
+			
+			for (MouseListener l: ls) {
+				if (l instanceof HoverListener) {
+					removeMouseListener(l);
+				}
+			}
+			
+			addMouseListener(
+					new HoverListener(new Color(200, 200, 200), new Color(170, 170, 170)));
+			
+			setBackground(new Color(200, 200, 200));
+		}
 	}
 	
 	private void addComponents() throws Exception {
