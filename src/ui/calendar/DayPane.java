@@ -75,54 +75,92 @@ public class DayPane extends JPanel {
 	private void addAppointments(Calendar calendar) throws Exception {
 		MySQLAccess access = new MySQLAccess();
 		
-		// add day panes for all week days
-		for (int i = 0; i < 5; i++) {
-			// anchor pane for top alignment
-			JPanel anchorTopContainer = new JPanel();
-			anchorTopContainer.setLayout(new BorderLayout());
-			anchorTopContainer.setOpaque(false);
-			
-			JPanel dayContainer = new JPanel();
-			dayContainer.setLayout(new BoxLayout(dayContainer, BoxLayout.Y_AXIS));
-			dayContainer.setOpaque(false);
-			
-			// add horizontal gap between appointments
-			dayContainer.setBorder(
-					new EmptyBorder(0, GAP_BETWEEN_DAYS / 2, 0, GAP_BETWEEN_DAYS / 2));
-			
-			AppointmentQuery appointmentQuery = new AppointmentQuery(access);
-			Appointment[] appointments = appointmentQuery.get(calendar.getTime());
-			Arrays.sort(appointments, new AppointmentComparator());
-			ArrayList<Appointment> selectedApps = new ArrayList<Appointment>();
-						
-			for (Appointment appointment: appointments) {				
-				if (appointment.getPartner().equals(partner)) {
-					selectedApps.add(appointment);
-				}
-			}
-						
-			int length = selectedApps.size();
-			
-			if (length > 0) {
-				initTimelineDates(selectedApps.get(0).getStartDate());
+		try {
+			// add day panes for all week days
+			for (int i = 0; i < 5; i++) {
+				// anchor pane for top alignment
+				JPanel anchorTopContainer = new JPanel();
+				anchorTopContainer.setLayout(new BorderLayout());
+				anchorTopContainer.setOpaque(false);
 				
-				if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(null, selectedApps.get(0))) {
-					dayContainer.add(new EmptySlotPane(
-							new EmptySlot(beginDate, selectedApps.get(0).getStartDate(), partner)));
+				JPanel dayContainer = new JPanel();
+				dayContainer.setLayout(new BoxLayout(dayContainer, BoxLayout.Y_AXIS));
+				dayContainer.setOpaque(false);
+				
+				// add horizontal gap between appointments
+				dayContainer.setBorder(
+						new EmptyBorder(0, GAP_BETWEEN_DAYS / 2, 0, GAP_BETWEEN_DAYS / 2));
+				
+				AppointmentQuery appointmentQuery = new AppointmentQuery(access);
+				Appointment[] appointments = appointmentQuery.get(calendar.getTime());
+				Arrays.sort(appointments, new AppointmentComparator());
+				ArrayList<Appointment> selectedApps = new ArrayList<Appointment>();
+							
+				for (Appointment appointment: appointments) {				
+					if (appointment.getPartner().equals(partner)) {
+						selectedApps.add(appointment);
+					}
+				}
+							
+				int length = selectedApps.size();
+				
+				if (length > 0) {
+					initTimelineDates(selectedApps.get(0).getStartDate());
+					
+					if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(null, selectedApps.get(0))) {
+						dayContainer.add(new EmptySlotPane(
+								new EmptySlot(beginDate, selectedApps.get(0).getStartDate(), partner)));
+						// add vertical gap between appointments
+						dayContainer.add(Box.createRigidArea(
+								new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
+					}
+					
+					dayContainer.add(new AppointmentPane(selectedApps.get(0)));
+					
 					// add vertical gap between appointments
 					dayContainer.add(Box.createRigidArea(
 							new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
 				}
 				
-				dayContainer.add(new AppointmentPane(selectedApps.get(0)));
+				for (int j = 1; j < length - 1; j++) {
+					if (j == 1) {
+						initTimelineDates(selectedApps.get(0).getStartDate());
+						
+						if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(selectedApps.get(0), selectedApps.get(1))) {
+							dayContainer.add(new EmptySlotPane(new EmptySlot(
+									selectedApps.get(0).getEndDate(), selectedApps.get(1).getStartDate(),
+									partner)));
+							// add vertical gap between appointments
+							dayContainer.add(Box.createRigidArea(
+									new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
+						}
+					}
+					
+					dayContainer.add(new AppointmentPane(selectedApps.get(j)));
+					
+					// add vertical gap between appointments
+					dayContainer.add(Box.createRigidArea(
+							new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
+					
+					initTimelineDates(selectedApps.get(0).getStartDate());
+					
+					if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(selectedApps.get(j), selectedApps.get(j + 1))) {
+						dayContainer.add(new EmptySlotPane(new EmptySlot(
+								selectedApps.get(j).getEndDate(), selectedApps.get(j + 1).getStartDate(),
+								partner)));
+						// add vertical gap between appointments
+						dayContainer.add(Box.createRigidArea(
+								new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
+					}
+				}
 				
-				// add vertical gap between appointments
-				dayContainer.add(Box.createRigidArea(
-						new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
-			}
-			
-			for (int j = 1; j < length - 1; j++) {
-				if (j == 1) {
+				if (MainFrame.mode == ModeUI.SECRETARY && length == 0) {
+					initTimelineDates(calendar.getTime());
+					
+					dayContainer.add(new EmptySlotPane(new EmptySlot(beginDate, finishDate,partner)));
+				}
+				
+				if (length == 2) {
 					initTimelineDates(selectedApps.get(0).getStartDate());
 					
 					if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(selectedApps.get(0), selectedApps.get(1))) {
@@ -135,69 +173,36 @@ public class DayPane extends JPanel {
 					}
 				}
 				
-				dayContainer.add(new AppointmentPane(selectedApps.get(j)));
+				if (length > 0) {
+					if (length != 1) {
+						dayContainer.add(new AppointmentPane(selectedApps.get(length - 1)));
+					}
 				
-				// add vertical gap between appointments
-				dayContainer.add(Box.createRigidArea(
-						new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
-				
-				initTimelineDates(selectedApps.get(0).getStartDate());
-				
-				if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(selectedApps.get(j), selectedApps.get(j + 1))) {
-					dayContainer.add(new EmptySlotPane(new EmptySlot(
-							selectedApps.get(j).getEndDate(), selectedApps.get(j + 1).getStartDate(),
-							partner)));
 					// add vertical gap between appointments
 					dayContainer.add(Box.createRigidArea(
 							new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
+					
+					initTimelineDates(selectedApps.get(0).getStartDate());
+					
+					if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(selectedApps.get(length - 1), null)) {
+						dayContainer.add(new EmptySlotPane(new EmptySlot(
+								selectedApps.get(length - 1).getEndDate(), finishDate, partner)));
+						// add vertical gap between appointments
+						dayContainer.add(Box.createRigidArea(
+								new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
+					}
 				}
-			}
-			
-			if (MainFrame.mode == ModeUI.SECRETARY && length == 0) {
-				initTimelineDates(calendar.getTime());
 				
-				dayContainer.add(new EmptySlotPane(new EmptySlot(beginDate, finishDate,partner)));
-			}
-			
-			if (length == 2) {
-				initTimelineDates(selectedApps.get(0).getStartDate());
+				anchorTopContainer.add(dayContainer, BorderLayout.NORTH);
+				add(anchorTopContainer);
 				
-				if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(selectedApps.get(0), selectedApps.get(1))) {
-					dayContainer.add(new EmptySlotPane(new EmptySlot(
-							selectedApps.get(0).getEndDate(), selectedApps.get(1).getStartDate(),
-							partner)));
-					// add vertical gap between appointments
-					dayContainer.add(Box.createRigidArea(
-							new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
-				}
+				calendar.add(Calendar.DAY_OF_YEAR, 1);
 			}
-			
-			if (length > 0) {
-				if (length != 1) {
-					dayContainer.add(new AppointmentPane(selectedApps.get(length - 1)));
-				}
-			
-				// add vertical gap between appointments
-				dayContainer.add(Box.createRigidArea(
-						new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
-				
-				initTimelineDates(selectedApps.get(0).getStartDate());
-				
-				if (MainFrame.mode == ModeUI.SECRETARY && hasEmptySlot(selectedApps.get(length - 1), null)) {
-					dayContainer.add(new EmptySlotPane(new EmptySlot(
-							selectedApps.get(length - 1).getEndDate(), finishDate, partner)));
-					// add vertical gap between appointments
-					dayContainer.add(Box.createRigidArea(
-							new Dimension(0, GAP_BETWEEN_APPOINTMENTS)));
-				}
-			}
-			
-			anchorTopContainer.add(dayContainer, BorderLayout.NORTH);
-			add(anchorTopContainer);
-			
-			calendar.add(Calendar.DAY_OF_YEAR, 1);
+		} catch (Exception e) {
+			access.close();
+			throw e;
 		}
-		
+				
 		access.close();
 	}
 

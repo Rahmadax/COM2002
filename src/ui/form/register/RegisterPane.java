@@ -203,26 +203,31 @@ public class RegisterPane extends JPanel {
 					} else {
 						adQuery.add(houseNumber, postCode, streetName, districtName, cityName);
 						patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
-						
+					}
+					
+					if ((boolean) map.get("Subscribe")) {
 						int patientID = patQuery.getLastadded();
 						
-						Pattern p = Pattern.compile("^(.*)\\s");
+						Pattern p = Pattern.compile("^(.*)\\s\\(.*\\)$");
 						Matcher m = p.matcher(map.get("Plan").toString());
 						
 						if (m.find()) {
 							String planName = m.group(1);
 							
-							
-						}
-						
-						JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-						new SuccessPane(rootPane, "New Patient added successfully!").show();
+							HCPsQuery q = new HCPsQuery(access);
+							q.addHCP(planName, patientID);
+						}	
 					}
+					
+					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+					new SuccessPane(rootPane, "New Patient added successfully!").show();
 					
 					access.close();
 					
 					clearInputs();
 				} catch (SQLException e1) {
+					e1.printStackTrace();
+					
 					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 					new ErrorPane(rootPane, "Unable to connect to the database.").show();
 				} catch (Exception e2) {

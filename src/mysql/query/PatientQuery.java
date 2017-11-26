@@ -13,7 +13,7 @@ public final class PatientQuery extends QuerySQL {
 	}
 	
 	public int getLastadded() throws Exception {
-		preparedStatement = prepareStatement("SELECT MAX (PatientID) FROM Patients");
+		preparedStatement = prepareStatement("SELECT * FROM Patients WHERE PatientID = (SELECT MAX(PatientID) FROM Patients);");
 		resultSet = preparedStatement.executeQuery();
 		resultSet.next();
 		
