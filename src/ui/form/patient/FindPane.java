@@ -161,6 +161,46 @@ public class FindPane extends JPanel {
 								ResultSet resultSet = query.findWithLastNamePostCodeHouseNum(searchTextSurname,
 										searchTextPostcode, searchTextHouseNum);
 								data = handleSearch(resultSet);
+							}else if (searchTextForename.equals("") && searchTextSurname.equals("") && searchTextPostcode.equals("")
+									&& searchTextHouseNum.equals("") && !searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithDOB(searchTextDOB);
+								data = handleSearch(resultSet);
+							}else if (searchTextForename.equals("") && searchTextSurname.equals("") && !searchTextPostcode.equals("")
+									&& searchTextHouseNum.equals("") && searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithPostCode(searchTextPostcode);
+								data = handleSearch(resultSet);
+							}else if (searchTextForename.equals("") && searchTextSurname.equals("") && !searchTextPostcode.equals("")
+									&& !searchTextHouseNum.equals("") && searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithPostCodeHouseNum(searchTextPostcode, searchTextHouseNum);
+								data = handleSearch(resultSet);
+							}else if (searchTextForename.equals("") && searchTextSurname.equals("") && !searchTextPostcode.equals("")
+									&& !searchTextHouseNum.equals("") && !searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithPostCodeHouseNumDOB(searchTextPostcode, searchTextHouseNum,
+										searchTextDOB);
+								data = handleSearch(resultSet);
+							}else if (searchTextForename.equals("") && !searchTextSurname.equals("") && searchTextPostcode.equals("")
+									&& searchTextHouseNum.equals("") && !searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithLastNameDOB(searchTextSurname, searchTextDOB);
+								data = handleSearch(resultSet);
+							}else if (!searchTextForename.equals("") && searchTextSurname.equals("") && !searchTextPostcode.equals("")
+									&& searchTextHouseNum.equals("") && searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithFirstNamePostCode(searchTextForename, searchTextPostcode);
+								data = handleSearch(resultSet);
+							}else if (!searchTextForename.equals("") && !searchTextSurname.equals("") && !searchTextPostcode.equals("")
+									&& !searchTextHouseNum.equals("") && searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithWholeNamePostCodeHouseNum(searchTextForename, searchTextSurname,
+										searchTextPostcode, searchTextHouseNum);
+								data = handleSearch(resultSet);
+							}else if (!searchTextForename.equals("") && searchTextSurname.equals("") && !searchTextPostcode.equals("")
+									&& !searchTextHouseNum.equals("") && searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithFirstNamePostCodeHouseNum(searchTextForename, searchTextPostcode,
+										searchTextHouseNum);
+								data = handleSearch(resultSet);
+							}else if (!searchTextForename.equals("") && !searchTextSurname.equals("") && !searchTextPostcode.equals("")
+									&& !searchTextHouseNum.equals("") && !searchTextDOB.equals("")) {
+								ResultSet resultSet = query.findWithWholeNamePostCodeHouseNumDOB(searchTextForename,
+										searchTextSurname, searchTextPostcode, searchTextHouseNum, searchTextDOB);
+								data = handleSearch(resultSet);
 							}
 							access.close();
 
