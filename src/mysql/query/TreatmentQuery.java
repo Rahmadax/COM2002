@@ -9,20 +9,25 @@ import mysql.MySQLAccess;
 
 public class TreatmentQuery extends QuerySQL {
 
-	protected TreatmentQuery(MySQLAccess access) {
+	public TreatmentQuery(MySQLAccess access) {
 		super(access);
 	}
 
     public String[] getTreatmentName(int[] treatmentIDList) throws Exception {
         String[] treatmentNameList = new String[treatmentIDList.length];
         for (int i = 0; i < treatmentIDList.length; i++) {
-            PreparedStatement get = prepareStatement("SELECT (TreatmentName) FROM Treatments WHERE " +
+        	preparedStatement = prepareStatement("SELECT (TreatmentName) FROM Treatments WHERE " +
                     "TreatmentID = ?");
             preparedStatement.setInt(1, treatmentIDList[i]);
+            resultSet = preparedStatement.executeQuery();
 
-
-            treatmentNameList[i] = String.valueOf(preparedStatement.executeQuery());
-
-        } return treatmentNameList;
+            if (resultSet.next()) {
+            	treatmentNameList[i] = String.valueOf(resultSet.getString(1));
+            }
+        } 
+        
+        close();
+        
+        return treatmentNameList;
     }
 }

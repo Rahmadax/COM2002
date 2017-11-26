@@ -26,6 +26,8 @@ import calendar.Appointment;
 import mysql.MySQLAccess;
 import mysql.query.AppointmentQuery;
 import mysql.query.PatientQuery;
+import mysql.query.TreatmentApp_LinkerQuery;
+import mysql.query.TreatmentQuery;
 import mysql.query.TreatmentsStoreQuery;
 import ui.MainFrame;
 import ui.ModeUI;
@@ -44,6 +46,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 
 	private ArrayList<TreatmentPane> treatmentList;
 	private JPanel treatmentsPane;
+	private String[][] treatments;
 
 	public AppointmentDetailsPane(Appointment appointment, OverlayPane overlay) throws Exception {
 		super(overlay);
@@ -58,6 +61,8 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 	}
 	
 	private void addComponents() throws Exception {
+		fetchTreatments();
+		
 		JPanel detailsContainer = new JPanel(new GridLayout(1, 2));
 		detailsContainer.setOpaque(false);
 		detailsContainer.setBorder(new CompoundBorder(
@@ -70,6 +75,21 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		add(detailsContainer, BorderLayout.NORTH);
 		add(createTreatmentsPane(), BorderLayout.CENTER);
 		add(createControlPane(), BorderLayout.SOUTH);
+	}
+	
+	private void fetchTreatments() {
+		try {
+			MySQLAccess access = new MySQLAccess();
+			TreatmentApp_LinkerQuery q1 = new TreatmentApp_LinkerQuery(access);
+			TreatmentQuery q2 = new TreatmentQuery(access);
+			TreatmentsStoreQuery q3 = new TreatmentsStoreQuery(access);
+			
+			String[][] ts = q3.getAll(q2.getTreatmentName(q1.getIDs(appointment)));
+
+			treatments = ts;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private JPanel createLeftPane() throws Exception {
@@ -132,9 +152,14 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		treatments.setBorder(new EmptyBorder(5, 20, 5, 20));
 		
 		treatments.add(createTreatmentsViewPane(), BorderLayout.CENTER);
-		
+		for (String[] data: this.treatments) {
+			addTreatment(new TreatmentPane(data[0], Double.parseDouble(data[1])));
+		}
+
 		if (MainFrame.mode == ModeUI.PRACTICE) {
-			treatments.add(createAddTreatmentPane(), BorderLayout.SOUTH);
+			if (this.treatments.length == 0) {
+				treatments.add(createAddTreatmentPane(), BorderLayout.SOUTH);
+			}
 		}
 		
 		treatmentsPane.add(treatments);
@@ -196,7 +221,9 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		if (MainFrame.mode == ModeUI.SECRETARY) {
 			controlPane.add(cancelButton, BorderLayout.CENTER);
 		} else {
-			controlPane.add(finishButton, BorderLayout.CENTER);
+			if (treatments.length == 0) {
+				controlPane.add(finishButton, BorderLayout.CENTER);
+			}
 		}
 
 		return controlPane;
@@ -349,10 +376,10 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 	}
 	
 	private void addTreatment(TreatmentPane treatment) {
-		treatmentsPane.add(treatment);
 		treatmentsPane.add(Box.createRigidArea(
 				new Dimension(0, 5)));
-		
+		treatmentsPane.add(treatment);
+
 		treatmentList.add(treatment);
 		
 		treatmentsPane.revalidate();

@@ -5,11 +5,12 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 public class AbsoluteCenteredPane extends JPanel {
 	
-	private JPanel contentPane;
+	private JComponent contentPane;
 	private JPanel container;
 	private ComponentListener resizeListener;
 
@@ -18,8 +19,8 @@ public class AbsoluteCenteredPane extends JPanel {
 	private double scaleX = 2;
 	private double scaleY = 2;
 
-	public AbsoluteCenteredPane(JPanel contentPane, JPanel container) {
-		super();
+	public AbsoluteCenteredPane(JComponent contentPane, JPanel container) {
+		super(null);
 		
 		this.contentPane = contentPane;
 		this.container = container;
@@ -37,7 +38,6 @@ public class AbsoluteCenteredPane extends JPanel {
 		addComponentListener(resizeListener);
 
 		setOpaque(false);
-		setLayout(null);
 		add(contentPane);
 	}
 	

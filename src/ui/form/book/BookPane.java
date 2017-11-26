@@ -138,17 +138,13 @@ public class BookPane extends JPanel {
 			} else {
 				calendar.set(Calendar.AM_PM, Calendar.PM);
 			}
-			
-			
-			
+
 			calendar.set(Calendar.HOUR, Integer.parseInt(m1.group(1)));
 			calendar.set(Calendar.MINUTE, Integer.parseInt(m1.group(2)));
 
 			calendar.set(Calendar.YEAR, Integer.parseInt(m2.group(1)));
 			calendar.set(Calendar.MONTH, Integer.parseInt(m2.group(2)) - 1);
 			calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(m2.group(3)));
-			
-			System.out.println(calendar.getTime());
 		} else {
 			throw new IllegalStateException();
 		}
