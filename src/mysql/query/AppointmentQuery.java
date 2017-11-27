@@ -1,5 +1,6 @@
 package mysql.query;
 
+import java.sql.SQLException;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,7 +9,6 @@ import java.util.Locale;
 
 import calendar.Appointment;
 import mysql.MySQLAccess;
-import sun.security.util.PropertyExpander;
 
 public class AppointmentQuery extends QuerySQL {
 
@@ -183,8 +183,18 @@ public class AppointmentQuery extends QuerySQL {
 					createDate(appDate, startTime), createDate(appDate, endTime), partner, patID);
 			
 		}
-		
+
 		return appArray;
 	}
+
+	public void payFor(Date startDate, String partner) throws SQLException {
+        preparedStatement = prepareStatement("UPDATE Appointments SET PaidFor = 'N' WHERE " +
+                "AppointmentDat = ? AND StartTime = ? AND Partner = ?");
+        preparedStatement.setDate(1, new java.sql.Date(startDate.getDate()));
+        preparedStatement.setTime(2, new java.sql.Time(startDate.getTime()));
+        preparedStatement.setString(3, partner);
+        preparedStatement.executeUpdate();
+
+    }
 	
 }

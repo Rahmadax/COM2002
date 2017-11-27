@@ -18,12 +18,12 @@ public class CalculateReciept {
 
         // List of the patients Health Care Plan Details
         int[] hcpDetails = qHP_L.getHCPDetails(patientID);
-        System.out.println(hcpDetails[1]);
-        System.out.println(hcpDetails[2]);
-        System.out.println(hcpDetails[3]);
 
         // List of unpaid Appointments
         Appointment[] appList = appQ.isPaidFor(patientID);
+        for ( int n = 0; n < appList.length; n++){
+            appQ.payFor(appList[n].getStartDate(), appList[n].getPartner());
+        }
 
         // List of Treatments connected to unpaid appointments
         ArrayList<Integer> treatmentIDList=new ArrayList<Integer>();
