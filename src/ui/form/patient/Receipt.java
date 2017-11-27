@@ -8,13 +8,17 @@ import java.awt.GridLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
+import mysql.query.CalculateReciept;
+import ui.MainFrame;
 import ui.listener.HoverListener;
+import ui.popup.ErrorPane;
 import ui.popup.OverlayContentPane;
 import ui.popup.OverlayPane;
 
@@ -22,7 +26,7 @@ public class Receipt extends OverlayContentPane {
 
 	public Receipt(OverlayPane overlay, int patientID) {
 		super(overlay);
-		
+		setLayout(new BorderLayout());
 		
 		JPanel treatmentsPane = new JPanel();
 		treatmentsPane.setOpaque(false);
@@ -42,6 +46,28 @@ public class Receipt extends OverlayContentPane {
 		JPanel container = new JPanel(new BorderLayout());
 		container.setOpaque(false);
 		container.add(scrollPane);
+		
+		CalculateReciept cr = new CalculateReciept();
+		
+		try {
+			String[][] data = cr.getReciept(patientID);
+			
+			for (String[] strs: data) {
+				if (strs[2].equals("Pre-Paid")) {
+					treatmentsPane.add(new TreatmentsRowPane(strs));
+				}
+			}
+			
+			for (String[] strs: data) {
+				if (strs[2].equals("Paid")) {
+					treatmentsPane.add(new TreatmentsRowPane(strs));
+				}
+			}
+		} catch (Exception e) {
+			JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+			getOverlay().hide();
+			new ErrorPane(rootPane, "Cannot process receipt.").show();
+		}
 		
 		add(container);
 		

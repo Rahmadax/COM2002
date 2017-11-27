@@ -188,9 +188,9 @@ public class AppointmentQuery extends QuerySQL {
 	}
 
 	public void payFor(Date startDate, String partner) throws SQLException {
-        preparedStatement = prepareStatement("UPDATE Appointments SET PaidFor = 'N' WHERE " +
-                "AppointmentDat = ? AND StartTime = ? AND Partner = ?");
-        preparedStatement.setDate(1, new java.sql.Date(startDate.getDate()));
+        preparedStatement = prepareStatement("UPDATE Appointments SET PaidFor = 'Y' WHERE " +
+                "AppointmentDate = ? AND StartTime = ? AND Partner = ?");
+        preparedStatement.setDate(1, new java.sql.Date(startDate.getTime()));
         preparedStatement.setTime(2, new java.sql.Time(startDate.getTime()));
         preparedStatement.setString(3, partner);
         preparedStatement.executeUpdate();
