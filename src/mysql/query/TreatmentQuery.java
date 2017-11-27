@@ -25,11 +25,22 @@ public class TreatmentQuery extends QuerySQL {
             if (resultSet.next()) {
             	treatmentNameList[i] = String.valueOf(resultSet.getString(1));
             }
-        } 
-        
+        }
         close();
-        
         return treatmentNameList;
+    }
+
+    public String getTreatmentName(int treatmentID) throws Exception {
+        preparedStatement = prepareStatement("SELECT (TreatmentName) FROM Treatments WHERE " +
+                "TreatmentID = ?");
+        preparedStatement.setInt(1, treatmentID);
+        resultSet = preparedStatement.executeQuery();
+        String treatmentName = null;
+        if (resultSet.next()) {
+            treatmentName = String.valueOf(resultSet.getString(1));
+        }
+        close();
+        return treatmentName;
     }
 
 
