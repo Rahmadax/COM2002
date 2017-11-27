@@ -166,7 +166,7 @@ public class PatientDetailsPane extends OverlayContentPane {
 		container.setOpaque(false);
 		
 		
-		return null;
+		return payButton;
 	}
 
 	private JPanel createCostsPane() {
