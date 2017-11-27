@@ -5,10 +5,13 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -174,69 +177,80 @@ public class RegisterPane extends JPanel {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				HashMap<String, Object> map = getFormData();
-
+				
 				try {
-					MySQLAccess access = new MySQLAccess();
-					AddressQuery adQuery = new AddressQuery(access);
-					PatientQuery patQuery = new PatientQuery(access);
-
-					int houseNumber = Integer.parseInt((String) map.get("HouseNumber"));
-					String postCode = map.get("Postcode").toString();
-					String streetName = map.get("StreetName").toString();
-					String districtName = map.get("DistrictName").toString();
-					String cityName = map.get("CityName").toString();
-					String title = map.get("Title").toString();
-					String firstName = map.get("FirstName").toString();
-					String lastName = map.get("LastName").toString();
-					String dob = map.get("DOB").toString();
-					String contactNumber = map.get("ContactNumber").toString();
-
-					ResultSet rs = adQuery.get(houseNumber, postCode);
+					Date dateOfB = new SimpleDateFormat("yyyy-MM-dd").parse((String) map.get("DOB"));
 					
-					if (rs.next()) {
-						if (postCode == rs.getString(2) && houseNumber == rs.getInt(1)) {
-							patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
+					if (!(boolean) map.get("Subscribe") || !map.get("Plan").equals("NHS Free Plan (0.00, 2, 2, 6)") || ((new Date().getTime() - dateOfB.getTime()) / 100000 < 5676000)) {						
+						try {
+							MySQLAccess access = new MySQLAccess();
+							AddressQuery adQuery = new AddressQuery(access);
+							PatientQuery patQuery = new PatientQuery(access);
+
+							int houseNumber = Integer.parseInt((String) map.get("HouseNumber"));
+							String postCode = map.get("Postcode").toString();
+							String streetName = map.get("StreetName").toString();
+							String districtName = map.get("DistrictName").toString();
+							String cityName = map.get("CityName").toString();
+							String title = map.get("Title").toString();
+							String firstName = map.get("FirstName").toString();
+							String lastName = map.get("LastName").toString();
+							String dob = map.get("DOB").toString();
+							String contactNumber = map.get("ContactNumber").toString();
+
+							ResultSet rs = adQuery.get(houseNumber, postCode);
+							
+							if (rs.next()) {
+								if (postCode == rs.getString(2) && houseNumber == rs.getInt(1)) {
+									patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
+									
+									JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+									new SuccessPane(rootPane, "New Patient added successfully!").show();
+								} 
+							} else {
+								adQuery.add(houseNumber, postCode, streetName, districtName, cityName);
+								patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
+							}
+							
+							if ((boolean) map.get("Subscribe")) {
+								int patientID = patQuery.getLastadded();
+								
+								Pattern p = Pattern.compile("^(.*)\\s\\(.*\\)$");
+								Matcher m = p.matcher(map.get("Plan").toString());
+								
+								if (m.find()) {
+									String planName = m.group(1);
+									
+									HCPsQuery q = new HCPsQuery(access);
+									q.addHCP(planName, patientID);
+								}	
+							}
 							
 							JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 							new SuccessPane(rootPane, "New Patient added successfully!").show();
-						} 
-					} else {
-						adQuery.add(houseNumber, postCode, streetName, districtName, cityName);
-						patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
-					}
-					
-					if ((boolean) map.get("Subscribe")) {
-						int patientID = patQuery.getLastadded();
-						
-						Pattern p = Pattern.compile("^(.*)\\s\\(.*\\)$");
-						Matcher m = p.matcher(map.get("Plan").toString());
-						
-						if (m.find()) {
-							String planName = m.group(1);
 							
-							HCPsQuery q = new HCPsQuery(access);
-							q.addHCP(planName, patientID);
-						}	
+							access.close();
+							
+							clearInputs();
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+							
+							JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+							new ErrorPane(rootPane, "Unable to connect to the database.").show();
+						} catch (Exception e2) {
+							e2.printStackTrace();
+							
+							JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+							new ErrorPane(rootPane, "Something went wrong. Please check your imput.").show();
+						}
+
+					} else {
+						JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+						new ErrorPane(rootPane, "NHS Free Plan is only available for people under 18.").show();
 					}
-					
-					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-					new SuccessPane(rootPane, "New Patient added successfully!").show();
-					
-					access.close();
-					
-					clearInputs();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-					
-					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-					new ErrorPane(rootPane, "Unable to connect to the database.").show();
-				} catch (Exception e2) {
-					e2.printStackTrace();
-					
-					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-					new ErrorPane(rootPane, "Something went wrong. Please check your imput.").show();
-				}
-				
+				} catch (ParseException e3) {
+					e3.printStackTrace();
+				}				
 			}
 		});
 		

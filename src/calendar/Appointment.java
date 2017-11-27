@@ -9,11 +9,13 @@ public class Appointment extends TimeSlot {
 	
 	private int patientID;
 	private String partner;
+	private String paidFor;
 
 	public Appointment(Date startDate, Date endDate, 
-			String partner, int patientID) {
+			String partner, int patientID, String paidFor) {
 		super(startDate, endDate);
 		
+		this.paidFor = paidFor;
 		this.patientID = patientID;
 		this.partner = partner;
 		

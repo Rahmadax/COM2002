@@ -63,7 +63,7 @@ public class AppointmentQuery extends QuerySQL {
 
 	public Appointment[] get(Date date) throws Exception {
 		preparedStatement = prepareStatement(
-				"SELECT StartTime, Partner, EndTime, PatientID "
+				"SELECT StartTime, Partner, EndTime, PatientID, PaidFor "
 				+ "FROM Appointments WHERE AppointmentDate = ?;");
 		preparedStatement.setDate(1, new java.sql.Date(date.getTime()));
 		resultSet = preparedStatement.executeQuery();
@@ -78,10 +78,11 @@ public class AppointmentQuery extends QuerySQL {
 			String partner = resultSet.getString(2);
 			Time endTime = resultSet.getTime(3);
 			int patientID = resultSet.getInt(4);
+			String paidFor = resultSet.getString(5);
 
 			appointments[currRow] = new Appointment(
 					createDate(date, startTime), createDate(date, endTime), 
-					partner, patientID);
+					partner, patientID, paidFor);
 		}
 		
 		close();
@@ -178,9 +179,10 @@ public class AppointmentQuery extends QuerySQL {
 			Time startTime = resultSet.getTime(2);
 			String partner = resultSet.getString(3);
 			Time endTime = resultSet.getTime(4);
+			String paidFor = resultSet.getString(6);
 
 			appArray[currRow] = new Appointment(
-					createDate(appDate, startTime), createDate(appDate, endTime), partner, patID);
+					createDate(appDate, startTime), createDate(appDate, endTime), partner, patID, paidFor);
 			
 		}
 
