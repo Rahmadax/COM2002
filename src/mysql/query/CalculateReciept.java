@@ -50,10 +50,10 @@ public class CalculateReciept {
 
             if (treatmentFinalDetails[m][2].equals("Checkup") && hcpDetails[1] > 0) {
                 hcpDetails[1] -= 1;
-                treatmentOutput[m][2] = "Free";
+                treatmentOutput[m][2] = "Pre-Paid";
             } else if (treatmentFinalDetails[m][2].equals("Hygiene") && hcpDetails[2] > 0) {
                 hcpDetails[2] -= 1;
-                treatmentOutput[m][2] = "Free";
+                treatmentOutput[m][2] = "Pre-Paid";
             } else if (treatmentFinalDetails[m][2].equals("Repair") && hcpDetails[3] > 0) {
                 hcpDetails[3] -= 1;
                 treatmentOutput[m][2] = "Pre-Paid";

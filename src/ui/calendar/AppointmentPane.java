@@ -96,9 +96,9 @@ public class AppointmentPane extends TimeSlotPane {
 			}
 			
 			addMouseListener(
-					new HoverListener(new Color(100, 100, 250), new Color(80, 80, 230)));
+					new HoverListener(new Color(150, 150, 250), new Color(130, 130, 230)));
 			
-			setBackground(new Color(100, 100, 250));
+			setBackground(new Color(150, 150, 250));
 		}
 		
 		if (appointment.isPaid()) {

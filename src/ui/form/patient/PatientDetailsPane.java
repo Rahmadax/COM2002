@@ -31,18 +31,24 @@ import mysql.MySQLAccess;
 import mysql.query.AddressQuery;
 import mysql.query.AppointmentQuery;
 import mysql.query.HCPPatientLinkerQuery;
+import mysql.query.HCPStoreQuery;
+import mysql.query.HCPsQuery;
 import mysql.query.TreatmentApp_LinkerQuery;
 import mysql.query.TreatmentQuery;
 import mysql.query.TreatmentsStoreQuery;
+import sun.java2d.loops.CustomComponent;
 import ui.MainFrame;
+import ui.custom.CustomComboBox;
 import ui.custom.CustomRowPane;
 import ui.custom.button.CustomButton;
 import ui.custom.tabbedpane.CustomTabbedPane;
 import ui.listener.HoverListener;
+import ui.popup.DialogPane;
 import ui.popup.ErrorPane;
 import ui.popup.LoadingPane;
 import ui.popup.OverlayContentPane;
 import ui.popup.OverlayPane;
+import ui.popup.SuccessPane;
 
 public class PatientDetailsPane extends OverlayContentPane {
 	
@@ -71,8 +77,11 @@ public class PatientDetailsPane extends OverlayContentPane {
 	}
 	
 	private JPanel createGeneralPane() {
-		JPanel generalPane = new JPanel(new GridLayout(0, 1));
+		JPanel generalPane = new JPanel(new BorderLayout());
 		generalPane.setBackground(new Color(90, 90, 90));
+		
+		JPanel container = new JPanel(new GridLayout(0, 1));
+		container.setOpaque(false);
 		
 		try {
 			MySQLAccess access = new MySQLAccess();
@@ -82,15 +91,15 @@ public class PatientDetailsPane extends OverlayContentPane {
 			String[] address = q1.get(Integer.parseInt(generalData.get("PatientID")));
 			int[] hcp = q2.getHCPDetails(Integer.parseInt(generalData.get("PatientID")));
 
-			generalPane.add(new DataRowPane("House no.", address[0]));
-			generalPane.add(new DataRowPane("Street name", address[1]));
-			generalPane.add(new DataRowPane("District name", address[2]));
-			generalPane.add(new DataRowPane("City", address[3]));
-			generalPane.add(new DataRowPane("Postcode", address[4]));
+			container.add(new DataRowPane("House no.", address[0]));
+			container.add(new DataRowPane("Street name", address[1]));
+			container.add(new DataRowPane("District name", address[2]));
+			container.add(new DataRowPane("City", address[3]));
+			container.add(new DataRowPane("Postcode", address[4]));
 			
-			generalPane.add(new DataRowPane("Remaining Checkups", Integer.toString(hcp[1])));
-			generalPane.add(new DataRowPane("Remaining Hygiene", Integer.toString(hcp[2])));
-			generalPane.add(new DataRowPane("Remaining Repairs", Integer.toString(hcp[3])));
+			container.add(new DataRowPane("Remaining Checkups", Integer.toString(hcp[1])));
+			container.add(new DataRowPane("Remaining Hygiene", Integer.toString(hcp[2])));
+			container.add(new DataRowPane("Remaining Repairs", Integer.toString(hcp[3])));
 			
 			access.close();
 		} catch (Exception e) {
@@ -99,7 +108,48 @@ public class PatientDetailsPane extends OverlayContentPane {
 			JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 			new ErrorPane(rootPane, "Unable to access the database.").show();
 		}
-
+		
+		JPanel buttonPane = new JPanel();
+		buttonPane.setOpaque(false);
+		
+		try {
+			MySQLAccess access = new MySQLAccess();
+			HCPStoreQuery q = new HCPStoreQuery(access);
+			String[] strs = q.getAll();
+			
+			CustomComboBox plansComboBox = new CustomComboBox(strs);
+			buttonPane.add(plansComboBox);
+			
+			CustomButton subscribe = new CustomButton("Subscribe", CustomButton.REVERSED_STYLE);
+			subscribe.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+					
+					try {
+						MySQLAccess access = new MySQLAccess();
+						HCPsQuery q = new HCPsQuery(access);
+						
+						q.addHCP((String) plansComboBox.getSelectedItem(), Integer.parseInt(generalData.get("PatientID")));
+					
+						new SuccessPane(rootPane, "Now the patient is subscribet to a plan.").show();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			});
+			
+			buttonPane.add(subscribe);	
+			
+			access.close();
+		} catch (Exception e) {
+			getOverlay().hide();
+			e.printStackTrace();
+		}
+		
+		generalPane.add(container);
+		generalPane.add(buttonPane, BorderLayout.SOUTH);
+		
 		return generalPane;
 	}
 	

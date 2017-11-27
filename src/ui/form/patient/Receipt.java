@@ -55,10 +55,14 @@ public class Receipt extends OverlayContentPane {
 		double prePaid = 0;
 		
 		for (String[] strs: data) {
-			total += Integer.parseInt(strs[1]);
+			System.out.println(strs[2]);
+		}
+		
+		for (String[] strs: data) {
+			total = total + Double.parseDouble(strs[1]);
 			
 			if (strs[2].equals("Pre-Paid")) {
-				prePaid += Integer.parseInt(strs[1]);
+				prePaid = prePaid + Double.parseDouble(strs[1]);
 				
 				treatmentsPane.add(new TreatmentsRowPane(strs));
 			}
@@ -75,9 +79,7 @@ public class Receipt extends OverlayContentPane {
 		}
 		
 		container.add(createCostPane(total, prePaid), BorderLayout.SOUTH);
-		
 		add(container);
-		
 		
 		setBackground(new Color(90, 90, 90));
 	}
@@ -99,9 +101,13 @@ public class Receipt extends OverlayContentPane {
 		totalLabel.setFont(
 				new Font(totalLabel.getFont().getFontName(), Font.BOLD, 25));
 		
+		container.setBorder(new EmptyBorder(20, 20, 20, 20));
+		
 		container.add(subTotal);
 		container.add(prePaidLabel);
 		container.add(totalLabel);
+		
+		costPane.add(container, BorderLayout.EAST);
 		
 		return costPane;
 	}
