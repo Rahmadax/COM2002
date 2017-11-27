@@ -35,6 +35,17 @@ public class AppointmentQuery extends QuerySQL {
 				+ "AppointmentDate = (SELECT STR_TO_DATE(?, '%Y-%m-%d')) AND Partner = ? AND "
 				+ "((StartTime >= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND StartTime <= (SELECT STR_TO_DATE(?, '%h:%i %p'))) OR "
 				+ "(EndTime >= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND EndTime <= (SELECT STR_TO_DATE(?, '%h:%i %p'))));"); 
+	        Calendar cal = Calendar.getInstance();
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		int mon = cal.get(Calendar.MONTH);
+		int[][] publicHolidays = new int[][] {{2,1},{14,4},{17,4},{1,5},{29,5},{28,8},{25,12},{26,12}};
+		for (int row = 0; row < 8; row++) {
+			if(day == publicHolidays[row][0] && mon-1 == publicHolidays[row][1]) {
+				appDate = null;
+			}
+		}
+		
+		
 		preparedStatement.setString(1, appDate);
 		preparedStatement.setString(2, partner);
 		preparedStatement.setString(3, startTime);
