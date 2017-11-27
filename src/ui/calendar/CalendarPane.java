@@ -203,7 +203,7 @@ public class CalendarPane extends JPanel {
 	}
 	
 	private JPanel createBookButton() {
-		CustomButton bookButton = new CustomButton("Book appoitnment", 
+		CustomButton bookButton = new CustomButton("Book appointnment", 
 				CustomButton.REVERSED_STYLE);
 		
 		bookButton.addMouseListener(new MouseAdapter() {

@@ -8,6 +8,7 @@ import java.util.Locale;
 
 import calendar.Appointment;
 import mysql.MySQLAccess;
+import sun.security.util.PropertyExpander;
 
 public class AppointmentQuery extends QuerySQL {
 
@@ -97,13 +98,14 @@ public class AppointmentQuery extends QuerySQL {
 		String endTime = (String) map.get("EndTime");
 		int patID = (int) map.get("PatientID");
 		
-		preparedStatement = prepareStatement("INSERT INTO Appointments (AppointmentDate, StartTime, Partner, EndTime, PatientID) "
-				+ "VALUES ((SELECT STR_TO_DATE(?, '%Y-%m-%d')), (SELECT STR_TO_DATE(?, '%h:%i %p')), ?, (SELECT STR_TO_DATE(?, '%h:%i %p')), ?)"); 
+		preparedStatement = prepareStatement("INSERT INTO Appointments (AppointmentDate, StartTime, Partner, EndTime, PatientID, PaidFor) "
+				+ "VALUES ((SELECT STR_TO_DATE(?, '%Y-%m-%d')), (SELECT STR_TO_DATE(?, '%h:%i %p')), ?, (SELECT STR_TO_DATE(?, '%h:%i %p')), ?, ?)"); 
 		preparedStatement.setString(1, appDate);
 		preparedStatement.setString(2, startTime);
 		preparedStatement.setString(3, partner);
 		preparedStatement.setString(4, endTime);
 		preparedStatement.setInt(5, patID);
+		preparedStatement.setString(6, "N");
 		
 		preparedStatement.executeUpdate();
 		

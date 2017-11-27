@@ -63,13 +63,14 @@ public class AppointmentPane extends TimeSlotPane {
 		                    overlay.setTitle("Appointment",
 		    						dateFormatter.format(appointment.getStartDate()));
 		    				overlay.setConstraints(650, 500, 2, 1.9);
-		    				loading.hide();
 		    				overlay.show();
 						} catch (Exception e1) {
 		                    e1.printStackTrace();
 		                    
 		                    new ErrorPane(rootPane, "Unable to view the appointment.").show();
 		                }
+						
+	    				loading.hide();
 					}
 				}.start();
                 

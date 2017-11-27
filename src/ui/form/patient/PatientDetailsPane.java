@@ -3,6 +3,7 @@ package ui.form.patient;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
@@ -141,7 +142,6 @@ public class PatientDetailsPane extends OverlayContentPane {
 		}
 		
 		JPanel anchorTopContainer = new JPanel(new BorderLayout());
-		anchorTopContainer.setBorder(new LineBorder(new Color(200, 200, 200), 1));
 		anchorTopContainer.setBackground(new Color(90, 90, 90));
 		anchorTopContainer.add(appointmentsPane, BorderLayout.NORTH);
 
@@ -150,6 +150,7 @@ public class PatientDetailsPane extends OverlayContentPane {
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setOpaque(false);
+		scrollPane.setBorder(null);
 		
 		JPanel container = new JPanel(new BorderLayout());
 		container.setOpaque(false);
@@ -161,9 +162,23 @@ public class PatientDetailsPane extends OverlayContentPane {
 	
 	private JPanel createPayButton() {
 		CustomButton payButton = new CustomButton("Pay", CustomButton.REVERSED_STYLE);
+		payButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+				OverlayPane overlay = new OverlayPane(rootPane, new JPanel());
+				Receipt receipt = new Receipt(overlay);
+				overlay.setContentPane(receipt);
+				overlay.setTitle("Receipt", "Date: " + new SimpleDateFormat("dd-MM-yyyy hh:mm a").format(new Date()));
+				
+				getOverlay().hide();
+				overlay.show();
+			}
+		});
+		
 		
 		JPanel container = new JPanel();
-		container.setOpaque(false);
+		container.setBackground(new Color(60, 60, 60));
 		
 		container.add(payButton);
 		
@@ -184,9 +199,9 @@ public class PatientDetailsPane extends OverlayContentPane {
 			
 			setBorder(new CompoundBorder(
 					new CompoundBorder(
-							new MatteBorder(5, 10, 5, 10, new Color(90, 90, 90)),
+							new MatteBorder(10, 20, 5, 10, new Color(90, 90, 90)),
 							new LineBorder(new Color(150, 150, 150), 1)),
-					new EmptyBorder(5, 10, 5, 10)));
+					new EmptyBorder(10, 20, 10, 20)));
 			setBackground(new Color(60, 60, 60));
 			
 			addMouseListener(new HoverListener(new Color(60, 60, 60), 
@@ -196,7 +211,7 @@ public class PatientDetailsPane extends OverlayContentPane {
 		}
 		
 		private void addData(String[] data) {			
-			for (int i = 0; i < data.length; i++) {
+			for (int i = 0; i < data.length - 1; i++) {
 				JLabel label = null;
 				label = new JLabel(data[i]);
 				
@@ -212,22 +227,29 @@ public class PatientDetailsPane extends OverlayContentPane {
 	private class TreatmentRowPane extends JPanel {
 		
 		public TreatmentRowPane(String[] data) {
-			super(new GridLayout(1, 3));
+			super(new GridLayout(1, 2));
 			
 			setBorder(new CompoundBorder(
 					new CompoundBorder(
 							new MatteBorder(5, 100, 5, 10, new Color(90, 90, 90)),
 							new LineBorder(new Color(150, 150, 150), 1)),
 					new EmptyBorder(5, 10, 5, 10)));
-			setBackground(new Color(110, 110, 110));
+			setBackground(new Color(70, 70, 70));
 			
 			addData(data);
 		}
 		
 		private void addData(String[] data) {			
-			for (int i = 0; i < data.length; i++) {
-				add(setLabel(data[i]));
-			}
+			add(setLabel(data[0]));
+			
+			JLabel label = setLabel(data[1]);
+			label.setForeground(new Color(220, 220, 220));
+			
+			JPanel container = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+			container.setOpaque(false);
+			container.add(label);
+			
+			add(container);
 		}
 		
 		private JLabel setLabel(String str) {
