@@ -42,6 +42,7 @@ import ui.popup.OverlayContentPane;
 import ui.popup.OverlayPane;
 import ui.popup.SuccessPane;
 
+// container to show details of appointment
 public class AppointmentDetailsPane extends OverlayContentPane {
 
 	private Appointment appointment;
@@ -95,6 +96,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		}
 	}
 	
+	// separated jPanel to properly layout
 	private JPanel createLeftPane() throws Exception {
 		JPanel leftPane = new JPanel();
 		leftPane.setOpaque(false);
@@ -121,6 +123,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		return new AnchorTopPane(leftPane);
 	}
 	
+	// separated jPanel to properly layot
 	private JPanel createRightPane() {
 		JPanel rightPane = new JPanel();
 		rightPane.setOpaque(false);
@@ -145,6 +148,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		
 		return new AnchorTopPane(rightPane);
 	}
+	
 	
 	private JPanel createTreatmentsPane() {
 		JPanel treatmentsPane = new JPanel(new GridLayout(1, 1));
@@ -188,6 +192,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		return container;
 	}
 	
+	// the container that stores the treatments
 	private JScrollPane createTreatmentsViewPane() {
 		JPanel anchorTopContainer = new JPanel();
 		anchorTopContainer.setLayout(new BorderLayout());
@@ -211,6 +216,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		return scrollPane;
 	}
 	
+	// container that stores the control buttons
 	private JPanel createControlPane() {
 		JPanel controlPane = new JPanel();
 		controlPane.setOpaque(false);
@@ -242,9 +248,11 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 				JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 				getOverlay().hide();
 				
+				// popup dialog
 				DialogPane dialogPane = new DialogPane(rootPane,
 						"Are you sure you want to finish this appointment?");
 				
+				// add click handler to popup dialog button 
 				dialogPane.getOKButton().addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseReleased(MouseEvent e) {
@@ -303,6 +311,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 					@Override
 					public void mouseReleased(MouseEvent e) {
 						try {
+							// query to remove an appointment
 		                	MySQLAccess access = new MySQLAccess();
 		                	new AppointmentQuery(access).remove(appointment);
 		                	
@@ -337,6 +346,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		addTreatmentPane.setOpaque(false);
 		
 		try {
+			
 			MySQLAccess access = new MySQLAccess();
 			TreatmentsStoreQuery q = new TreatmentsStoreQuery(access);
 			String[] treatments;
@@ -368,6 +378,7 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 			CustomButton addButton = new CustomButton("Add treatment", CustomButton.REVERSED_STYLE);
 			addButton.setPreferredSize(new Dimension(150, 40));
 			
+			// button to add treatments to the queue list
 			addButton.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
