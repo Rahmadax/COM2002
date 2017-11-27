@@ -13,24 +13,24 @@ public class AddressQuery extends QuerySQL {
 	
 	public ResultSet get(int houseNumber, String postCode) throws Exception {
 		
-	PreparedStatement get = prepareStatement("SELECT HouseNumber, Postcode FROM Address WHERE "
-				+ "HouseNumber = " +houseNumber+ " and Postcode = '" +postCode+ "';");
+		preparedStatement = prepareStatement("SELECT HouseNumber, Postcode FROM Address WHERE "
+					+ "HouseNumber = " +houseNumber+ " and Postcode = '" +postCode+ "';");
+			
+		resultSet = preparedStatement.executeQuery();
 		
-	resultSet = get.executeQuery();
-		
-	return resultSet;
+		close();
+	
+		return resultSet;
 	}
 	
 	
 	public void add(int houseNumber, String postCode, String streetName, String districtName, String cityName) {
-		
 		try {
-			PreparedStatement insert = connect.prepareStatement("INSERT INTO Address VALUES ("
+			preparedStatement = prepareStatement("INSERT INTO Address VALUES ("
 					+houseNumber+ ", '" +postCode+ "', '" +streetName+ "', '" +districtName+ "', '" +cityName+ "');");
 			
-			insert.executeUpdate();
+			preparedStatement.executeUpdate();
 			close();
-			
 		} catch(Exception e) {System.out.println(e);}
 		
 	}
