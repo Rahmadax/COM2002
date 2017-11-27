@@ -136,10 +136,15 @@ public class AppointmentQuery extends QuerySQL {
 	}
 	
 	public Appointment[] isPaidFor(int patID) throws Exception {
-		preparedStatement = prepareStatement("SELECT * FROM Appointments "
-				+ "WHERE PatientID = " +patID+ " AND PaidFor = 'N';");
 		
+		Date currentDate = new Date();
+		
+		preparedStatement = prepareStatement("SELECT * FROM Appointments "
+				+ "WHERE PatientID = " +patID+ " AND PaidFor = 'N' AND AppointmentDate <= ?;");
+		
+		preparedStatement.setDate(1, new java.sql.Date(currentDate.getTime()));
 		resultSet = preparedStatement.executeQuery();
+		
 		int rows = getRowCount(resultSet);
 		Appointment[] appArray = new Appointment[rows];
 		
@@ -150,14 +155,13 @@ public class AppointmentQuery extends QuerySQL {
 			Time startTime = resultSet.getTime(2);
 			String partner = resultSet.getString(3);
 			Time endTime = resultSet.getTime(4);
-			String paidFor = resultSet.getString(6);
 
 			appArray[currRow] = new Appointment(
-				createDate(appDate, startTime), createDate(appDate, endTime), partner, patID);
+					createDate(appDate, startTime), createDate(appDate, endTime), partner, patID);
 			
 		}
 		
-	return appArray;
+		return appArray;
 	}
 	
 }
