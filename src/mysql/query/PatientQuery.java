@@ -17,9 +17,11 @@ public final class PatientQuery extends QuerySQL {
 		resultSet = preparedStatement.executeQuery();
 		resultSet.next();
 		
+		int i = resultSet.getInt(1);
+		
 		close();
 		
-		return resultSet.getInt(1);
+		return i;
 	}
 
 	public String getPatientName(int ID) throws Exception {
@@ -27,8 +29,10 @@ public final class PatientQuery extends QuerySQL {
             "SELECT * FROM Patients WHERE PatientID = ID;");
 		preparedStatement.setQueryTimeout(5);
         resultSet = preparedStatement.executeQuery();
+        
+        String firstName = resultSet.getString("FirstName");
 		close();
-		return resultSet.getString("FirstName");
+		return firstName;
 		
 	}
 	

@@ -55,9 +55,11 @@ public class AppointmentQuery extends QuerySQL {
 		
 		resultSet = preparedStatement.executeQuery();
 		
+		boolean bool = !resultSet.next();
+		
 		close();
 		
-		return !resultSet.next();
+		return bool;
 	}
 
 	public Appointment[] get(Date date) throws Exception {

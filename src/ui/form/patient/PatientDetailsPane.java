@@ -160,13 +160,14 @@ public class PatientDetailsPane extends OverlayContentPane {
 	}
 	
 	private JPanel createPayButton() {
-		CustomButton payButton = new CustomButton("Pay");
+		CustomButton payButton = new CustomButton("Pay", CustomButton.REVERSED_STYLE);
 		
 		JPanel container = new JPanel();
 		container.setOpaque(false);
 		
+		container.add(payButton);
 		
-		return payButton;
+		return container;
 	}
 
 	private JPanel createCostsPane() {
