@@ -14,10 +14,10 @@ public class HCPsQuery extends QuerySQL {
     
 	public void HCPUpdate(int hCPID, int checkUpsLeft, int hygieneLeft, int repairsLeft) throws Exception{
 		 preparedStatement = prepareStatement("UPDATE HCPs SET CheckupsLeft = ?, HygieneLeft = ?, RepairsLeft = ? WHERE HCPID = ?;");
-	     preparedStatement.setInt(1, hCPID);
-	     preparedStatement.setInt(2, checkUpsLeft);
-	     preparedStatement.setInt(3,  hygieneLeft);
-	     preparedStatement.setInt(4, repairsLeft);
+	     preparedStatement.setInt(4, hCPID);
+	     preparedStatement.setInt(1, checkUpsLeft);
+	     preparedStatement.setInt(2,  hygieneLeft);
+	     preparedStatement.setInt(3, repairsLeft);
 	     preparedStatement.executeUpdate();
 		 			 
 		 close();
