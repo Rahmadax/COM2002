@@ -16,11 +16,11 @@ public class AppointmentQuery extends QuerySQL {
 	}
 	public int appointmentToPatientID(String appDate, String startTime, String partner) throws Exception{
 		String query = "SELECT PatientID FROM Appointments WHERE (AppointmentData =" + appDate + " AND StartTime =" +startTime +" AND Partner =" + partner + "; ";
-	 	Statement st = connect.createStatement(); 
-	        ResultSet rs = st.executeQuery(query);	
+	 	preparedStatement =  prepareStatement(query); 
+	    resultSet = preparedStatement.executeQuery(query);	
 		int patientID = 0;
-		while(rs.next()) {
-	        	patientID = rs.getInt(1);				
+		while(resultSet.next()) {
+	        	patientID = resultSet.getInt(1);				
 		}
 		close();
 		return patientID;				
