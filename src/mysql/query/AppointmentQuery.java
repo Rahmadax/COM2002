@@ -101,6 +101,14 @@ public class AppointmentQuery extends QuerySQL {
 		String endTime = (String) map.get("EndTime");
 		int patID = (int) map.get("PatientID");
 		
+		if (startTime.equals("00:00 PM")) {
+			startTime = "12:00 AM";
+		}
+		
+		if (endTime.equals("00:00 PM")) {
+			endTime = "12:00 AM";
+		}
+		
 		preparedStatement = prepareStatement("INSERT INTO Appointments (AppointmentDate, StartTime, Partner, EndTime, PatientID, PaidFor) "
 				+ "VALUES ((SELECT STR_TO_DATE(?, '%Y-%m-%d')), (SELECT STR_TO_DATE(?, '%h:%i %p')), ?, (SELECT STR_TO_DATE(?, '%h:%i %p')), ?, ?)"); 
 		preparedStatement.setString(1, appDate);

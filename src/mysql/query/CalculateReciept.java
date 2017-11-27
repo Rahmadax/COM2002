@@ -56,7 +56,7 @@ public class CalculateReciept {
                 treatmentOutput[m][2] = "Free";
             } else if (treatmentFinalDetails[m][2].equals("Repair") && hcpDetails[3] > 0) {
                 hcpDetails[3] -= 1;
-                treatmentOutput[m][2] = "Free";
+                treatmentOutput[m][2] = "Pre-Paid";
             } else {
                 treatmentOutput[m][2] = "Paid";
             }

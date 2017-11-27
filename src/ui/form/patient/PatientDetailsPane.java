@@ -169,6 +169,7 @@ public class PatientDetailsPane extends OverlayContentPane {
 				OverlayPane overlay = new OverlayPane(rootPane, new JPanel());
 				Receipt receipt = new Receipt(overlay, Integer.parseInt(generalData.get("PatientID")));
 				overlay.setContentPane(receipt);
+				overlay.setConstraints(800, 600, 2, 2);
 				overlay.setTitle("Receipt", "Date: " + new SimpleDateFormat("dd-MM-yyyy hh:mm a").format(new Date()));
 				
 				getOverlay().hide();
