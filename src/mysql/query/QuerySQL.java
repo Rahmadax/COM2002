@@ -21,7 +21,7 @@ public abstract class QuerySQL {
 		this.connect = access.getConnection();
 	}
 	
-	protected void close() throws Exception {
+	protected void close() throws SQLException {
 		if (resultSet != null) {
 			resultSet.close();
         }

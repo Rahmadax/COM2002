@@ -244,7 +244,19 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 				dialogPane.getOKButton().addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseReleased(MouseEvent e) {
-						
+						try {
+							MySQLAccess access = new MySQLAccess();
+							TreatmentQuery q = new TreatmentQuery(access);
+							
+							String[] treatmentNames = new String[treatmentList.size()];
+							for (int i = 0; i < treatmentList.size(); i++) {
+								treatmentNames[i] = treatmentList.get(i).getName();
+							}
+							
+							q.add(treatmentNames, appointment);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					}
 				});
 				
