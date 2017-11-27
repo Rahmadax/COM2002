@@ -62,7 +62,7 @@ public class AppointmentPane extends TimeSlotPane {
     						overlay.setContentPane(new AppointmentDetailsPane(appointment, overlay));
 		                    overlay.setTitle("Appointment",
 		    						dateFormatter.format(appointment.getStartDate()));
-		    				overlay.setConstraints(650, 500, 2, 1.9);
+		    				overlay.setConstraints(700, 550, 2, 1.9);
 		    				overlay.show();
 						} catch (Exception e1) {
 		                    e1.printStackTrace();
@@ -87,6 +87,21 @@ public class AppointmentPane extends TimeSlotPane {
 		TreatmentApp_LinkerQuery q1 = new TreatmentApp_LinkerQuery(access);
 		
 		if (q1.getIDs(appointment).length != 0) {
+			MouseListener[] ls = getMouseListeners();
+			
+			for (MouseListener l: ls) {
+				if (l instanceof HoverListener) {
+					removeMouseListener(l);
+				}
+			}
+			
+			addMouseListener(
+					new HoverListener(new Color(100, 100, 250), new Color(80, 80, 230)));
+			
+			setBackground(new Color(100, 100, 250));
+		}
+		
+		if (appointment.isPaid()) {
 			MouseListener[] ls = getMouseListeners();
 			
 			for (MouseListener l: ls) {

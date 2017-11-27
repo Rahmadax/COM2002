@@ -394,12 +394,23 @@ public class FindPane extends JPanel {
 				public void mouseReleased(MouseEvent e) {
 					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 					OverlayPane overlay = new OverlayPane(rootPane, new JPanel());
-					PatientDetailsPane detailspane = new PatientDetailsPane(convertToHashMapp(data), overlay);
+					LoadingPane loading = new LoadingPane(rootPane);
+					loading.show();
 					
-					overlay.setContentPane(detailspane);
-					overlay.setConstraints(800, 600, 2, 2);
-					overlay.setTitle(data[1] + " " + data[2], "Patient details");
-					overlay.show();
+					new Thread() {
+						@Override
+						public void run() {
+							PatientDetailsPane detailspane = new PatientDetailsPane(convertToHashMapp(data), overlay);
+							
+							overlay.setContentPane(detailspane);
+							overlay.setConstraints(800, 600, 2, 2);
+							overlay.setTitle(data[1] + " " + data[2], "Patient details");
+							
+							loading.hide();
+							overlay.show();
+						}
+					}.start();;
+					
 				}
 			});
 			

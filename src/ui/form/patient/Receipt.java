@@ -24,7 +24,7 @@ import ui.popup.OverlayPane;
 
 public class Receipt extends OverlayContentPane {
 
-	public Receipt(OverlayPane overlay, int patientID) {
+	public Receipt(OverlayPane overlay, int patientID) throws Exception {
 		super(overlay);
 		setLayout(new BorderLayout());
 		
@@ -48,30 +48,62 @@ public class Receipt extends OverlayContentPane {
 		container.add(scrollPane);
 		
 		CalculateReciept cr = new CalculateReciept();
+
+		String[][] data = cr.getReciept(patientID);
 		
-		try {
-			String[][] data = cr.getReciept(patientID);
+		double total = 0;
+		double prePaid = 0;
+		
+		for (String[] strs: data) {
+			total += Integer.parseInt(strs[1]);
 			
-			for (String[] strs: data) {
-				if (strs[2].equals("Pre-Paid")) {
-					treatmentsPane.add(new TreatmentsRowPane(strs));
-				}
+			if (strs[2].equals("Pre-Paid")) {
+				prePaid += Integer.parseInt(strs[1]);
+				
+				treatmentsPane.add(new TreatmentsRowPane(strs));
 			}
-			
-			for (String[] strs: data) {
-				if (strs[2].equals("Paid")) {
-					treatmentsPane.add(new TreatmentsRowPane(strs));
-				}
-			}
-		} catch (Exception e) {
-			JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-			getOverlay().hide();
-			new ErrorPane(rootPane, "Cannot process receipt.").show();
 		}
+		
+		for (String[] strs: data) {
+			if (strs[2].equals("Paid")) {
+				treatmentsPane.add(new TreatmentsRowPane(strs));
+			}
+		}
+		
+		if (total == 0) {
+			throw new Exception();
+		}
+		
+		container.add(createCostPane(total, prePaid), BorderLayout.SOUTH);
 		
 		add(container);
 		
+		
 		setBackground(new Color(90, 90, 90));
+	}
+	
+	private JPanel createCostPane(double total, double prePaid) {
+		JPanel costPane = new JPanel(new BorderLayout(10, 10));
+		costPane.setOpaque(false);
+		
+		JPanel container = new JPanel();
+		container.setOpaque(false);
+		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+		
+		JLabel subTotal = new JLabel("SubTotal: " + Double.toString(total));
+		subTotal.setForeground(new Color(200, 200, 200));
+		JLabel prePaidLabel = new JLabel("Pre-Paid: " + Double.toString(prePaid));
+		prePaidLabel.setForeground(new Color(200, 200, 200));
+		JLabel totalLabel = new JLabel("Total: " + Double.toString(total - prePaid));
+		totalLabel.setForeground(new Color(255, 150, 0));
+		totalLabel.setFont(
+				new Font(totalLabel.getFont().getFontName(), Font.BOLD, 25));
+		
+		container.add(subTotal);
+		container.add(prePaidLabel);
+		container.add(totalLabel);
+		
+		return costPane;
 	}
 	
 	private class TreatmentsRowPane extends JPanel {

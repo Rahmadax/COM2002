@@ -27,6 +27,10 @@ public class Appointment extends TimeSlot {
 		this.status = status;
 	}
 	
+	public boolean isPaid() {
+		return paidFor.equals("Y");
+	}
+	
 	public Status getStatus() {
 		return status;
 	}

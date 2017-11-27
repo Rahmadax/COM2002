@@ -203,9 +203,6 @@ public class RegisterPane extends JPanel {
 							if (rs.next()) {
 								if (postCode == rs.getString(2) && houseNumber == rs.getInt(1)) {
 									patQuery.add(title, firstName, lastName, dob, contactNumber, houseNumber, postCode);
-									
-									JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-									new SuccessPane(rootPane, "New Patient added successfully!").show();
 								} 
 							} else {
 								adQuery.add(houseNumber, postCode, streetName, districtName, cityName);
