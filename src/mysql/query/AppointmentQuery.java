@@ -39,17 +39,12 @@ public class AppointmentQuery extends QuerySQL {
 	        Calendar cal = Calendar.getInstance();
 		int day = cal.get(Calendar.DAY_OF_MONTH);
 		int mon = cal.get(Calendar.MONTH);
-		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 		int[][] publicHolidays = new int[][] {{2,1},{14,4},{17,4},{1,5},{29,5},{28,8},{25,12},{26,12}};
 		for (int row = 0; row < 8; row++) {
 			if(day == publicHolidays[row][0] && mon-1 == publicHolidays[row][1]) {
 				appDate = null;
 			}
-		}
-		if(dayOfWeek == 1 || dayOfWeek == 7) {
-			appDate = null;
-		}
-		
+		}		
 		preparedStatement.setString(1, appDate);
 		preparedStatement.setString(2, partner);
 		preparedStatement.setString(3, startTime);
