@@ -34,7 +34,7 @@ public final class PatientQuery extends QuerySQL {
 			houseDetails[1] = resultSet.getString(8);
 		}
 		return houseDetails;
-	}`
+	}
 
 	public String getPatientName(int ID) throws Exception {
         preparedStatement = connect.prepareStatement(
