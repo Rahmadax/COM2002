@@ -23,6 +23,18 @@ public final class PatientQuery extends QuerySQL {
 		
 		return i;
 	}
+	
+	public String[] getHouseDetails(int patientID) throws Exception {
+		preparedStatement = prepareStatement("SELECT * FROM Patients WHERE PatientID = ?;");
+		preparedStatement.setInt(1, patientID);
+		resultSet = preparedStatement.executeQuery();
+		String[] houseDetails = new String[2];
+		while (resultSet.next()) {
+			houseDetails[0] = resultSet.getString(7);
+			houseDetails[1] = resultSet.getString(8);
+		}
+		return houseDetails;
+	}`
 
 	public String getPatientName(int ID) throws Exception {
         preparedStatement = connect.prepareStatement(
