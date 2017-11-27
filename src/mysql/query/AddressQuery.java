@@ -17,9 +17,7 @@ public class AddressQuery extends QuerySQL {
 					+ "HouseNumber = " +houseNumber+ " and Postcode = '" +postCode+ "';");
 			
 		resultSet = preparedStatement.executeQuery();
-		
-		close();
-	
+			
 		return resultSet;
 	}
 

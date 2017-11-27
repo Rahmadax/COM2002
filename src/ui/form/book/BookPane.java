@@ -50,7 +50,7 @@ import ui.popup.SuccessPane;
 
 public class BookPane extends JPanel {
 	
-	private int patientID;
+	private int patientID = -1;
 	private JPanel formPane;
 	private JPanel appointmentsPane;
 	private ArrayList<FormData> dataList;
@@ -116,6 +116,10 @@ public class BookPane extends JPanel {
 		}
 		
 		return true;
+	}
+	
+	public void clearPatient() {
+		setPatient(-1, "");
 	}
 	
 	public void setInitialPartner(String partner) {
@@ -241,8 +245,8 @@ public class BookPane extends JPanel {
 					
 					ArrayList<String[]> data = new ArrayList<String[]>();
 					
-					for (String[] patient: patients) {
-						Pattern p = Pattern.compile(text);
+					for (String[] patient: patients) {						
+						Pattern p = Pattern.compile(text.toLowerCase());
 						Matcher m1 = p.matcher(patient[1].toLowerCase() + " " + patient[2].toLowerCase());
 						Matcher m2 = p.matcher(patient[1].toLowerCase());
 						Matcher m3 = p.matcher(patient[2].toLowerCase());
@@ -281,9 +285,8 @@ public class BookPane extends JPanel {
 		ArrayList<String> allContactNumbers = new ArrayList<String>();
 		ArrayList<String> allHouseNums = new ArrayList<String>();
 		ArrayList<String> allPostCodes = new ArrayList<String>();
-		
-		int count = 0;
-		while (count < 10 && searchInput.next()) {
+
+		while (searchInput.next()) {
 			allPatientIDs.add(Integer.toString(searchInput.getInt(1)));
 			allFirstNames.add(searchInput.getString(3));
 			allSecondNames.add(searchInput.getString(4));
@@ -291,7 +294,6 @@ public class BookPane extends JPanel {
 			allContactNumbers.add(searchInput.getString(6));
 			allHouseNums.add(searchInput.getString(7));
 			allPostCodes.add(searchInput.getString(8));
-			count++;
 		}
 		
 		String[][] resultsBack = new String[allPatientIDs.size()][7];
@@ -382,6 +384,15 @@ public class BookPane extends JPanel {
 			}
 		});
 		
+		CustomButton clearButton = new CustomButton("Clear patient");
+		clearButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				clearPatient();
+			}
+		});
+		
+		submitPane.add(clearButton);
 		submitPane.add(submitButton);
 		
 		return submitPane;

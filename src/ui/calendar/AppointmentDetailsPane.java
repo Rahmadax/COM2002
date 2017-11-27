@@ -37,8 +37,10 @@ import ui.custom.button.CustomButton;
 import ui.layout.AnchorTopPane;
 import ui.layout.CenteredPane;
 import ui.popup.DialogPane;
+import ui.popup.ErrorPane;
 import ui.popup.OverlayContentPane;
 import ui.popup.OverlayPane;
+import ui.popup.SuccessPane;
 
 public class AppointmentDetailsPane extends OverlayContentPane {
 
@@ -220,7 +222,9 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 		CustomButton finishButton = createFinishButton();
 		
 		if (MainFrame.mode == ModeUI.SECRETARY) {
-			controlPane.add(cancelButton, BorderLayout.CENTER);
+			if (treatments.length == 0) {
+				controlPane.add(cancelButton, BorderLayout.CENTER);
+			}
 		} else {
 			if (treatments.length == 0) {
 				controlPane.add(finishButton, BorderLayout.CENTER);
@@ -254,9 +258,18 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 							}
 							
 							q.add(treatmentNames, appointment);
+							
+							if (treatmentList.size() != 0) {
+								MainFrame.program.refreshCalendar();
+								new SuccessPane(rootPane, "Appointment finished.").show();
+							} else {
+								new ErrorPane(rootPane, "Cannot finish appointment with no treatments.").show();
+							}
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
+						
+						dialogPane.hide();
 					}
 				});
 				
