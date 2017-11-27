@@ -16,6 +16,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -130,8 +132,13 @@ public class PatientDetailsPane extends OverlayContentPane {
 						MySQLAccess access = new MySQLAccess();
 						HCPsQuery q = new HCPsQuery(access);
 						
-						q.addHCP((String) plansComboBox.getSelectedItem(), Integer.parseInt(generalData.get("PatientID")));
+						Pattern p = Pattern.compile("^(.*)\\s\\(.*\\)$");
+						Matcher m = p.matcher((String) plansComboBox.getSelectedItem());
+						
+						m.find();
+						q.addHCP(m.group(1), Integer.parseInt(generalData.get("PatientID")));
 					
+						getOverlay().hide();
 						new SuccessPane(rootPane, "Now the patient is subscribet to a plan.").show();
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -139,7 +146,28 @@ public class PatientDetailsPane extends OverlayContentPane {
 				}
 			});
 			
-			buttonPane.add(subscribe);	
+			CustomButton unsubscribe = new CustomButton("Unsubscribe", CustomButton.REVERSED_STYLE);
+			unsubscribe.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+					
+					try {
+						MySQLAccess access = new MySQLAccess();
+						HCPsQuery q = new HCPsQuery(access);
+						
+						q.removeHCP(Integer.parseInt(generalData.get("PatientID")));
+					
+						getOverlay().hide();
+						new SuccessPane(rootPane, "Now the patient is unsubscribed to a plan.").show();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			});
+			
+			buttonPane.add(subscribe);
+			buttonPane.add(unsubscribe);	
 			
 			access.close();
 		} catch (Exception e) {
