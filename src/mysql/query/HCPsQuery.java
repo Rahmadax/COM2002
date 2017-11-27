@@ -13,10 +13,15 @@ public class HCPsQuery extends QuerySQL {
     protected HCPsQuery(MySQLAccess access) {super(access);}
     
 	public void HCPUpdate(int hCPID, int checkUpsLeft, int hygieneLeft, int repairsLeft) throws Exception{
-		 String query = "UPDATE Appointments SET CheckupsLeft = " + checkUpsLeft  + ", HygieneLeft = " + hygieneLeft + ", RepairsLeft = " + repairsLeft +" WHERE HCPID = " + hCPID + "; ";
-	     Statement st = connect.createStatement(); 
-		 st.executeQuery(query);			 
-		 close();						
+		 preparedStatement = prepareStatement("UPDATE HCPs SET CheckupsLeft = ?, HygieneLeft = ?, RepairsLeft = ? WHERE HCPID = ?;");
+	     preparedStatement.setInt(1, hCPID);
+	     preparedStatement.setInt(2, checkUpsLeft);
+	     preparedStatement.setInt(3,  hygieneLeft);
+	     preparedStatement.setInt(4, repairsLeft);
+	     preparedStatement.executeUpdate();
+		 			 
+		 close();
+						
 	}
     public void removeHCP(int patientID) throws Exception {
         preparedStatement = prepareStatement("SELECT (HCPID) FROM HCPPatient_Linker WHERE "
