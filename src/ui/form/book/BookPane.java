@@ -222,7 +222,7 @@ public class BookPane extends JPanel {
 				new MatteBorder(0, 0, 20, 0, new Color(40, 40, 40)),
 				new EmptyBorder(10, 10, 10, 10)));
 		
-		JLabel helperLabel = new JLabel("Select patient");
+		JLabel helperLabel = new JLabel("Search name ");
 		helperLabel.setForeground(new Color(240, 140, 0));
 		helperLabel.setFont(
 				new Font(helperLabel.getFont().getFontName(), Font.BOLD, 18));
