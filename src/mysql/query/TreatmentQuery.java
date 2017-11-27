@@ -32,32 +32,27 @@ public class TreatmentQuery extends QuerySQL {
         return treatmentNameList;
     }
 
-    public void add(String[] treatments, Appointment a) throws SQLException {
+    public void add(String[] treatments, Date date, Time startTime, String partner) throws SQLException {
 	    for (int i = 0; i < treatments.length; i++){
 
-            preparedStatement = prepareStatement("INSERT INTO TreatmentApp_Linker ( AppointmentDate, StartTime, Partner) " +
-                    "VALUES (?,?,?)");
-
-            preparedStatement.setDate(2, new java.sql.Date(a.getStartDate().getTime()));
-    		preparedStatement.setTime(3, new java.sql.Time(a.getStartDate().getTime()));
-    		preparedStatement.setString(4, a.getPartner());
+            preparedStatement = prepareStatement("INSERT INTO Treatments (TreatmentName) " +
+                    "VALUES (?);");
+            preparedStatement.setString(1, treatments[i]);
             preparedStatement.executeUpdate();
 
-            preparedStatement = prepareStatement("SELECT * FROM TreatmentApp_Linker WHERE TreatmentID=(SELECT MAX(TreatmentID) FROM TreatmentApp_Linker);");
+            preparedStatement = prepareStatement("SELECT * FROM Treatments WHERE TreatmentID=(SELECT MAX(TreatmentID) FROM Treatments);");
             resultSet = preparedStatement.executeQuery();
             int treatmentID = 0;
             while(resultSet.next()){
                 treatmentID = resultSet.getInt(1);
             }
 
-            preparedStatement = prepareStatement("INSERT INTO Treatments (TreatmentID, TreatmentName) " +
-                    "VALUES (?,?);");
+            preparedStatement = prepareStatement("INSERT INTO TreatmentApp_Linker (TreatmentsID, AppointmentDate, StartTime, Partner) " +
+                    "VALUES (?,?,?,?)");
             preparedStatement.setInt(1, treatmentID);
-            preparedStatement.setString(2, treatments[i]);
+            preparedStatement.setDate(2, date);
+            preparedStatement.setTime(3, startTime);
+            preparedStatement.setString(4, partner);
             preparedStatement.executeUpdate();
 
         }
-	    
-	    close();
-    }
-}
