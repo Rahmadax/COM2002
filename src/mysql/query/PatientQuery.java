@@ -101,7 +101,8 @@ public final class PatientQuery extends QuerySQL {
 		
 		close();
 	}
-	
+	//Most likely combinations of querys for findPane, findPane will call correct query depending on what search fields are empty.
+	//Findpane handles the resultSet directly 
 	public ResultSet findWithFirstName(String firstName) throws Exception {		
 		 String query = "SELECT * FROM Patients WHERE FirstName LIKE  '%" + firstName + "%'; ";
 	     preparedStatement = prepareStatement(query); 
