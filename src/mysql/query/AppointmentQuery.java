@@ -34,6 +34,8 @@ public class AppointmentQuery extends QuerySQL {
 		
 		resultSet = preparedStatement.executeQuery();
 		
+		close();
+		
 		return !resultSet.next();
 	}
 
@@ -60,6 +62,8 @@ public class AppointmentQuery extends QuerySQL {
 					partner, patientID);
 		}
 		
+		close();
+		
 		return appointments;
 	}
 
@@ -79,6 +83,8 @@ public class AppointmentQuery extends QuerySQL {
 		preparedStatement.setInt(5, patID);
 		
 		preparedStatement.executeUpdate();
+		
+		close();
 	}
 
 	public void remove(Appointment a) throws Exception {
@@ -89,6 +95,8 @@ public class AppointmentQuery extends QuerySQL {
 		preparedStatement.setString(3, a.getPartner());
 		
     	preparedStatement.executeUpdate();
+    	
+    	close();
 	}
 	
 	private Date createDate(Date date, Time time) {
@@ -100,7 +108,7 @@ public class AppointmentQuery extends QuerySQL {
 		calendar.set(Calendar.HOUR_OF_DAY, timeC.get(Calendar.HOUR_OF_DAY));
 		calendar.set(Calendar.MINUTE, timeC.get(Calendar.MINUTE));
 		calendar.set(Calendar.SECOND, timeC.get(Calendar.SECOND));
-
+		
 		return calendar.getTime();
 	}
 	
@@ -122,6 +130,8 @@ public class AppointmentQuery extends QuerySQL {
             apps[currRow][3] = resultSet.getString(4);
 		}
 
+		close();
+		
 		return apps;
 	}
 	

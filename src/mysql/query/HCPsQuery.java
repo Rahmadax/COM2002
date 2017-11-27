@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class HCPsQuery extends QuerySQL {
-    protected HCPsQuery(MySQLAccess access) {super(access);}
+    public HCPsQuery(MySQLAccess access) {super(access);}
 
     public void removeHCP(int patientID) throws Exception {
         preparedStatement = prepareStatement("SELECT (HCPID) FROM HCPPatient_Linker WHERE "
@@ -31,20 +31,22 @@ public class HCPsQuery extends QuerySQL {
                 + "HCPID = ?;");
         preparedStatement.setInt(1, hcpID);
         preparedStatement.executeUpdate();
+        
+        close();
     }
 
     public void addHCP(String hcpName, int patientID) throws Exception {
 
-        PreparedStatement ps = prepareStatement ("SELECT * FROM HCPStore WHERE HCPName = ?;");
+        preparedStatement = prepareStatement ("SELECT * FROM HCPStore WHERE HCPName = ?;");
         int[] hcp = new int[3];
         double cost = 0;
-        ps.setString(1, hcpName);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            cost = rs.getDouble(2);
-            hcp[0] = rs.getInt(3);
-            hcp[1] = rs.getInt(4);
-            hcp[2] = rs.getInt(5);
+        preparedStatement.setString(1, hcpName);
+        resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            cost = resultSet.getDouble(2);
+            hcp[0] = resultSet.getInt(3);
+            hcp[1] = resultSet.getInt(4);
+            hcp[2] = resultSet.getInt(5);
         }
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -72,5 +74,7 @@ public class HCPsQuery extends QuerySQL {
         preparedStatement.setInt(1, patientID);
         preparedStatement.setInt(2, hcpID);
         preparedStatement.executeUpdate();
+        
+        close();
     }
 }
