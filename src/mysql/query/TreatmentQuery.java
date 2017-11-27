@@ -8,12 +8,14 @@ import java.sql.Time;
 import calendar.Appointment;
 import mysql.MySQLAccess;
 
+// Class for Treatment queries
 public class TreatmentQuery extends QuerySQL {
 
 	public TreatmentQuery(MySQLAccess access) {
 		super(access);
 	}
 
+	// Gets the treatment names of a list of ID
     public String[] getTreatmentName(int[] treatmentIDList) throws Exception {
         String[] treatmentNameList = new String[treatmentIDList.length];
         for (int i = 0; i < treatmentIDList.length; i++) {
@@ -30,6 +32,7 @@ public class TreatmentQuery extends QuerySQL {
         return treatmentNameList;
     }
 
+    // returns a treatment name with its IDs
     public String getTreatmentName(int treatmentID) throws Exception {
         preparedStatement = prepareStatement("SELECT (TreatmentName) FROM Treatments WHERE " +
                 "TreatmentID = ?");
@@ -44,6 +47,7 @@ public class TreatmentQuery extends QuerySQL {
     }
 
 
+    // Adds a new treatment from an Appointment
     public void add(String[] treatments, Appointment a) throws SQLException {
 	    for (int i = 0; i < treatments.length; i++){
 

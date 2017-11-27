@@ -6,11 +6,13 @@ import mysql.MySQLAccess;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+// Class for HCPLinker table queries
 public class HCPPatientLinkerQuery extends QuerySQL {
-	
 	public HCPPatientLinkerQuery(MySQLAccess access) {
 		super(access);
 	}
+
+	// gets the details of a health care plan by providing PatientID
 	public int[] getHCPDetails(int patientID) throws Exception {
 		String query = "SELECT HCPID FROM HCPPatient_Linker WHERE PatientID =" + patientID + ";";
 	     preparedStatement = prepareStatement(query); 

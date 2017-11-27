@@ -5,12 +5,14 @@ import java.sql.ResultSet;
 
 import mysql.MySQLAccess;
 
+// Class for Address queries
 public class AddressQuery extends QuerySQL {
 	
 	public AddressQuery(MySQLAccess access) {
 		super(access);
 	}
-	
+
+	// Takes house number, postcode, returns result set of Addresses
 	public ResultSet get(int houseNumber, String postCode) throws Exception {
 		
 		preparedStatement = prepareStatement("SELECT HouseNumber, Postcode FROM Address WHERE "
@@ -21,6 +23,7 @@ public class AddressQuery extends QuerySQL {
 		return resultSet;
 	}
 
+	// takes patientID returns result set of addrsses
 	public String[] get (int patientID) throws Exception {
 
         MySQLAccess access = new MySQLAccess();
@@ -45,7 +48,7 @@ public class AddressQuery extends QuerySQL {
 		return addressDetails;
 	}
 	
-	
+	// Creates a new address record
 	public void add(int houseNumber, String postCode, String streetName, String districtName, String cityName) {
 		try {
 			preparedStatement = prepareStatement("INSERT INTO Address VALUES ("

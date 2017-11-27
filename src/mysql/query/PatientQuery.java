@@ -6,12 +6,14 @@ import java.sql.Statement;
 
 import mysql.MySQLAccess;
 
+// Class for Patient queries
 public final class PatientQuery extends QuerySQL {
 
 	public PatientQuery(MySQLAccess access) {
 		super(access);
 	}
-	
+
+	// Gets a Patient's detials with the PatientID
 	public String[] get(int patientID) throws Exception {
 		preparedStatement = prepareStatement("SELECT * FROM Patients WHERE PatientID = ?;");
 		preparedStatement.setInt(1, patientID);
@@ -27,14 +29,16 @@ public final class PatientQuery extends QuerySQL {
 		
 		return result;
 	}
-	
+
+	// Returns a results set of all patients
 	public ResultSet getAll() throws Exception {
 		preparedStatement = prepareStatement("SELECT * FROM Patients;");
 		resultSet = preparedStatement.executeQuery();
 		
 		return resultSet;
 	}
-	
+
+	// get Last added Patient's info
 	public int getLastadded() throws Exception {
 		preparedStatement = prepareStatement("SELECT * FROM Patients WHERE PatientID = (SELECT MAX(PatientID) FROM Patients);");
 		resultSet = preparedStatement.executeQuery();
@@ -46,7 +50,8 @@ public final class PatientQuery extends QuerySQL {
 		
 		return i;
 	}
-	
+
+	// Returns the house details of a Patient
 	public String[] getHouseDetails(int patientID) throws Exception {
 		preparedStatement = prepareStatement("SELECT * FROM Patients WHERE PatientID = ?;");
 		preparedStatement.setInt(1, patientID);
@@ -59,6 +64,7 @@ public final class PatientQuery extends QuerySQL {
 		return houseDetails;
 	}
 
+	// Takes patientID returns patients name
 	public String getPatientName(int ID) throws Exception {
         preparedStatement = connect.prepareStatement(
             "SELECT * FROM Patients WHERE PatientID = ID;");
@@ -101,8 +107,9 @@ public final class PatientQuery extends QuerySQL {
 		
 		close();
 	}
-	//Most likely combinations of querys for findPane, findPane will call correct query depending on what search fields are empty.
-	//Findpane handles the resultSet directly 
+
+
+	// For search
 	public ResultSet findWithFirstName(String firstName) throws Exception {		
 		 String query = "SELECT * FROM Patients WHERE FirstName LIKE  '%" + firstName + "%'; ";
 	     preparedStatement = prepareStatement(query); 

@@ -6,10 +6,12 @@ import mysql.MySQLAccess;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+// Calculates Reciept, Itemises Treatments and costs updates HCPS
 public class CalculateReciept {
 
     public String[][] getReciept(int patientID) throws Exception {
         MySQLAccess access = new MySQLAccess();
+        // Many query calls (lol)
         HCPPatientLinkerQuery qHP_L = new HCPPatientLinkerQuery(access);
         HCPsQuery q = new HCPsQuery(access);
         HCPPatientLinkerQuery q2 = new HCPPatientLinkerQuery(access);
@@ -35,6 +37,7 @@ public class CalculateReciept {
                 treatmentIDList.add(treatmentIDs[j]);
             }
         }
+        // More Query Calls
         TreatmentQuery tQ = new TreatmentQuery(access);
         TreatmentsStoreQuery tsQ = new TreatmentsStoreQuery(access);
         String[] treatmentArray = new String[treatmentIDList.size()];

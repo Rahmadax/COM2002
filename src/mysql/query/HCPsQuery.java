@@ -9,9 +9,11 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+// Class for Health care plan queries
 public class HCPsQuery extends QuerySQL {
     public HCPsQuery(MySQLAccess access) {super(access);}
-    
+
+    // Updates a health care plan with new info
 	public void HCPUpdate(int hCPID, int checkUpsLeft, int hygieneLeft, int repairsLeft) throws Exception{
 		 preparedStatement = prepareStatement("UPDATE HCPs SET CheckupsLeft = ?, HygieneLeft = ?, RepairsLeft = ? WHERE HCPID = ?;");
 	     preparedStatement.setInt(4, hCPID);
@@ -23,6 +25,7 @@ public class HCPsQuery extends QuerySQL {
 		 close();
 						
 	}
+	// Removes a HCP from the database
     public void removeHCP(int patientID) throws Exception {
         preparedStatement = prepareStatement("SELECT (HCPID) FROM HCPPatient_Linker WHERE "
                 + "PatientID = ?;");
@@ -46,6 +49,7 @@ public class HCPsQuery extends QuerySQL {
         close();
     }
 
+    // Creates a new HCP and updates the HCP linker tables
     public void addHCP(String hcpName, int patientID) throws Exception {
 
         preparedStatement = prepareStatement ("SELECT * FROM HCPStore WHERE HCPName = ?;");
@@ -88,7 +92,8 @@ public class HCPsQuery extends QuerySQL {
         
         close();
     }
-    
+
+    // gets a list of health care plan details from its IDs
     public int[] get(int hcpID) throws Exception  {
         preparedStatement = prepareStatement("SELECT * FROM HCPs WHERE "
                 + "HCPID = ?;");

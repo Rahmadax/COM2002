@@ -6,9 +6,11 @@ import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+// Class for TreatmentStore queries
 public class TreatmentsStoreQuery extends QuerySQL {
     public TreatmentsStoreQuery(MySQLAccess access) {super(access);}
 
+    // gets all the details of all treats in store
     public String[] getAll(String type) throws Exception {
         preparedStatement = prepareStatement("SELECT TreatmentName, TreatmentCost "
                 + "FROM TreatmentsStore WHERE Type = ?;");
@@ -33,7 +35,8 @@ public class TreatmentsStoreQuery extends QuerySQL {
         close();
         return treatmentsStore;
     }
-    
+
+    // gets all treatments in store details from treatment names
     public String[][] getAll(String[] treatmentNames) throws Exception {
         String[][] treatmentsStore = new String[treatmentNames.length][3];
         for (int i = 0; i < treatmentNames.length; i++ ){        	

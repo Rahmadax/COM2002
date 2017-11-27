@@ -8,10 +8,11 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 
 import calendar.Appointment;
-
+// Class for TreatmentApp Linker queries
 public class TreatmentApp_LinkerQuery extends QuerySQL {
     public TreatmentApp_LinkerQuery(MySQLAccess access) { super(access); }
-    
+
+    // getIDs from Appointment primary keys
     public int[] getIDs(String appDate, String sTime, String p) throws Exception{    	
     	java.sql.Date appointmentDate = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(appDate).getTime());		
 		java.sql.Time startTime = new java.sql.Time(new SimpleDateFormat("HH:mm:ss").parse(sTime).getTime());
@@ -34,7 +35,8 @@ public class TreatmentApp_LinkerQuery extends QuerySQL {
         
         return idList;
     }
-    
+
+    // gets the Id from an appointments primary keys (Appointment form)
     public int[] getIDs(Appointment a) throws Exception{
     	java.sql.Date appointmentDate = new java.sql.Date(a.getStartDate().getTime());		
 		java.sql.Time startTime = new java.sql.Time(a.getStartDate().getTime());
@@ -57,18 +59,6 @@ public class TreatmentApp_LinkerQuery extends QuerySQL {
         
         return idList;
     }
-    /*
-    public int[] getAppointment(int treatmentID) throws Exception{
-        PreparedStatement get = prepareStatement("SELECT (AppointmentDate,StartTime,Partner) FROM Treatments WHERE " +
-                "TreatmentID = ?");
-        preparedStatement.setDate(1, treatmentID);
-        resultSet = preparedStatement.executeQuery();
-        while (resultSet.next()){
-            int currRow = resultSet.getRow() - 1;
 
-
-
-        }
-    }*/
 
 }

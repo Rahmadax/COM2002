@@ -8,6 +8,7 @@ import java.sql.Statement;
 
 import mysql.MySQLAccess;
 
+// Query super class, called by all other classes
 public abstract class QuerySQL {
 	
 	public static final int QUERY_TIMEOUT = 5;

@@ -6,12 +6,14 @@ import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+// Class for HCPStore queries
 public class HCPStoreQuery extends QuerySQL {
 	
 	public HCPStoreQuery(MySQLAccess access) {
 		super(access);
 	}
-	
+
+	// Retrives the details of all plans in the Store
 	public String[] getAll() throws Exception {
 		preparedStatement = prepareStatement("SELECT * FROM HCPStore;");
 

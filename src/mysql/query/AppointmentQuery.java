@@ -10,11 +10,14 @@ import java.util.Locale;
 import calendar.Appointment;
 import mysql.MySQLAccess;
 
+// Class for Address queries
 public class AppointmentQuery extends QuerySQL {
 
 	public AppointmentQuery(MySQLAccess access) {
 		super(access);
 	}
+
+	// Takes appointment and returns the PatientID
 	public int appointmentToPatientID(String appDate, String startTime, String partner) throws Exception{
 		String query = "SELECT PatientID FROM Appointments WHERE (AppointmentData =" + appDate + " AND StartTime =" +startTime +" AND Partner =" + partner + "; ";
 	 	preparedStatement =  prepareStatement(query); 
@@ -26,6 +29,8 @@ public class AppointmentQuery extends QuerySQL {
 		close();
 		return patientID;				
 	}
+
+	// Checks if a time slot is free.
 	public boolean isValidTimeSlot(HashMap<String, Object> map) throws Exception {
 		String appDate = (String) map.get("AppointmentDate");
 		String startTime = (String) map.get("StartTime");
@@ -61,6 +66,7 @@ public class AppointmentQuery extends QuerySQL {
 		return bool;
 	}
 
+	// Takes a date and a time, returns the appointments that are at that time
 	public Appointment[] get(Date date) throws Exception {
 		preparedStatement = prepareStatement(
 				"SELECT StartTime, Partner, EndTime, PatientID, PaidFor "
@@ -90,6 +96,7 @@ public class AppointmentQuery extends QuerySQL {
 		return appointments;
 	}
 
+	// Adds a new appointment
 	public void add(HashMap<String, Object> map) throws Exception {
 		String appDate = (String) map.get("AppointmentDate");
 		String startTime = (String) map.get("StartTime");
@@ -111,6 +118,7 @@ public class AppointmentQuery extends QuerySQL {
 		close();
 	}
 
+	// Removes appointments
 	public void remove(Appointment a) throws Exception {
 		preparedStatement = prepareStatement("DELETE FROM Appointments WHERE "
 				+ "AppointmentDate = ? AND StartTime = ? AND Partner = ?;");
@@ -122,7 +130,8 @@ public class AppointmentQuery extends QuerySQL {
     	
     	close();
 	}
-	
+
+	// Creates a date by concating several inputs
 	private Date createDate(Date date, Time time) {
 		Calendar timeC = Calendar.getInstance(Locale.UK);
 		timeC.setTime(time);
@@ -135,7 +144,7 @@ public class AppointmentQuery extends QuerySQL {
 		
 		return calendar.getTime();
 	}
-	
+	// gets a list of appointment fields with a patientID
 	public String[][] get(int patientID) throws Exception {
 		preparedStatement = prepareStatement(
 				"SELECT AppointmentDate, StartTime, Partner, PaidFor "
@@ -158,7 +167,8 @@ public class AppointmentQuery extends QuerySQL {
 		
 		return apps;
 	}
-	
+
+	// Checks if an appointment has been paid for
 	public Appointment[] isPaidFor(int patID) throws Exception {
 		
 		Date currentDate = new Date();
@@ -189,6 +199,7 @@ public class AppointmentQuery extends QuerySQL {
 		return appArray;
 	}
 
+	// Turns appointments paidFor = 'Y'
 	public void payFor(Date startDate, String partner) throws SQLException {
         preparedStatement = prepareStatement("UPDATE Appointments SET PaidFor = 'Y' WHERE " +
                 "AppointmentDate = ? AND StartTime = ? AND Partner = ?");
