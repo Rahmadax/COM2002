@@ -12,6 +12,29 @@ public final class PatientQuery extends QuerySQL {
 		super(access);
 	}
 	
+	public String[] get(int patientID) throws Exception {
+		preparedStatement = prepareStatement("SELECT * FROM Patients WHERE PatientID = ?;");
+		preparedStatement.setInt(1, patientID);
+		resultSet = preparedStatement.executeQuery();
+		
+		String[] result = new String[getRowCount(resultSet)];
+		
+		while (resultSet.next()) {
+			result[resultSet.getRow() - 1] = resultSet.getString(1);
+		}
+		
+		close();
+		
+		return result;
+	}
+	
+	public ResultSet getAll() throws Exception {
+		preparedStatement = prepareStatement("SELECT * FROM Patients;");
+		resultSet = preparedStatement.executeQuery();
+		
+		return resultSet;
+	}
+	
 	public int getLastadded() throws Exception {
 		preparedStatement = prepareStatement("SELECT * FROM Patients WHERE PatientID = (SELECT MAX(PatientID) FROM Patients);");
 		resultSet = preparedStatement.executeQuery();

@@ -233,38 +233,36 @@ public class BookPane extends JPanel {
 			public void mouseReleased(MouseEvent e) {
 				try {
 					String text = searchField.getText();
+					MySQLAccess access = new MySQLAccess();
+					PatientQuery query = new PatientQuery(access);
 					
-					Pattern p = Pattern.compile("^(.*)\\s*(.*)$");
-					Matcher m = p.matcher(text);
+					ResultSet resultSet = query.getAll();
+					String[][] patients = handleSearch(resultSet);
 					
-					if (m.find()) {
-						String first = m.group(1);
-						String last = m.group(2);
+					ArrayList<String[]> data = new ArrayList<String[]>();
+					
+					for (String[] patient: patients) {
+						Pattern p = Pattern.compile(text);
+						Matcher m1 = p.matcher(patient[1].toLowerCase() + " " + patient[2].toLowerCase());
+						Matcher m2 = p.matcher(patient[1].toLowerCase());
+						Matcher m3 = p.matcher(patient[2].toLowerCase());
 						
-						MySQLAccess access = new MySQLAccess();
-						PatientQuery query = new PatientQuery(access);
-						
-						String[][] data = {};
-						
-						if (!first.equals("") && last.equals("")) {
-							ResultSet resultSet = query.findWithFirstName(first);
-							data = handleSearch(resultSet);
-						} else if (first.equals("") && !last.equals("")) {
-							ResultSet resultSet = query.findWithLastName(last);
-							data = handleSearch(resultSet);
-						} else if (!first.equals("") && !last.equals("")) {
-							ResultSet resultSet = query.findWithWholeName(first, last);
-							data = handleSearch(resultSet);
+						if (m1.find()) {
+							data.add(0, patient);
+						} else if (m2.find()) {
+							data.add(patient);
+						} else if (m3.find()) {
+							data.add(patient);
 						}
-						
-						JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-						OverlayPane overlay = new OverlayPane(rootPane, new JPanel());
-						overlay.setContentPane(new SearchResultsPane(data, bookPane, overlay));
-						overlay.setTitle("Search results", "Text query: " + text);
-						overlay.show();
-						
-						access.close();
-					}	
+					}
+					
+					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+					OverlayPane overlay = new OverlayPane(rootPane, new JPanel());
+					overlay.setContentPane(new SearchResultsPane(data, bookPane, overlay));
+					overlay.setTitle("Search results", "Text query: " + text);
+					overlay.show();
+					
+					access.close();	
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -393,7 +391,7 @@ public class BookPane extends JPanel {
 
 		private BookPane bookPane;
 		
-		public SearchResultsPane(String[][] data, BookPane bookPane, OverlayPane overlay) {
+		public SearchResultsPane(ArrayList<String[]> data, BookPane bookPane, OverlayPane overlay) {
 			super(overlay);
 			setLayout(new BorderLayout());
 			this.bookPane = bookPane;
