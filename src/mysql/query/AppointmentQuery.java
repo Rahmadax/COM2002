@@ -139,6 +139,7 @@ public class AppointmentQuery extends QuerySQL {
 		preparedStatement = prepareStatement("SELECT * FROM Appointments "
 				+ "WHERE PatientID = " +patID+ " AND PaidFor = 'N';");
 		
+		resultSet = preparedStatement.executeQuery();
 		int rows = getRowCount(resultSet);
 		Appointment[] appArray = new Appointment[rows];
 		
