@@ -35,9 +35,11 @@ public class TreatmentQuery extends QuerySQL {
     public void add(String[] treatments, Date date, Time startTime, String partner) throws SQLException {
 	    for (int i = 0; i < treatments.length; i++){
 
-            preparedStatement = prepareStatement("INSERT INTO Treatments (TreatmentName) " +
-                    "VALUES (?);");
-            preparedStatement.setString(1, treatments[i]);
+            preparedStatement = prepareStatement("INSERT INTO TreatmentApp_Linker ( AppointmentDate, StartTime, Partner) " +
+                    "VALUES (?,?,?)");
+            preparedStatement.setDate(1, date);
+            preparedStatement.setTime(2, startTime);
+            preparedStatement.setString(3, partner);
             preparedStatement.executeUpdate();
 
             preparedStatement = prepareStatement("SELECT * FROM TreatmentApp_Linker WHERE TreatmentID=(SELECT MAX(TreatmentID) FROM TreatmentApp_Linker);");
@@ -47,12 +49,10 @@ public class TreatmentQuery extends QuerySQL {
                 treatmentID = resultSet.getInt(1);
             }
 
-            preparedStatement = prepareStatement("INSERT INTO TreatmentApp_Linker (TreatmentID, AppointmentDate, StartTime, Partner) " +
-                    "VALUES (?,?,?,?)");
+            preparedStatement = prepareStatement("INSERT INTO Treatments (TreatmentID, TreatmentName) " +
+                    "VALUES (?,?);");
             preparedStatement.setInt(1, treatmentID);
-            preparedStatement.setDate(2, date);
-            preparedStatement.setTime(3, startTime);
-            preparedStatement.setString(4, partner);
+            preparedStatement.setString(2, treatments[i]);
             preparedStatement.executeUpdate();
 
         }
