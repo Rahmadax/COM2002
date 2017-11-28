@@ -101,7 +101,7 @@ public class AppointmentQuery extends QuerySQL {
 		String partner = (String) map.get("Partner");
 		String endTime = (String) map.get("EndTime");
 		
-		int patID = 0;
+		int patID = -1;
 		if (!map.get("PatientName").equals("")) {
 			patID = (int) map.get("PatientID");
 		}
@@ -113,7 +113,7 @@ public class AppointmentQuery extends QuerySQL {
 		preparedStatement.setString(3, partner);
 		preparedStatement.setString(4, endTime);
 		preparedStatement.setInt(5, patID);
-		if (patID == 0) {
+		if (patID == -1) {
 			preparedStatement.setString(6, "H");
 		} else {
 			preparedStatement.setString(6, "N");

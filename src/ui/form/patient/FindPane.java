@@ -342,7 +342,7 @@ public class FindPane extends JPanel {
 		while (count < 10 && searchInput.next()) {
 			String id = Integer.toString(searchInput.getInt(1));
 			
-			if (!id.equals("0")) {
+			if (!id.equals("-1")) {
 				allPatientIDs.add(id);
 				allFirstNames.add(searchInput.getString(3));
 				allSecondNames.add(searchInput.getString(4));

@@ -41,7 +41,7 @@ public class AppointmentPane extends TimeSlotPane {
 		
 		addMouseListener(new HoverListener(BACKGROUND_COLOR, HOVER_COLOR));
 		
-		if (appointment.isHoliday()) {
+		if (!appointment.isHoliday()) {
 			addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
@@ -84,7 +84,6 @@ public class AppointmentPane extends TimeSlotPane {
 				}
 			});
 		}
-		
 		
 		setBackground(BACKGROUND_COLOR);
 		setPreferredSize(new Dimension(50, height));
