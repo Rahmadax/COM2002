@@ -31,6 +31,10 @@ public class Appointment extends TimeSlot {
 		return paidFor.equals("Y");
 	}
 	
+	public boolean isHoliday() {
+		return paidFor.equals("H");
+	}
+	
 	public Status getStatus() {
 		return status;
 	}

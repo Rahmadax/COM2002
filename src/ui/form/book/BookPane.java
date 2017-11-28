@@ -43,6 +43,7 @@ import ui.custom.button.CustomButton;
 import ui.form.patient.PatientDetailsPane;
 import ui.layout.AbsoluteCenteredPane;
 import ui.listener.HoverListener;
+import ui.popup.DialogPane;
 import ui.popup.ErrorPane;
 import ui.popup.OverlayContentPane;
 import ui.popup.OverlayPane;
@@ -75,15 +76,37 @@ public class BookPane extends JPanel {
 				JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 				
 				if (q.isValidTimeSlot(data)) {
-					q.add(data);
 					
-            		MainFrame.program.refreshCalendar();
-					new SuccessPane(rootPane, "Appointment added successfully.").show();
+					if (patientID == -1) {
+						DialogPane dialog = new DialogPane(rootPane, "Are you sure you want to book an empty appointment?");
+						dialog.getOKButton().addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseReleased(MouseEvent e) {
+								try {
+									q.add(data);
+									access.close();
+									
+									MainFrame.program.refreshCalendar();
+									new SuccessPane(rootPane, "Appointment added successfully.").show();
+								} catch (Exception e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								
+								dialog.hide();
+							}
+						});
+						dialog.show();
+					} else {
+						q.add(data);
+						access.close();
+						
+						MainFrame.program.refreshCalendar();
+						new SuccessPane(rootPane, "Appointment added successfully.").show();
+					}		
 				} else {
 					new ErrorPane(rootPane, "The time selected is not available for booking.").show();
 				}
-				
-				access.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -251,12 +274,14 @@ public class BookPane extends JPanel {
 						Matcher m2 = p.matcher(patient[1].toLowerCase());
 						Matcher m3 = p.matcher(patient[2].toLowerCase());
 						
-						if (m1.find()) {
-							data.add(0, patient);
-						} else if (m2.find()) {
-							data.add(patient);
-						} else if (m3.find()) {
-							data.add(patient);
+						if (!patient[0].equals("0")) {
+							if (m1.find()) {
+								data.add(0, patient);
+							} else if (m2.find()) {
+								data.add(patient);
+							} else if (m3.find()) {
+								data.add(patient);
+							}
 						}
 					}
 					

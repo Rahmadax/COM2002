@@ -60,9 +60,7 @@ public class AppointmentQuery extends QuerySQL {
 		resultSet = preparedStatement.executeQuery();
 		
 		boolean bool = !resultSet.next();
-		
-		close();
-		
+				
 		return bool;
 	}
 
@@ -102,7 +100,11 @@ public class AppointmentQuery extends QuerySQL {
 		String startTime = (String) map.get("StartTime");
 		String partner = (String) map.get("Partner");
 		String endTime = (String) map.get("EndTime");
-		int patID = (int) map.get("PatientID");
+		
+		int patID = 0;
+		if (!map.get("PatientName").equals("")) {
+			patID = (int) map.get("PatientID");
+		}
 		
 		preparedStatement = prepareStatement("INSERT INTO Appointments (AppointmentDate, StartTime, Partner, EndTime, PatientID, PaidFor) "
 				+ "VALUES ((SELECT STR_TO_DATE(?, '%Y-%m-%d')), (SELECT STR_TO_DATE(?, '%h:%i %p')), ?, (SELECT STR_TO_DATE(?, '%h:%i %p')), ?, ?)"); 
@@ -111,7 +113,12 @@ public class AppointmentQuery extends QuerySQL {
 		preparedStatement.setString(3, partner);
 		preparedStatement.setString(4, endTime);
 		preparedStatement.setInt(5, patID);
-		preparedStatement.setString(6, "N");
+		if (patID == 0) {
+			preparedStatement.setString(6, "H");
+		} else {
+			preparedStatement.setString(6, "N");
+		}
+		
 		
 		preparedStatement.executeUpdate();
 		

@@ -37,51 +37,54 @@ public class AppointmentPane extends TimeSlotPane {
 
 	public AppointmentPane(Appointment appointment) throws Exception {
 		super(appointment);
-		
 		this.appointment = appointment;
 		
 		addMouseListener(new HoverListener(BACKGROUND_COLOR, HOVER_COLOR));
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
+		
+		if (appointment.isHoliday()) {
+			addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 
-				SimpleDateFormat dateFormatter = 
-						new SimpleDateFormat("d MMMM yyyy");
-				
-				OverlayPane overlay = new OverlayPane(rootPane, 
-						new JPanel());
-				
-				LoadingPane loading = new LoadingPane(rootPane);
-				loading.show();
-                
-            	new Thread() {
-					@Override
-					public void run() {
-						try {
-    						overlay.setContentPane(new AppointmentDetailsPane(appointment, overlay));
-		                    
-    						String title = "Appointment";
-    						if (!appointment.isPaid()) {
-    							title += " (Not paid)";
-    						}
-    						
-    						overlay.setTitle(title,
-		    						dateFormatter.format(appointment.getStartDate()));
-		    				overlay.setConstraints(700, 550, 2, 1.9);
-		    				overlay.show();
-						} catch (Exception e1) {
-		                    e1.printStackTrace();
-		                    
-		                    new ErrorPane(rootPane, "Unable to view the appointment.").show();
-		                }
-						
-	    				loading.hide();
-					}
-				}.start();
-                
-			}
-		});
+					SimpleDateFormat dateFormatter = 
+							new SimpleDateFormat("d MMMM yyyy");
+					
+					OverlayPane overlay = new OverlayPane(rootPane, 
+							new JPanel());
+					
+					LoadingPane loading = new LoadingPane(rootPane);
+					loading.show();
+	                
+	            	new Thread() {
+						@Override
+						public void run() {
+							try {
+	    						overlay.setContentPane(new AppointmentDetailsPane(appointment, overlay));
+			                    
+	    						String title = "Appointment";
+	    						if (!appointment.isPaid()) {
+	    							title += " (Not paid)";
+	    						}
+	    						
+	    						overlay.setTitle(title,
+			    						dateFormatter.format(appointment.getStartDate()));
+			    				overlay.setConstraints(700, 550, 2, 1.9);
+			    				overlay.show();
+							} catch (Exception e1) {
+			                    e1.printStackTrace();
+			                    
+			                    new ErrorPane(rootPane, "Unable to view the appointment.").show();
+			                }
+							
+		    				loading.hide();
+						}
+					}.start();
+	                
+				}
+			});
+		}
+		
 		
 		setBackground(BACKGROUND_COLOR);
 		setPreferredSize(new Dimension(50, height));
@@ -120,6 +123,16 @@ public class AppointmentPane extends TimeSlotPane {
 					new HoverListener(new Color(200, 200, 200), new Color(170, 170, 170)));
 			
 			setBackground(new Color(200, 200, 200));
+		}
+		
+		if (appointment.isHoliday()) {
+			MouseListener[] ls = getMouseListeners();
+			
+			for (MouseListener l: ls) {
+				removeMouseListener(l);
+			}
+			
+			setBackground(new Color(150, 150, 150));
 		}
 		
 		access.close();
@@ -161,7 +174,13 @@ public class AppointmentPane extends TimeSlotPane {
 	private JPanel createContentPane() throws Exception {
         MySQLAccess access = new MySQLAccess();
         PatientQuery q = new PatientQuery(access);
-		JLabel patientName = new JLabel(q.getFullName(appointment.getPatientID()));
+        
+        JLabel patientName = null;
+        if (appointment.isHoliday()) {
+    		patientName = new JLabel("Holiday");
+        } else {
+    		patientName = new JLabel(q.getFullName(appointment.getPatientID()));
+        }
 		
 		patientName.setFont(new Font("Aller", Font.BOLD, 14));
 		patientName.setForeground(new Color(80, 50, 0));

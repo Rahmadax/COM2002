@@ -340,13 +340,17 @@ public class FindPane extends JPanel {
 		
 		int count = 0;
 		while (count < 10 && searchInput.next()) {
-			allPatientIDs.add(Integer.toString(searchInput.getInt(1)));
-			allFirstNames.add(searchInput.getString(3));
-			allSecondNames.add(searchInput.getString(4));
-			allDOB.add(searchInput.getDate(5).toString());
-			allContactNumbers.add(searchInput.getString(6));
-			allHouseNums.add(searchInput.getString(7));
-			allPostCodes.add(searchInput.getString(8));
+			String id = Integer.toString(searchInput.getInt(1));
+			
+			if (!id.equals("0")) {
+				allPatientIDs.add(id);
+				allFirstNames.add(searchInput.getString(3));
+				allSecondNames.add(searchInput.getString(4));
+				allDOB.add(searchInput.getDate(5).toString());
+				allContactNumbers.add(searchInput.getString(6));
+				allHouseNums.add(searchInput.getString(7));
+				allPostCodes.add(searchInput.getString(8));
+			}
 			count++;
 		}
 		
