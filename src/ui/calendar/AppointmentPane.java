@@ -60,7 +60,13 @@ public class AppointmentPane extends TimeSlotPane {
 					public void run() {
 						try {
     						overlay.setContentPane(new AppointmentDetailsPane(appointment, overlay));
-		                    overlay.setTitle("Appointment",
+		                    
+    						String title = "Appointment";
+    						if (!appointment.isPaid()) {
+    							title += " (Not paid)";
+    						}
+    						
+    						overlay.setTitle(title,
 		    						dateFormatter.format(appointment.getStartDate()));
 		    				overlay.setConstraints(700, 550, 2, 1.9);
 		    				overlay.show();

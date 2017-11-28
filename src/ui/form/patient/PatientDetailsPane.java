@@ -85,23 +85,29 @@ public class PatientDetailsPane extends OverlayContentPane {
 		JPanel container = new JPanel(new GridLayout(0, 1));
 		container.setOpaque(false);
 		
+		String hcpName = null;
 		try {
 			MySQLAccess access = new MySQLAccess();
 			AddressQuery q1 = new AddressQuery(access);
 			HCPPatientLinkerQuery q2 = new HCPPatientLinkerQuery(access);
+			HCPsQuery q3 = new HCPsQuery(access);
 			
 			String[] address = q1.get(Integer.parseInt(generalData.get("PatientID")));
 			int[] hcp = q2.getHCPDetails(Integer.parseInt(generalData.get("PatientID")));
-
+			hcpName = q3.getName(Integer.parseInt(generalData.get("PatientID")));
+			
 			container.add(new DataRowPane("House no.", address[0]));
 			container.add(new DataRowPane("Street name", address[1]));
 			container.add(new DataRowPane("District name", address[2]));
 			container.add(new DataRowPane("City", address[3]));
 			container.add(new DataRowPane("Postcode", address[4]));
 			
-			container.add(new DataRowPane("Remaining Checkups", Integer.toString(hcp[1])));
-			container.add(new DataRowPane("Remaining Hygiene", Integer.toString(hcp[2])));
-			container.add(new DataRowPane("Remaining Repairs", Integer.toString(hcp[3])));
+			if (hcpName != null) {
+				container.add(new DataRowPane("Dental Plan", hcpName));
+				container.add(new DataRowPane("Remaining Checkups", Integer.toString(hcp[1])));
+				container.add(new DataRowPane("Remaining Hygiene", Integer.toString(hcp[2])));
+				container.add(new DataRowPane("Remaining Repairs", Integer.toString(hcp[3])));
+			}
 			
 			access.close();
 		} catch (Exception e) {
@@ -119,55 +125,58 @@ public class PatientDetailsPane extends OverlayContentPane {
 			HCPStoreQuery q = new HCPStoreQuery(access);
 			String[] strs = q.getAll();
 			
-			CustomComboBox plansComboBox = new CustomComboBox(strs);
-			buttonPane.add(plansComboBox);
-			
-			CustomButton subscribe = new CustomButton("Subscribe", CustomButton.REVERSED_STYLE);
-			subscribe.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-					
-					try {
-						MySQLAccess access = new MySQLAccess();
-						HCPsQuery q = new HCPsQuery(access);
+			if (hcpName == null) {
+				CustomComboBox plansComboBox = new CustomComboBox(strs);
+				buttonPane.add(plansComboBox);
+				
+				CustomButton subscribe = new CustomButton("Subscribe", CustomButton.REVERSED_STYLE);
+				subscribe.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 						
-						Pattern p = Pattern.compile("^(.*)\\s\\(.*\\)$");
-						Matcher m = p.matcher((String) plansComboBox.getSelectedItem());
+						try {
+							MySQLAccess access = new MySQLAccess();
+							HCPsQuery q = new HCPsQuery(access);
+							
+							Pattern p = Pattern.compile("^(.*)\\s\\(.*\\)$");
+							Matcher m = p.matcher((String) plansComboBox.getSelectedItem());
+							
+							m.find();
+							q.addHCP(m.group(1), Integer.parseInt(generalData.get("PatientID")));
 						
-						m.find();
-						q.addHCP(m.group(1), Integer.parseInt(generalData.get("PatientID")));
-					
-						getOverlay().hide();
-						new SuccessPane(rootPane, "Now the patient is subscribet to a plan.").show();
-					} catch (Exception e1) {
-						e1.printStackTrace();
+							getOverlay().hide();
+							new SuccessPane(rootPane, "Now the patient is subscribet to a plan.").show();
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					}
-				}
-			});
-			
-			CustomButton unsubscribe = new CustomButton("Unsubscribe", CustomButton.REVERSED_STYLE);
-			unsubscribe.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
-					
-					try {
-						MySQLAccess access = new MySQLAccess();
-						HCPsQuery q = new HCPsQuery(access);
+				});
+				
+				buttonPane.add(subscribe);
+			} else {
+				CustomButton unsubscribe = new CustomButton("Unsubscribe", CustomButton.REVERSED_STYLE);
+				unsubscribe.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						JRootPane rootPane = (JRootPane) MainFrame.program.getContentPane();
 						
-						q.removeHCP(Integer.parseInt(generalData.get("PatientID")));
-					
-						getOverlay().hide();
-						new SuccessPane(rootPane, "Now the patient is unsubscribed to a plan.").show();
-					} catch (Exception e1) {
-						e1.printStackTrace();
+						try {
+							MySQLAccess access = new MySQLAccess();
+							HCPsQuery q = new HCPsQuery(access);
+							
+							q.removeHCP(Integer.parseInt(generalData.get("PatientID")));
+						
+							getOverlay().hide();
+							new SuccessPane(rootPane, "Now the patient is unsubscribed to a plan.").show();
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					}
-				}
-			});
-			
-			buttonPane.add(subscribe);
-			buttonPane.add(unsubscribe);	
+				});
+				
+				buttonPane.add(unsubscribe);
+			}	
 			
 			access.close();
 		} catch (Exception e) {
@@ -319,7 +328,7 @@ public class PatientDetailsPane extends OverlayContentPane {
 	private class AppointmentRowPane extends JPanel {
 				
 		public AppointmentRowPane(String[] data) {
-			super(new GridLayout(1, 3));
+			super(new GridLayout(1, 4));
 			
 			setBorder(new CompoundBorder(
 					new CompoundBorder(
@@ -335,9 +344,16 @@ public class PatientDetailsPane extends OverlayContentPane {
 		}
 		
 		private void addData(String[] data) {			
-			for (int i = 0; i < data.length - 1; i++) {
+			for (int i = 0; i < data.length; i++) {
 				JLabel label = null;
 				label = new JLabel(data[i]);
+				if (i == 3) {
+					if (data[3].equals("Y")) {
+						label = new JLabel("Paid");
+					} else {
+						label = new JLabel("Not Paid");
+					}
+				}
 				
 				label.setForeground(new Color(255, 160, 0));
 				label.setFont(new Font(label.getFont().getFontName(), Font.BOLD, 15));

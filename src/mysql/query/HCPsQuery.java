@@ -108,4 +108,34 @@ public class HCPsQuery extends QuerySQL {
         }
         return list;
     }
+    
+    public String getName(int patientID) throws Exception {
+    	preparedStatement = prepareStatement("SELECT (HCPID) FROM HCPPatient_Linker WHERE "
+                + "PatientID = ?;");
+        preparedStatement.setInt(1, patientID);
+        resultSet = preparedStatement.executeQuery();
+        int hcpID = -1;
+        while(resultSet.next()){
+           hcpID = resultSet.getInt(1);
+        }
+        
+        if (hcpID == -1) {
+        	return null;
+        }
+        
+        preparedStatement = prepareStatement("SELECT HCPName FROM HCPs WHERE "
+                + "HCPID = ?;");
+        preparedStatement.setInt(1, hcpID);
+        resultSet = preparedStatement.executeQuery();
+        
+        String hcpName = null;
+        if (resultSet.next()) {
+            hcpName = resultSet.getString(1);
+        }
+        
+        close();
+        
+        return hcpName;
+    }
+    
 }
