@@ -97,10 +97,10 @@ public class PatientDetailsPane extends OverlayContentPane {
 			hcpName = q3.getName(Integer.parseInt(generalData.get("PatientID")));
 			
 			container.add(new DataRowPane("House no.", address[0]));
-			container.add(new DataRowPane("Street name", address[1]));
-			container.add(new DataRowPane("District name", address[2]));
-			container.add(new DataRowPane("City", address[3]));
-			container.add(new DataRowPane("Postcode", address[4]));
+			container.add(new DataRowPane("Street name", address[2]));
+			container.add(new DataRowPane("District name", address[3]));
+			container.add(new DataRowPane("City", address[4]));
+			container.add(new DataRowPane("Postcode", address[1]));
 			
 			if (hcpName != null) {
 				container.add(new DataRowPane("Dental Plan", hcpName));
