@@ -165,7 +165,9 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 
 		if (MainFrame.mode == ModeUI.PRACTICE) {
 			if (this.treatments.length == 0) {
-				treatments.add(createAddTreatmentPane(), BorderLayout.SOUTH);
+				if (!appointment.isHoliday()) {
+					treatments.add(createAddTreatmentPane(), BorderLayout.SOUTH);
+				}
 			}
 		}
 		
@@ -233,7 +235,9 @@ public class AppointmentDetailsPane extends OverlayContentPane {
 			}
 		} else {
 			if (treatments.length == 0) {
-				controlPane.add(finishButton, BorderLayout.CENTER);
+				if (!appointment.isHoliday()) {
+					controlPane.add(finishButton, BorderLayout.CENTER);
+				}
 			}
 		}
 
