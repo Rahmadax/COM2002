@@ -38,6 +38,24 @@ public class AppointmentQuery extends QuerySQL {
 		String endTime = (String) map.get("EndTime");
 		int patientId = (int) map.get("PatientID");
 
+		// Checks if it's a public holiday
+        Calendar cal = Calendar.getInstance();
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int mon = cal.get(Calendar.MONTH);
+        int[][] publicHolidays = new int[][] {{2,1},{14,4},{17,4},{1,5},{29,5},{28,8},{25,12},{26,12}};
+        for (int row = 0; row < 8; row++) {
+            if(day == publicHolidays[row][0] && mon-1 == publicHolidays[row][1]) {
+                return  false;
+            }
+        }
+
+		String otherPartner;
+		if (partner == "Dentist"){
+			otherPartner = "Hygienist";
+		} else {
+			otherPartner = "Dentist";
+		}
+
 		preparedStatement = prepareStatement("SELECT * FROM Appointments WHERE "
 				+ "AppointmentDate = (SELECT STR_TO_DATE(?, '%Y-%m-%d')) AND Partner = ? AND "
 				+ "((StartTime <= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND (SELECT STR_TO_DATE(?, '%h:%i %p')) <= EndTime) OR "
@@ -58,12 +76,15 @@ public class AppointmentQuery extends QuerySQL {
 		
 		resultSet = preparedStatement.executeQuery();
 
-		/* if (!resultSet.next() && (patientId == resultSet.getInt(1))){
+		if (resultSet.first()) {
+            return false;
+        } else {
             preparedStatement = prepareStatement("SELECT * FROM Appointments WHERE "
-                    + "(AppointmentDate = (SELECT STR_TO_DATE(?, '%Y-%m-%d')) AND Partner = ? AND PatientID = ?) AND "
+                    + "(AppointmentDate = (SELECT STR_TO_DATE(?, '%Y-%m-%d')) AND Partner = ? AND PatientID = ?) AND"
                     + "((StartTime <= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND (SELECT STR_TO_DATE(?, '%h:%i %p')) <= EndTime) OR "
-                    + "(StartTime <= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND (SELECT STR_TO_DATE(?, '%h:%i %p')) <= EndTime)" +
-                    "OR (StartTime >= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND (SELECT STR_TO_DATE(?, '%h:%i %p')) >= EndTime));");
+                    + "(StartTime <= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND (SELECT STR_TO_DATE(?, '%h:%i %p')) <= EndTime) OR "
+                    + "(StartTime >= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND (SELECT STR_TO_DATE(?, '%h:%i %p')) >= EndTime) OR"
+                    + "(StartTime <= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND (SELECT STR_TO_DATE(?, '%h:%i %p')) <= EndTime));");
             preparedStatement.setString(1, appDate);
             preparedStatement.setString(2, otherPartner);
             preparedStatement.setInt(3, patientId);
@@ -73,21 +94,13 @@ public class AppointmentQuery extends QuerySQL {
             preparedStatement.setString(7, endTime);
             preparedStatement.setString(8, startTime);
             preparedStatement.setString(9, endTime);
+            preparedStatement.setString(10, startTime);
+            preparedStatement.setString(11, endTime);
             resultSet = preparedStatement.executeQuery();
-        }*/
-
-        Calendar cal = Calendar.getInstance();
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int mon = cal.get(Calendar.MONTH);
-        int[][] publicHolidays = new int[][] {{2,1},{14,4},{17,4},{1,5},{29,5},{28,8},{25,12},{26,12}};
-        for (int row = 0; row < 8; row++) {
-            if(day == publicHolidays[row][0] && mon-1 == publicHolidays[row][1]) {
-                appDate = null;
-            }
         }
 
         boolean bool = (!resultSet.next());
-				
+
 		return bool;
 	}
 
