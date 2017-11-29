@@ -39,8 +39,8 @@ public class AppointmentQuery extends QuerySQL {
 		
 		preparedStatement = prepareStatement("SELECT * FROM Appointments WHERE "
 				+ "AppointmentDate = (SELECT STR_TO_DATE(?, '%Y-%m-%d')) AND Partner = ? AND "
-				+ "((StartTime <= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND (SELECT STR_TO_DATE(?, '%h:%i %p')) <= EndTime) OR "
-				+ "(StartTime <= (SELECT STR_TO_DATE(?, '%h:%i %p')) AND (SELECT STR_TO_DATE(?, '%h:%i %p')) <= EndTime));");
+				+ "((StartTime < (SELECT STR_TO_DATE(?, '%h:%i %p')) AND (SELECT STR_TO_DATE(?, '%h:%i %p')) < EndTime) OR "
+				+ "(StartTime < (SELECT STR_TO_DATE(?, '%h:%i %p')) AND (SELECT STR_TO_DATE(?, '%h:%i %p')) < EndTime));");
 	        Calendar cal = Calendar.getInstance();
 		int day = cal.get(Calendar.DAY_OF_MONTH);
 		int mon = cal.get(Calendar.MONTH);
